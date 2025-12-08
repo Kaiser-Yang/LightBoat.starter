@@ -10,6 +10,8 @@ The starter for [LightBoat](https://github.com/Kaiser-Yang/LightBoat).
 - `make`
 - `npm`
 - `node`
+- `pngpaste`: `macOS` only, for image pasting in markdown files
+- `xclip` or `wl-paste`: `Linux` only, for image pasting in markdown files
 
 ## Java Development
 
@@ -67,6 +69,8 @@ Executables which may be installed automatically by `mason.nvim`:
 
 ## Others
 
+Executables which may be installed automatically by `mason.nvim`:
+
 - `eslint-lsp`: when `npm` is executable, this will be installed automatically
 - `json-lsp`: when `npm` is executable, this will be installed automatically
 - `typescript-language-server`: when `npm` is executable, this will be installed automatically
@@ -84,7 +88,7 @@ You can configure `vim.g.lightboat_opts.mason.ensure_installed` in
 [lua/core/lazy.lua](https://github.com/Kaiser-Yang/LightBoat.starter/blob/master/lua/core/lazy.lua#L16)
 to disable some of them.
 
-For example, I can use those below to not install some executables:
+For example, You can use those below to not install some executables:
 
 ```lua
 vim.g.lightboat_opts = {
@@ -96,7 +100,6 @@ vim.g.lightboat_opts = {
       ['vue-language-server'] = false,
       ['yaml-language-server'] = false,
       ['typescript-language-server'] = false,
-      ['tailwindcss-language-server'] = false,
     }
   }
 }
