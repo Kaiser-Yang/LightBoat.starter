@@ -128,4 +128,16 @@ git clone https://github.com/Kaiser-Yang/LightBoat.starter.git ~/.config/nvim
 **NOTE**: When running `nvim` at the first time, you may encounter many errors. You just
 need to restart `nvim` many times, and wait for the plugins intallation.
 
+Or you can use the `Dockerfile` to build a docker image with everything set up:
+
+```bash
+docker build -t lightboat-starter .
+docker run -it --rm lightboat-starter
+nvim
+```
+
+**NOTE**: The first time you run `nvim`, it will download the plugins. When all plugins are downloaded, you should restart `nvim`.
+
+**NOTE**: `Mason` may not install executables automatically, and you just need to restart `nvim` and run `:Mason` in `nvim`.
+
 Check [LightBoat](https://github.com/Kaiser-Yang/LightBoat) to learn how to customize.
