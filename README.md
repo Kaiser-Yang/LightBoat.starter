@@ -57,6 +57,7 @@ Executables which may be installed automatically by `mason.nvim`:
 Executables which may be installed automatically by `mason.nvim`:
 
 - `gopls`: when `go` is executable, this will be installed automatically
+- `goimports`: when `go` is executable, this will be installed automatically
 
 ## Python Development
 
