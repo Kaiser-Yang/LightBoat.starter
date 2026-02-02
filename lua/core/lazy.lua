@@ -12,11 +12,12 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
---- @type LightBoat.Opts
+--- @type LightBoat.Opt
 vim.g.lightboat_opts = {}
 require('lazy').setup({
   spec = {
-    { 'Kaiser-Yang/LightBoat', import = 'lightboat.plugin' },
+    -- TODO: update this with url
+    { dir = vim.fn.expand('~') .. '/repo/LightBoat', import = 'lightboat.plugin' },
     { import = 'plugin' },
   },
 })

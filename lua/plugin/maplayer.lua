@@ -1,0 +1,114 @@
+return {
+  'Kaiser-Yang/maplayer.nvim',
+  config = function()
+    local c = require('lightboat.condition')
+    local h = require('lightboat.handler')
+    require('maplayer').setup({
+      {
+        key = '1',
+        mode = 'i',
+        desc = 'Insert Markdown Title 1',
+        condition = function() return c.filetype('markdown') and c.last_key(vim.g.maplocalleader) end,
+        handler = h.markdown_title(1),
+      },
+      {
+        key = '2',
+        mode = 'i',
+        desc = 'Insert Markdown Title 2',
+        condition = function() return c.filetype('markdown') and c.last_key(vim.g.maplocalleader) end,
+        handler = h.markdown_title(2),
+      },
+      {
+        key = '3',
+        mode = 'i',
+        desc = 'Insert Markdown Title 3',
+        condition = function() return c.filetype('markdown') and c.last_key(vim.g.maplocalleader) end,
+        handler = h.markdown_title(3),
+      },
+      {
+        key = '4',
+        mode = 'i',
+        desc = 'Insert Markdown Title 4',
+        condition = function() return c.filetype('markdown') and c.last_key(vim.g.maplocalleader) end,
+        handler = h.markdown_title(4),
+      },
+      {
+        key = 's',
+        mode = 'i',
+        desc = 'Insert Markdown Separate Line',
+        condition = function() return c.filetype('markdown') and c.last_key(vim.g.maplocalleader) end,
+        handler = h.markdown_separate_line,
+      },
+      {
+        key = 'm',
+        mode = 'i',
+        desc = 'Insert Markdown Inline Math',
+        condition = function() return c.filetype('markdown') and c.last_key(vim.g.maplocalleader) end,
+        handler = h.markdown_math_inline_2,
+      },
+      {
+        key = 't',
+        mode = 'i',
+        desc = 'Insert Markdown Code Line',
+        condition = function() return c.filetype('markdown') and c.last_key(vim.g.maplocalleader) end,
+        handler = h.markdown_code_line,
+      },
+      {
+        key = 'x',
+        mode = 'i',
+        desc = 'Insert Markdown Todo',
+        condition = function() return c.filetype('markdown') and c.last_key(vim.g.maplocalleader) end,
+        handler = h.markdown_todo,
+      },
+      {
+        key = 'a',
+        mode = 'i',
+        desc = 'Insert Markdown Link',
+        condition = function() return c.filetype('markdown') and c.last_key(vim.g.maplocalleader) end,
+        handler = h.markdown_link,
+      },
+      {
+        key = 'b',
+        mode = 'i',
+        desc = 'Insert Markdown Bold Text',
+        condition = function() return c.filetype('markdown') and c.last_key(vim.g.maplocalleader) end,
+        handler = h.markdown_bold,
+      },
+      {
+        key = 'd',
+        mode = 'i',
+        desc = 'Delete Current Line',
+        condition = function() return c.filetype('markdown') and c.last_key(vim.g.maplocalleader) end,
+        handler = h.markdown_delete_line,
+      },
+      {
+        key = 'i',
+        mode = 'i',
+        desc = 'Insert Markdown Italic Text',
+        condition = function() return c.filetype('markdown') and c.last_key(vim.g.maplocalleader) end,
+        handler = h.markdown_italic,
+      },
+      {
+        key = 'M',
+        mode = 'i',
+        desc = 'Insert Markdown Math Block',
+        condition = function() return c.filetype('markdown') and c.last_key(vim.g.maplocalleader) end,
+        handler = h.markdown_math_block,
+      },
+      {
+        key = 'c',
+        mode = 'i',
+        desc = 'Insert Markdown Code Block',
+        condition = function() return c.filetype('markdown') and c.last_key(vim.g.maplocalleader) end,
+        handler = h.markdown_code_block,
+      },
+      {
+        key = 'f',
+        mode = 'i',
+        desc = 'Markdown Goto Placeholder',
+        condition = function() return c.filetype('markdown') and c.last_key(vim.g.maplocalleader) end,
+        handler = h.markdown_goto_placeholder,
+      }
+    })
+  end,
+}
