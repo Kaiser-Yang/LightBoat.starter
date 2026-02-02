@@ -2,7 +2,7 @@
 
 The starter for [LightBoat](https://github.com/Kaiser-Yang/LightBoat).
 
-# Requirements
+## Requirements
 
 - `rg`
 - `curl`
