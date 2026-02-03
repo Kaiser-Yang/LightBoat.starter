@@ -108,7 +108,55 @@ return {
         desc = 'Markdown Goto Placeholder',
         condition = function() return c.filetype('markdown') and c.last_key(vim.g.maplocalleader) end,
         handler = h.markdown_goto_placeholder,
-      }
+      },
+      {
+        key = ';',
+        mode = { 'n', 'x' },
+        handler = h.repmove_semicolon,
+        desc = 'Repeat Last Motion Forward',
+      },
+      {
+        key = ',',
+        mode = { 'n', 'x' },
+        handler = h.repmove_comma,
+        desc = 'Repeat Last Motion Backward',
+      },
+      {
+        key = 'f',
+        mode = { 'n', 'x' },
+        handler = h.repmove_builtin_f,
+        desc = 'Find Next Character',
+      },
+      {
+        key = 'F',
+        mode = { 'n', 'x' },
+        handler = h.repmove_builtin_F,
+        desc = 'Find Previous Character',
+      },
+      {
+        key = 't',
+        mode = { 'n', 'x' },
+        handler = h.repmove_builtin_t,
+        desc = 'Till Next Character',
+      },
+      {
+        key = 'T',
+        mode = { 'n', 'x' },
+        handler = h.repmove_builtin_T,
+        desc = 'Till Previous Character',
+      },
+      {
+        key = '[s',
+        mode = { 'n', 'x', 'o' },
+        handler = h.repmove_previous_misspelled,
+        desc = 'Go to Previous Misspelled Word',
+      },
+      {
+        key = ']s',
+        mode = { 'n', 'x', 'o' },
+        handler = h.repmove_next_misspelled,
+        desc = 'Go to Next Misspelled Word',
+      },
     })
   end,
 }
