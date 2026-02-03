@@ -157,6 +157,44 @@ return {
         handler = h.repmove_next_misspelled,
         desc = 'Go to Next Misspelled Word',
       },
+      {
+        key = '[m',
+        mode = { 'n', 'x', 'o' },
+        handler = h.repmove_previous_function_start,
+        condition = c.treesitter_available,
+      },
+      {
+        key = ']m',
+        mode = { 'n', 'x', 'o' },
+        handler = h.repmove_next_function_start,
+        condition = c.treesitter_available,
+      },
+      {
+        key = '[M',
+        mode = { 'n', 'x', 'o' },
+        handler = h.repmove_previous_function_end,
+        condition = c.treesitter_available,
+      },
+      {
+        key = ']M',
+        mode = { 'n', 'x', 'o' },
+        handler = h.repmove_next_function_end,
+        condition = c.treesitter_available,
+      },
+      {
+        key = 'am',
+        mode = { 'o', 'x' },
+        handler = h.repmove_around_function,
+        condition = c.treesitter_available,
+        desc = 'Around Method',
+      },
+      {
+        key = 'im',
+        mode = { 'o', 'x' },
+        handler = h.repmove_inside_function,
+        condition = c.treesitter_available,
+        desc = 'Inside Method',
+      },
     })
   end,
 }
