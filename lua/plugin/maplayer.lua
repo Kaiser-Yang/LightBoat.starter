@@ -65,6 +65,17 @@ return {
       { key = 'ir', mode = { 'o', 'x' }, desc = 'Inside Return', condition = c.treesitter_available, handler = h.inside_return },
       { key = 'ac', mode = { 'o', 'x' }, desc = 'Around Class', condition = c.treesitter_available, handler = h.around_class },
       { key = 'ic', mode = { 'o', 'x' }, desc = 'Inside Class', condition = c.treesitter_available, handler = h.inside_class },
+      { key = '<c-n>', mode = { 'i', 'c' }, desc = 'Select Next Completion Item', condition = c.completion_menu_visible, handler = h.next_completion_item },
+      { key = '<c-p>', mode = { 'i', 'c' }, desc = 'Select Previous Completion Item', condition = c.completion_menu_visible, handler = h.previous_completion_item },
+      { key = '<tab>', mode = 'i', desc = 'Snippet Forward', condition = c.snippet_active, handler = h.snippet_forward },
+      { key = '<s-tab>', mode = 'i', desc = 'Snippet Backward', condition = c.snippet_active, handler = h.snippet_backward },
+      { key = '<c-x>', mode = { 'i', 'c' }, desc = 'Show Completion', handler = h.show_completion },
+      { key = '<c-y>', mode = { 'i', 'c' }, desc = 'Accept Completion Item', condition = c.completion_menu_visible, handler = h.accept_completion_item },
+      { key = '<c-e>', mode = { 'i', 'c' }, desc = 'Cancel Completion', condition = c.completion_menu_visible, handler = h.cancel_completion },
+      { key = '<c-u>', mode = 'i', desc = 'Scroll Documentation Up', condition = c.documentation_visible, handler = h.scroll_documentation_up },
+      { key = '<c-d>', mode = 'i', desc = 'Scroll Documentation Down', condition = c.documentation_visible, handler = h.scroll_documentation_down },
+      { key = '<c-s>', mode = 'i', desc = 'Show Signature Help', handler = h.show_signature },
+      { key = '<c-s>', mode = 'i', desc = 'Hide Signature Help', handler = h.hide_signature },
       -- stylua: ignore end
     })
   end,
