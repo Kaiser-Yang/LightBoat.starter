@@ -324,14 +324,14 @@ return {
       {
         key = 'am',
         mode = { 'o', 'x' },
-        handler = h.repmove_around_function,
+        handler = h.around_function,
         condition = c.treesitter_available,
         desc = 'Around Method',
       },
       {
         key = 'im',
         mode = { 'o', 'x' },
-        handler = h.repmove_inside_function,
+        handler = h.inside_function,
         condition = c.treesitter_available,
         desc = 'Inside Method',
       },
