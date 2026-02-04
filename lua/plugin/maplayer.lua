@@ -72,10 +72,12 @@ return {
       { key = '<c-x>', mode = { 'i', 'c' }, desc = 'Show Completion', handler = h.show_completion },
       { key = '<c-y>', mode = { 'i', 'c' }, desc = 'Accept Completion Item', condition = c.completion_menu_visible, handler = h.accept_completion_item },
       { key = '<c-e>', mode = { 'i', 'c' }, desc = 'Cancel Completion', condition = c.completion_menu_visible, handler = h.cancel_completion },
-      { key = '<c-u>', mode = 'i', desc = 'Scroll Documentation Up', condition = c.documentation_visible, handler = h.scroll_documentation_up },
-      { key = '<c-d>', mode = 'i', desc = 'Scroll Documentation Down', condition = c.documentation_visible, handler = h.scroll_documentation_down },
-      { key = '<c-s>', mode = 'i', desc = 'Show Signature Help', handler = h.show_signature },
-      { key = '<c-s>', mode = 'i', desc = 'Hide Signature Help', handler = h.hide_signature },
+      { key = '<c-u>', mode = 'i', desc = 'Scroll Documentation Up', condition = c.documentation_visible, handler = h.scroll_documentation_up, priority = 2 },
+      { key = '<c-u>', mode = 'i', desc = 'Scroll Signature Up', condition = c.signature_visible, handler = h.scroll_signature_up, priority = 1 },
+      { key = '<c-d>', mode = 'i', desc = 'Scroll Documentation Down', condition = c.documentation_visible, handler = h.scroll_documentation_down, priority = 2 },
+      { key = '<c-d>', mode = 'i', desc = 'Scroll Signature Down', condition = c.signature_visible, handler = h.scroll_signature_down, priority = 1 },
+      { key = '<c-s>', mode = 'i', desc = 'Show Signature Help', condition = c.signature_not_visible, handler = h.show_signature },
+      { key = '<c-s>', mode = 'i', desc = 'Hide Signature Help', condition = c.signature_visible, handler = h.hide_signature },
       -- stylua: ignore end
     })
   end,
