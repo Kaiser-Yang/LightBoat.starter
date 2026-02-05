@@ -26,36 +26,58 @@ return {
       { key = 'F', mode = { 'n', 'x' }, desc = 'Find Previous Character', handler = h.repmove_builtin_F },
       { key = 't', mode = { 'n', 'x' }, desc = 'Till Next Character', handler = h.repmove_builtin_t },
       { key = 'T', mode = { 'n', 'x' }, desc = 'Till Previous Character', handler = h.repmove_builtin_T },
-      -- FIX: When inputting the key slowly, the default behavior still triggers
       { key = '[s', mode = { 'n', 'x', 'o' }, desc = 'Jump Previous Misspelled Word', handler = h.repmove_previous_misspelled },
       { key = ']s', mode = { 'n', 'x', 'o' }, desc = 'Jump Next Misspelled Word', handler = h.repmove_next_misspelled },
+      -- NOTE: By deafault, "[a" and "]a" are mapped to ":prevvious" and ":next"
+      { key = '[a', mode = { 'n', 'x', 'o' }, desc = 'Jump Previous Argument Start', condition = c.treesitter_available, handler = h.repmove_previous_parameter_start },
+      { key = ']a', mode = { 'n', 'x', 'o' }, desc = 'Jump Next Argument Start', condition = c.treesitter_available, handler = h.repmove_next_parameter_start },
+      -- NOTE: By deafault, "[A" and "]A" are mapped to ":rewind" and ":last"
+      { key = '[A', mode = { 'n', 'x', 'o' }, desc = 'Jump Previous Argument End', condition = c.treesitter_available, handler = h.repmove_previous_parameter_end },
+      { key = ']A', mode = { 'n', 'x', 'o' }, desc = 'Jump Next Argument End', condition = c.treesitter_available, handler = h.repmove_next_parameter_end },
+      -- NOTE: Those four mappings below behavior like the default ones
       { key = '[m', mode = { 'n', 'x', 'o' }, desc = 'Jump Previous Method Start', condition = c.treesitter_available, handler = h.repmove_previous_function_start },
       { key = ']m', mode = { 'n', 'x', 'o' }, desc = 'Jump Next Method Start', condition = c.treesitter_available, handler = h.repmove_next_function_start },
       { key = '[M', mode = { 'n', 'x', 'o' }, desc = 'Jump Previous Method End', condition = c.treesitter_available, handler = h.repmove_previous_function_end },
       { key = ']M', mode = { 'n', 'x', 'o' }, desc = 'Jump Next Method End', condition = c.treesitter_available, handler = h.repmove_next_function_end },
-      { key = '[[', mode = { 'n', 'x', 'o' }, desc = 'Jump Previous Block Start', condition = c.treesitter_available, handler = h.repmove_previous_block_start },
-      { key = ']]', mode = { 'n', 'x', 'o' }, desc = 'Jump Next Block Start', condition = c.treesitter_available, handler = h.repmove_next_block_start },
+      -- NOTE: Those eight mappings below behavior like the default ones
+      { key = '[[', mode = { 'n', 'x', 'o' }, desc = 'Jump Previous Block Start', condition = function() return c.treesitter_available() and c.not_filetype("help") end, handler = h.repmove_previous_block_start },
+      { key = '[[', mode = { 'n', 'x', 'o' }, desc = 'Jump Previous Section', condition = c.filetype_wrap('help'), handler = h.repmove_previous_section, priority = 100 },
+      { key = ']]', mode = { 'n', 'x', 'o' }, desc = 'Jump Next Block Start', condition = function() return c.treesitter_available() and c.not_filetype("help") end, handler = h.repmove_next_block_start },
+      { key = ']]', mode = { 'n', 'x', 'o' }, desc = 'Jump Next Section', condition = c.filetype_wrap('help'), handler = h.repmove_next_section },
       { key = '[]', mode = { 'n', 'x', 'o' }, desc = 'Jump Previous Block End', condition = c.treesitter_available, handler = h.repmove_previous_block_end },
       { key = '][', mode = { 'n', 'x', 'o' }, desc = 'Jump Next Block End', condition = c.treesitter_available, handler = h.repmove_next_block_end },
+      -- NOTE: By default, "[i", "]i", "[I", and "]I" are used to show information of keywords under cursor
       { key = '[i', mode = { 'n', 'x', 'o' }, desc = 'Jump Previous If Start', condition = c.treesitter_available, handler = h.rempove_previous_conditional_start },
       { key = ']i', mode = { 'n', 'x', 'o' }, desc = 'Jump Next If Start', condition = c.treesitter_available, handler = h.rempove_next_conditional_start },
       { key = '[I', mode = { 'n', 'x', 'o' }, desc = 'Jump Previous If End', condition = c.treesitter_available, handler = h.rempove_previous_conditional_end },
       { key = ']I', mode = { 'n', 'x', 'o' }, desc = 'Jump Next If End', condition = c.treesitter_available, handler = h.rempove_next_conditional_end },
+      -- NOTE: By default, "[f", "]f" are alias of "gf"
       { key = '[f', mode = { 'n', 'x', 'o' }, desc = 'Jump Previous For Start', condition = c.treesitter_available, handler = h.repmove_previous_loop_start },
       { key = ']f', mode = { 'n', 'x', 'o' }, desc = 'Jump Next For Start', condition = c.treesitter_available, handler = h.repmove_next_loop_start },
       { key = '[F', mode = { 'n', 'x', 'o' }, desc = 'Jump Previous For End', condition = c.treesitter_available, handler = h.repmove_previous_loop_end },
       { key = ']F', mode = { 'n', 'x', 'o' }, desc = 'Jump Next For End', condition = c.treesitter_available, handler = h.repmove_next_loop_end },
+      -- NOTE: By default "[r" and "]r" are used to search "rare" words
       { key = '[r', mode = { 'n', 'x', 'o' }, desc = 'Jump Previous Return Start', condition = c.treesitter_available, handler = h.repmove_previous_return_start },
       { key = ']r', mode = { 'n', 'x', 'o' }, desc = 'Jump Next Return Start', condition = c.treesitter_available, handler = h.repmove_next_return_start },
       { key = '[R', mode = { 'n', 'x', 'o' }, desc = 'Jump Previous Return End', condition = c.treesitter_available, handler = h.repmove_previous_return_end },
       { key = ']R', mode = { 'n', 'x', 'o' }, desc = 'Jump Next Return End', condition = c.treesitter_available, handler = h.repmove_next_return_end },
-      { key = '[c', mode = { 'n', 'x', 'o' }, handler = h.repmove_previous_class_start, desc = 'Jump Previous Class Start' },
-      { key = ']c', mode = { 'n', 'x', 'o' }, handler = h.repmove_next_class_start, desc = 'Jump Next Class Start' },
-      { key = '[C', mode = { 'n', 'x', 'o' }, handler = h.repmove_previous_class_end, desc = 'Jump Previous Class End' },
-      { key = ']C', mode = { 'n', 'x', 'o' }, handler = h.repmove_next_class_end, desc = 'Jump Next Class End' },
+      -- NOTE: By default, "[c" and "]c" are used to navigate changes in the buffer
+      { key = '[c', mode = { 'n', 'x', 'o' }, desc = 'Jump Previous Class Start', handler = h.repmove_previous_class_start },
+      { key = ']c', mode = { 'n', 'x', 'o' }, desc = 'Jump Next Class Start', handler = h.repmove_next_class_start },
+      { key = '[C', mode = { 'n', 'x', 'o' }, desc = 'Jump Previous Class End', handler = h.repmove_previous_class_end },
+      { key = ']C', mode = { 'n', 'x', 'o' }, desc = 'Jump Next Class End', handler = h.repmove_next_class_end },
+      -- NOTE:
+      -- Those two below is to make sure the motion is handled by repmove.nvim instead of the default mappings
+      -- If you key bindings of motion above is not started with '[' or ']',
+      -- you do not need to use those two lines. This is not needed when which-key is installed
+      { key = '[', mode = { 'n', 'x', 'o' }, desc = 'Hack', handler = h.hack_left_curly_bracket_wrap('[') },
+      { key = ']', mode = { 'n', 'x', 'o' }, desc = 'Hack', handler = h.hack_right_curly_bracket_wrap(']') },
       { key = 'ae', mode = { 'o', 'x' }, desc = 'Around Edit', handler = h.around_file },
+      { key = 'aa', mode = { 'o', 'x' }, desc = 'Around Argument', condition = c.treesitter_available, handler = h.around_parameter },
+      { key = 'ia', mode = { 'o', 'x' }, desc = 'Inside Argument', condition = c.treesitter_available, handler = h.inside_parameter },
       { key = 'am', mode = { 'o', 'x' }, desc = 'Around Method', condition = c.treesitter_available, handler = h.around_function },
       { key = 'im', mode = { 'o', 'x' }, desc = 'Inside Method', condition = c.treesitter_available, handler = h.inside_function },
+      -- NOTE: By default, "ab" and "ib" are alias of "a(" and "i(" respectively.
       { key = 'ab', mode = { 'o', 'x' }, desc = 'Around Block', condition = c.treesitter_available, handler = h.around_block },
       { key = 'ib', mode = { 'o', 'x' }, desc = 'Inside Block', condition = c.treesitter_available, handler = h.inside_block },
       { key = 'ai', mode = { 'o', 'x' }, desc = 'Around If', condition = c.treesitter_available, handler = h.around_conditional },
@@ -68,8 +90,11 @@ return {
       { key = 'ic', mode = { 'o', 'x' }, desc = 'Inside Class', condition = c.treesitter_available, handler = h.inside_class },
       { key = '<c-j>', mode = { 'i', 'c' }, desc = 'Select Next Completion Item', condition = c.completion_menu_visible, handler = h.next_completion_item },
       { key = '<c-k>', mode = { 'i', 'c' }, desc = 'Select Previous Completion Item', condition = c.completion_menu_visible, handler = h.previous_completion_item },
+      -- NOTE: By default, "<c-k>" is used to insert digraph, see ":help i_CTRL-K" and ":help c_CTRL-K"
+      { key = '<c-k>', mode = { 'i', 'c' }, desc = 'Delete Content After Cursor', condition = c.completion_menu_not_visible, handler = h.delete_content_after_cursor },
       { key = '<tab>', mode = 'i', desc = 'Snippet Forward', condition = c.snippet_active, handler = h.snippet_forward },
       { key = '<s-tab>', mode = 'i', desc = 'Snippet Backward', condition = c.snippet_active, handler = h.snippet_backward },
+      -- NOTE: Those four below behaviour like the default ones
       { key = '<c-x>', mode = { 'i', 'c' }, desc = 'Show Completion', condition = c.completion_menu_not_visible, handler = h.show_completion },
       { key = '<c-x>', mode = { 'i', 'c' }, desc = 'Hide Completion', condition = c.completion_menu_visible,  handler = h.hide_completion },
       { key = '<c-y>', mode = { 'i', 'c' }, desc = 'Accept Completion Item', condition = c.completion_menu_visible, handler = h.accept_completion_item },
@@ -90,12 +115,48 @@ return {
       { key = '"', mode = 'i', desc = 'Autopairs', handler = h.auto_pair_wrap('"'), replace_keycodes = false },
       { key = "'", mode = 'i', desc = 'Autopairs', handler = h.auto_pair_wrap("'"), replace_keycodes = false },
       { key = '`', mode = 'i', desc = 'Autopairs', handler = h.auto_pair_wrap('`'), replace_keycodes = false },
-      { key = '<cr>', mode = 'i', desc = 'Autopairs', handler = h.auto_pair_wrap('<cr>'), replace_keycodes = false },
-      { key = '<bs>', mode = 'i', desc = 'Autopairs', handler = h.auto_pair_wrap('<bs>'), replace_keycodes = false },
-      { key = '<m-e>', mode = 'i', desc = 'Autopairs Fastwarp', handler = h.auto_pair_wrap('<a-e>'), replace_keycodes = false },
-      { key = '<m-E>', mode = 'i', desc = 'Autopairs Reverse Fastwarp', handler = h.auto_pair_wrap('<a-E>'), replace_keycodes = false },
-      { key = '<m-)>', mode = 'i', desc = 'Autopairs Close', handler = h.auto_pair_wrap('<a-)>'), replace_keycodes = false },
+      { key = '<cr>', mode = 'i', desc = 'Autopairs CR', handler = h.auto_pair_wrap('<cr>'), replace_keycodes = false },
+      { key = '<bs>', mode = 'i', desc = 'Autopairs BS', handler = h.auto_pair_wrap('<bs>'), replace_keycodes = false },
+      { key = '<m-e>', mode = 'i', desc = 'Autopairs Fastwarp', handler = h.auto_pair_wrap('<m-e>'), replace_keycodes = false },
+      { key = '<m-E>', mode = 'i', desc = 'Autopairs Reverse Fastwarp', handler = h.auto_pair_wrap('<m-E>'), replace_keycodes = false },
+      { key = '<m-c>', mode = 'i', desc = 'Autopairs Close', handler = h.auto_pair_wrap('<m-)>'), replace_keycodes = false },
       { key = '<space>', mode = 'i', desc = 'Autopairs Space', handler = h.auto_pair_wrap('<space>'), replace_keycodes = false },
+      -- NOTE: By default "s" in visual mode is an alias of "c"
+      { key = 's', mode = 'x', desc = 'Surround', handler = h.surround_visual },
+      { key = 'S', mode = 'x', desc = 'Surround Line Mode', handler = h.surround_visual_line },
+      { key = 'cs', mode = 'n', desc = 'Change Surround', handler = h.surround_change },
+      { key = 'cS', mode = 'n', desc = 'Change Surround Line Mode', handler = h.surround_change_line },
+      { key = 'ds', mode = 'n', desc = 'Delete Surround', handler = h.surround_delete },
+      { key = 'ys', mode = 'n', desc = 'Add Surround', handler = h.surround_normal },
+      { key = 'yss', mode = 'n', desc = 'Add Surround Current', handler = h.surround_normal_cur },
+      { key = 'yS', mode = 'n', desc = 'Add Surround Line Mode', handler = h.surround_normal_line },
+      { key = 'ySS', mode = 'n', desc = 'Add Surround Current Line Mode', handler = h.surround_normal_cur_line },
+      -- NOTE: Because we have an auto pair plugin, those two below are rarely used
+      { key = '<c-g>s', mode = 'i', desc = 'Surround', handler = h.surround_insert },
+      { key = '<c-g>S', mode = 'i', desc = 'Surround Line Mode', handler = h.surround_insert_line },
+      -- NOTE:
+      -- Those two below is to make sure "ys" and "yS" work when you type them slowly
+      -- If you bind surround with other keys like "yx", "cx", "dx", "yY" and "cY",
+      -- you should use h.hack_s_wrap('x') and h.hack_S_wrap('Y') instead
+      { key = 's', mode = 'o', desc = 'Hack', handler = h.hack_s_wrap('s') },
+      { key = 'S', mode = 'o', desc = 'Hack', handler = h.hack_S_wrap('S') },
+      { key = '<m-s>pa', mode = 'n', desc = 'Swap With Previous Argument', condition = c.treesitter_available, handler = h.swap_with_previous_parameter },
+      { key = '<m-s>na', mode = 'n', desc = 'Swap With Next Argument', condition = c.treesitter_available, handler = h.swap_with_next_parameter },
+      { key = '<m-s>pb', mode = 'n', desc = 'Swap With Previous Block', condition = c.treesitter_available, handler = h.swap_with_previous_block },
+      { key = '<m-s>nb', mode = 'n', desc = 'Swap With Next Block', condition = c.treesitter_available, handler = h.swap_with_next_block },
+      { key = '<m-s>pc', mode = 'n', desc = 'Swap With Previous Class', condition = c.treesitter_available, handler = h.swap_with_previous_class },
+      { key = '<m-s>nc', mode = 'n', desc = 'Swap With Next Class', condition = c.treesitter_available, handler = h.swap_with_next_class },
+      { key = '<m-s>pi', mode = 'n', desc = 'Swap With Previous If', condition = c.treesitter_available, handler = h.swap_with_previous_conditional },
+      { key = '<m-s>ni', mode = 'n', desc = 'Swap With Next If', condition = c.treesitter_available, handler = h.swap_with_next_conditional },
+      { key = '<m-s>pf', mode = 'n', desc = 'Swap With Previous For', condition = c.treesitter_available, handler = h.swap_with_previous_loop },
+      { key = '<m-s>nf', mode = 'n', desc = 'Swap With Next For', condition = c.treesitter_available, handler = h.swap_with_next_loop },
+      { key = '<m-s>pm', mode = 'n', desc = 'Swap With Previous Method', condition = c.treesitter_available, handler = h.swap_with_previous_function },
+      { key = '<m-s>nm', mode = 'n', desc = 'Swap With Next Method', condition = c.treesitter_available, handler = h.swap_with_next_function },
+      { key = '<m-s>pr', mode = 'n', desc = 'Swap With Previous Return', condition = c.treesitter_available, handler = h.swap_with_previous_return },
+      { key = '<m-s>nr', mode = 'n', desc = 'Swap With Next Return', condition = c.treesitter_available, handler = h.swap_with_next_return },
+      -- NOTE:
+      -- This is used when your input is very slow, this is not needed when which-key is installed
+      { key = '<m-s>', mode = 'n', desc = 'Hack', condition = c.treesitter_available, handler = h.hack_alt_s_wrap('<m-s>') },
       -- stylua: ignore end
     })
   end,
