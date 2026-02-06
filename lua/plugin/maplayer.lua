@@ -71,8 +71,8 @@ return {
       -- Those two below is to make sure the motion is handled by repmove.nvim instead of the default mappings
       -- If you key bindings of motion above is not started with '[' or ']',
       -- you do not need to use those two lines. This is not needed when which-key is installed
-      { key = '[', mode = { 'n', 'x', 'o' }, desc = 'Hack', handler = h.hack_left_curly_bracket_wrap('[') },
-      { key = ']', mode = { 'n', 'x', 'o' }, desc = 'Hack', handler = h.hack_right_curly_bracket_wrap(']') },
+      { key = '[', mode = { 'n', 'x', 'o' }, desc = 'Hack', handler = h.hack_wrap('[', { 'n', 'x', 'o' }) },
+      { key = ']', mode = { 'n', 'x', 'o' }, desc = 'Hack', handler = h.hack_wrap(']', { 'n', 'x', 'o' }) },
       { key = 'ae', mode = { 'o', 'x' }, desc = 'Around Edit', handler = h.around_file },
       { key = 'aa', mode = { 'o', 'x' }, desc = 'Around Argument', condition = c.treesitter_available, handler = h.around_parameter },
       { key = 'ia', mode = { 'o', 'x' }, desc = 'Inside Argument', condition = c.treesitter_available, handler = h.inside_parameter },
@@ -157,7 +157,7 @@ return {
       { key = '<m-s>nr', mode = 'n', desc = 'Swap With Next Return', condition = c.treesitter_available, handler = h.swap_with_next_return },
       -- NOTE:
       -- This is used when your input is very slow, this is not needed when which-key is installed
-      { key = '<m-s>', mode = 'n', desc = 'Hack', condition = c.treesitter_available, handler = h.hack_alt_s_wrap('<m-s>') },
+      { key = '<m-s>', mode = 'n', desc = 'Hack', condition = c.treesitter_available, handler = h.hack_wrap('<m-s>', 'n') },
       -- stylua: ignore end
     })
   end,
