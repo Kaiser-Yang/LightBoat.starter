@@ -1,5 +1,6 @@
 return {
   'Kaiser-Yang/maplayer.nvim',
+  event = 'VeryLazy',
   config = function()
     local c = require('lightboat.condition')
     local h = require('lightboat.handler')
@@ -29,6 +30,10 @@ return {
       { key = 'T', mode = { 'n', 'x' }, desc = 'Till Previous Character', handler = h.T },
       { key = '[s', mode = { 'n', 'x', 'o' }, desc = 'Previous Misspelled Word', handler = h.previous_misspelled },
       { key = ']s', mode = { 'n', 'x', 'o' }, desc = 'Next Misspelled Word', handler = h.next_misspelled },
+      { key = '[g', desc = 'Previous Git Hunk', condition = c.is_git_repository, handler = h.previous_hunk },
+      { key = ']g', desc = 'Next Git Hunk', condition = c.is_git_repository, handler = h.next_hunk },
+      { key = '[x', desc = 'Previous Git Conflict', condition = c.is_git_repository, handler = h.previous_conflict },
+      { key = ']x', desc = 'Next Git Conflict', condition = c.is_git_repository, handler = h.next_conflict },
       -- NOTE: By deafault, "[a" and "]a" are mapped to ":prevvious" and ":next"
       { key = '[a', mode = { 'n', 'x', 'o' }, desc = 'Previous Argument Start', condition = c.treesitter_available, handler = h.previous_parameter_start },
       { key = ']a', mode = { 'n', 'x', 'o' }, desc = 'Next Argument Start', condition = c.treesitter_available, handler = h.next_parameter_start },
@@ -67,7 +72,8 @@ return {
       { key = ']c', mode = { 'n', 'x', 'o' }, desc = 'Next Class Start', handler = h.next_class_start },
       { key = '[C', mode = { 'n', 'x', 'o' }, desc = 'Previous Class End', handler = h.previous_class_end },
       { key = ']C', mode = { 'n', 'x', 'o' }, desc = 'Next Class End', handler = h.next_class_end },
-      { key = 'ae', mode = { 'o', 'x' }, desc = 'Around Edit', handler = h.around_file },
+      { key = 'ae', mode = { 'o', 'x' }, desc = 'Select Edit', handler = h.select_file },
+      { key = 'ie', mode = { 'o', 'x' }, desc = 'Select Edit', handler = h.select_file },
       { key = 'aa', mode = { 'o', 'x' }, desc = 'Around Argument', condition = c.treesitter_available, handler = h.around_parameter },
       { key = 'ia', mode = { 'o', 'x' }, desc = 'Inside Argument', condition = c.treesitter_available, handler = h.inside_parameter },
       { key = 'am', mode = { 'o', 'x' }, desc = 'Around Method', condition = c.treesitter_available, handler = h.around_function },
@@ -92,7 +98,7 @@ return {
       -- NOTE: Those four below behaviour like the default ones
       { key = '<c-x>', mode = { 'i', 'c' }, desc = 'Show Completion', condition = c.completion_menu_not_visible, handler = h.show_completion },
       { key = '<c-x>', mode = { 'i', 'c' }, desc = 'Hide Completion', condition = c.completion_menu_visible,  handler = h.hide_completion },
-      { key = '<c-y>', mode = { 'i', 'c' }, desc = 'Accept Completion Item', condition = c.completion_menu_visible, handler = h.accept_completion_item },
+      { key = '<c-y>', mode = { 'i', 'c' }, desc = 'Accept Completion Item', condition = c.completion_item_selected, handler = h.accept_completion_item },
       { key = '<c-e>', mode = { 'i', 'c' }, desc = 'Cancel Completion', condition = c.completion_menu_visible, handler = h.cancel_completion },
       { key = '<c-u>', mode = 'i', desc = 'Scroll Documentation Up', condition = c.documentation_visible, handler = h.scroll_documentation_up, priority = 2 },
       { key = '<c-u>', mode = 'i', desc = 'Scroll Signature Up', condition = c.signature_visible, handler = h.scroll_signature_up, priority = 1 },
@@ -149,6 +155,21 @@ return {
       { key = '<m-s>nm', mode = 'n', desc = 'Swap With Next Method', condition = c.treesitter_available, handler = h.swap_with_next_function },
       { key = '<m-s>pr', mode = 'n', desc = 'Swap With Previous Return', condition = c.treesitter_available, handler = h.swap_with_previous_return },
       { key = '<m-s>nr', mode = 'n', desc = 'Swap With Next Return', condition = c.treesitter_available, handler = h.swap_with_next_return },
+      { key = '<leader>ga', mode = 'n', desc = 'Stage Hunk', condition = c.is_git_repository, handler = h.stage_hunk },
+      { key = '<leader>ga', mode = 'v', desc = 'Stage Selection', condition = c.is_git_repository, handler = h.stage_selection },
+      { key = '<leader>gA', mode = 'n', desc = 'Stage Buffer', condition = c.is_git_repository, handler = h.stage_buffer },
+      { key = '<leader>gu', mode = 'n', desc = 'Undo Stage Hunk', condition = c.is_git_repository, handler = h.undo_stage_hunk },
+      { key = '<leader>gU', mode = 'n', desc = 'Unstage Buffer', condition = c.is_git_repository, handler = h.unstage_buffer },
+      { key = '<leader>gr', mode = 'n', desc = 'Reset Hunk', condition = c.is_git_repository, handler = h.reset_hunk },
+      { key = '<leader>gr', mode = 'v', desc = 'Reset Selection', condition = c.is_git_repository, handler = h.reset_selection },
+      { key = '<leader>gR', mode = 'n', desc = 'Reset Buffer', condition = c.is_git_repository, handler = h.reset_buffer },
+      { key = '<leader>gp', mode = 'n', desc = 'Preview Hunk Inline', condition = c.is_git_repository, handler = h.preview_hunk_inline },
+      { key = '<leader>gP', mode = 'n', desc = 'Preview Hunk', condition = c.is_git_repository, handler = h.preview_hunk },
+      { key = '<leader>gb', mode = 'n', desc = 'Blame Line', condition = c.is_git_repository, handler = h.blame_line },
+      { key = '<leader>tb', mode = 'n', desc = 'Toggle Current Line Blame', condition = c.is_git_repository, handler = h.toggle_current_line_blame },
+      { key = '<leader>tw', mode = 'n', desc = 'Toggle Word Diff', condition = c.is_git_repository, handler = h.toggle_word_diff },
+      { key = 'ah', mode = { 'x', 'o' }, desc = 'Select Hunk', condition = c.is_git_repository, handler = h.select_hunk },
+      { key = 'ih', mode = { 'x', 'o' }, desc = 'Select Hunk', condition = c.is_git_repository, handler = h.select_hunk },
       -- stylua: ignore end
     })
   end,
