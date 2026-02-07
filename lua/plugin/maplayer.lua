@@ -207,6 +207,24 @@ return {
       { key = '<leader>gtw', mode = 'n', desc = 'Toggle Word Diff', condition = igrc, handler = h.toggle_word_diff },
       { key = '[x', desc = 'Previous Git Conflict', condition = hcc, handler = h.previous_conflict },
       { key = ']x', desc = 'Next Git Conflict', condition = hcc, handler = h.next_conflict },
+      -- Comment
+      { key = 'gc', desc = 'Comment', handler = h.comment },
+      { key = '<m-/>', desc = 'Comment Line', handler = h.comment_line, count = true },
+      { key = '<m-/>', mode = 'i', desc = 'Comment Line', handler = h.comment_line_insert },
+      { key = 'gc', mode = 'v', desc = 'Comment Selection', handler = h.comment_selection },
+      { key = '<m-/>', mode = 'v', desc = 'Comment Selection', handler = h.comment_selection },
+      { key = 'gb', desc = 'Comment Block Style', handler = h.comment_block_style },
+      { key = '<m-?>', desc = 'Comment Line Block Style', handler = h.comment_line_block_style, count = true },
+      { key = '<m-?>', mode = 'i', desc = 'Comment Line Block Style', handler = h.comment_line_block_style_insert },
+      { key = 'gb', mode = 'v', desc = 'Comment Selection Block Style', handler = h.comment_selection_block_style },
+      { key = '<m-?>', mode = 'v', desc = 'Comment Selection Block Style', handler = h.comment_selection_block_style },
+      { key = '<leader>O', mode = 'n', desc = 'Comment Above', handler = h.comment_above },
+      { key = '<leader>o', mode = 'n', desc = 'Comment Below', handler = h.comment_below },
+      { key = '<leader>A', mode = 'n', desc = 'Comment Eol', handler = h.comment_eol },
+      { key = '<leader>cO', mode = 'n', desc = 'Comment Above Block Style', handler = h.comment_above_block_style },
+      { key = '<leader>co', mode = 'n', desc = 'Comment Below Block Style', handler = h.comment_below_block_style },
+      { key = '<leader>cA', mode = 'n', desc = 'Comment Eol Block Style', handler = h.comment_eol_block_style },
+
       -- stylua: ignore end
     })
   end,
