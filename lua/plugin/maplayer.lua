@@ -193,12 +193,11 @@ return {
       { key = '<leader>gr', mode = 'n', desc = 'Reset Hunk', condition = igrc, handler = h.reset_hunk },
       { key = '<leader>gr', mode = 'v', desc = 'Reset Selection', condition = igrc, handler = h.reset_selection },
       { key = '<leader>gR', mode = 'n', desc = 'Reset Buffer', condition = igrc, handler = h.reset_buffer },
-      { key = '<leader>gp', mode = 'n', desc = 'Preview Hunk Inline', condition = igrc, handler = h.preview_hunk_inline },
-      { key = '<leader>gP', mode = 'n', desc = 'Preview Hunk', condition = igrc, handler = h.preview_hunk },
+      { key = '<leader>gd', mode = 'n', desc = 'Hunk Diff Inline', condition = igrc, handler = h.preview_hunk_inline },
+      { key = '<leader>gD', mode = 'n', desc = 'Hunk Diff', condition = igrc, handler = h.preview_hunk },
       { key = '<leader>gb', mode = 'n', desc = 'Blame Line', condition = igrc, handler = h.blame_line },
-      -- TODO: check if we should use <leader>tgb and <leader>tgw
-      { key = '<leader>tb', mode = 'n', desc = 'Toggle Current Line Blame', condition = igrc, handler = h.toggle_current_line_blame },
-      { key = '<leader>tw', mode = 'n', desc = 'Toggle Word Diff', condition = igrc, handler = h.toggle_word_diff },
+      { key = '<leader>gtb', mode = 'n', desc = 'Toggle Current Line Blame', condition = igrc, handler = h.toggle_current_line_blame },
+      { key = '<leader>gtw', mode = 'n', desc = 'Toggle Word Diff', condition = igrc, handler = h.toggle_word_diff },
       { key = '[x', desc = 'Previous Git Conflict', condition = hcc, handler = h.previous_conflict },
       { key = ']x', desc = 'Next Git Conflict', condition = hcc, handler = h.next_conflict },
       -- stylua: ignore end
