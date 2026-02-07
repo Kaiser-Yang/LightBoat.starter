@@ -83,9 +83,10 @@ return {
       { key = '[[', mode = { 'n', 'x', 'o' }, desc = 'Previous Section', condition = tac:add(hc), handler = h.previous_section },
       { key = ']]', mode = { 'n', 'x', 'o' }, desc = 'Next Block Start', condition = tac:add(nhc), handler = h.next_block_start },
       { key = ']]', mode = { 'n', 'x', 'o' }, desc = 'Next Section', condition = tac:add(hc), handler = h.next_section },
-      -- HACK: This motion only works in normal mode and visual mode
+      -- WARN: This motion only works in normal mode and visual mode
       { key = '[g', mode = { 'n', 'x' }, desc = 'Previous Git Hunk', condition = igrc, handler = h.previous_hunk },
       { key = ']g', mode = { 'n', 'x' }, desc = 'Next Git Hunk', condition = igrc, handler = h.next_hunk },
+      -- NOTE: Those hacks below is to make sure something like "yam" work when you input "m" very slowly
       { key = 'yi', desc = 'Separate Key', handler = h.separate_key_wrap('yi') },
       { key = 'ya', desc = 'Separate Key', handler = h.separate_key_wrap('ya') },
       { key = 'y[', desc = 'Separate Key', handler = h.separate_key_wrap('y[') },
