@@ -1,7 +1,14 @@
 return {
   'Kaiser-Yang/maplayer.nvim',
-  event = 'VeryLazy',
+  lazy = false,
+  priority = 1000,
   config = function()
+    -- NOTE:
+    -- When all key bindings has no overlapping,
+    -- you can set "timeoutlen" with zero
+    vim.o.timeoutlen = 0
+    vim.keymap.del('v', 'gc')
+    vim.keymap.del('n', 'gcc')
     local c = require('lightboat.condition')
     local h = require('lightboat.handler')
     local mc = c():filetype('markdown'):last_key(',')
