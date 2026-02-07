@@ -38,14 +38,14 @@ return {
 
       -- Motion
       -- NOTE: If you do not use repeatable move, just remove these two lines below
-      { key = ';', mode = { 'n', 'x' }, desc = 'Repeat Last Motion Forward', handler = h.semicolon },
-      { key = ',', mode = { 'n', 'x' }, desc = 'Repeat Last Motion Backward', handler = h.comma },
-      { key = 'f', mode = { 'n', 'x' }, desc = 'Find Next Character', handler = h.f },
-      { key = 'F', mode = { 'n', 'x' }, desc = 'Find Previous Character', handler = h.F },
-      { key = 't', mode = { 'n', 'x' }, desc = 'Till Next Character', handler = h.t },
-      { key = 'T', mode = { 'n', 'x' }, desc = 'Till Previous Character', handler = h.T },
-      { key = '[s', mode = { 'n', 'x', 'o' }, desc = 'Previous Misspelled Word', condition = sc, handler = h.previous_misspelled },
-      { key = ']s', mode = { 'n', 'x', 'o' }, desc = 'Next Misspelled Word', condition = sc, handler = h.next_misspelled },
+      { key = ';', mode = { 'n', 'x' }, desc = 'Repeat Last Motion Forward', handler = h.semicolon, count = true },
+      { key = ',', mode = { 'n', 'x' }, desc = 'Repeat Last Motion Backward', handler = h.comma, count = true },
+      { key = 'f', mode = { 'n', 'x' }, desc = 'Find Next Character', handler = h.f, count = true },
+      { key = 'F', mode = { 'n', 'x' }, desc = 'Find Previous Character', handler = h.F, count = true },
+      { key = 't', mode = { 'n', 'x' }, desc = 'Till Next Character', handler = h.t, count = true },
+      { key = 'T', mode = { 'n', 'x' }, desc = 'Till Previous Character', handler = h.T, count = true },
+      { key = '[s', mode = { 'n', 'x', 'o' }, desc = 'Previous Misspelled Word', condition = sc, handler = h.previous_misspelled, count = true },
+      { key = ']s', mode = { 'n', 'x', 'o' }, desc = 'Next Misspelled Word', condition = sc, handler = h.next_misspelled, count = true },
       -- NOTE: By deafault, "[a" and "]a" are mapped to ":prevvious" and ":next"
       { key = '[a', mode = { 'n', 'x', 'o' }, desc = 'Previous Argument Start', condition = tac, handler = h.previous_parameter_start },
       { key = ']a', mode = { 'n', 'x', 'o' }, desc = 'Next Argument Start', condition = tac, handler = h.next_parameter_start },
@@ -86,19 +86,9 @@ return {
       -- WARN: This motion only works in normal mode and visual mode
       { key = '[g', mode = { 'n', 'x' }, desc = 'Previous Git Hunk', condition = igrc, handler = h.previous_hunk },
       { key = ']g', mode = { 'n', 'x' }, desc = 'Next Git Hunk', condition = igrc, handler = h.next_hunk },
-      -- NOTE: Those hacks below is to make sure something like "yam" work when you input "m" very slowly
-      { key = 'yi', desc = 'Separate Key', handler = h.separate_key_wrap('yi') },
-      { key = 'ya', desc = 'Separate Key', handler = h.separate_key_wrap('ya') },
-      { key = 'y[', desc = 'Separate Key', handler = h.separate_key_wrap('y[') },
-      { key = 'y]', desc = 'Separate Key', handler = h.separate_key_wrap('y]') },
-      { key = 'di', desc = 'Separate Key', handler = h.separate_key_wrap('di') },
-      { key = 'da', desc = 'Separate Key', handler = h.separate_key_wrap('da') },
-      { key = 'd[', desc = 'Separate Key', handler = h.separate_key_wrap('d[') },
-      { key = 'd]', desc = 'Separate Key', handler = h.separate_key_wrap('d]') },
-      { key = 'ci', desc = 'Separate Key', handler = h.separate_key_wrap('ci') },
-      { key = 'ca', desc = 'Separate Key', handler = h.separate_key_wrap('ca') },
-      { key = 'c[', desc = 'Separate Key', handler = h.separate_key_wrap('c[') },
-      { key = 'c]', desc = 'Separate Key', handler = h.separate_key_wrap('c]') },
+      -- NOTE: By default, "[t" and "]t" are mapped to ":tabprevious" and ":tabnext"
+      { key = '[t', mode = { 'n', 'x', 'o' }, desc = 'Previous Todo', handler = h.previous_todo },
+      { key = ']t', mode = { 'n', 'x', 'o' }, desc = 'Next Todo', handler = h.next_todo },
 
       -- Text Object
       { key = 'aa', mode = { 'o', 'x' }, desc = 'Around Argument', condition = tac, handler = h.around_parameter },
@@ -181,26 +171,18 @@ return {
 
       -- Surround
       -- NOTE: By default "s" and "S" in visual mode is an alias of "c"
-      { key = 's', mode = 'x', desc = 'Surround', handler = h.surround_visual },
-      { key = 'S', mode = 'x', desc = 'Surround Line Mode', handler = h.surround_visual_line },
-      { key = 'cs', mode = 'n', desc = 'Change Surround', handler = h.surround_change },
-      { key = 'cS', mode = 'n', desc = 'Change Surround Line Mode', handler = h.surround_change_line },
-      { key = 'ds', mode = 'n', desc = 'Delete Surround', handler = h.surround_delete },
-      { key = 'ys', mode = 'n', desc = 'Add Surround', handler = h.surround_normal },
-      { key = 'yss', mode = 'n', desc = 'Add Surround Current', handler = h.surround_normal_cur },
-      { key = 'yS', mode = 'n', desc = 'Add Surround Line Mode', handler = h.surround_normal_line },
-      { key = 'ySS', mode = 'n', desc = 'Add Surround Current Line Mode', handler = h.surround_normal_cur_line },
+      { key = 's', mode = 'x', desc = 'Surround', handler = h.surround_visual, count = true },
+      { key = 'S', mode = 'x', desc = 'Surround Line Mode', handler = h.surround_visual_line, count = true },
+      { key = 'cs', mode = 'n', desc = 'Change Surround', handler = h.surround_change, count = true },
+      { key = 'cS', mode = 'n', desc = 'Change Surround Line Mode', handler = h.surround_change_line, count = true },
+      { key = 'ds', mode = 'n', desc = 'Delete Surround', handler = h.surround_delete, count = true },
+      { key = 'ys', mode = 'n', desc = 'Add Surround', handler = h.surround_normal, count = true },
+      { key = 'yss', mode = 'n', desc = 'Add Surround Current', handler = h.surround_normal_current, count = true },
+      { key = 'yS', mode = 'n', desc = 'Add Surround Line Mode', handler = h.surround_normal_line, count = true },
+      { key = 'ySS', mode = 'n', desc = 'Add Surround Current Line Mode', handler = h.surround_normal_current_line, count = true },
       -- NOTE: Because we have an auto pair plugin, those two below are rarely used
       { key = '<c-g>s', mode = 'i', desc = 'Surround', handler = h.surround_insert },
       { key = '<c-g>S', mode = 'i', desc = 'Surround Line Mode', handler = h.surround_insert_line },
-      -- NOTE:
-      -- Those two below is to make sure "ys", "yS", "yss", "ySS", "ySs" and "ysS" work when you type them slowly
-      -- You should note that "ySs" will become "yss" and "ysS" will become "ySS" when you type the third "s" or "S" with a long delay
-      -- Actually, without those two below, "ySs" and "ysS" will do nothing no matter how you type
-      -- If you bind surround with other keys like "yx", "cx", "dx", "yY" and "cY",
-      -- you should use h.hack_s_wrap('x') and h.hack_S_wrap('Y') instead
-      { key = 's', mode = 'o', desc = 'Hack', handler = h.hack_s_wrap('s') },
-      { key = 'S', mode = 'o', desc = 'Hack', handler = h.hack_S_wrap('S') },
 
       -- Git
       { key = '<leader>ga', mode = 'n', desc = 'Stage Hunk', condition = igrc, handler = h.stage_hunk },
