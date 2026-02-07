@@ -86,6 +86,18 @@ return {
       -- HACK: This motion only works in normal mode and visual mode
       { key = '[g', mode = { 'n', 'x' }, desc = 'Previous Git Hunk', condition = igrc, handler = h.previous_hunk },
       { key = ']g', mode = { 'n', 'x' }, desc = 'Next Git Hunk', condition = igrc, handler = h.next_hunk },
+      { key = 'yi', desc = 'Separate Key', handler = h.separate_key_wrap('yi') },
+      { key = 'ya', desc = 'Separate Key', handler = h.separate_key_wrap('ya') },
+      { key = 'y[', desc = 'Separate Key', handler = h.separate_key_wrap('y[') },
+      { key = 'y]', desc = 'Separate Key', handler = h.separate_key_wrap('y]') },
+      { key = 'di', desc = 'Separate Key', handler = h.separate_key_wrap('di') },
+      { key = 'da', desc = 'Separate Key', handler = h.separate_key_wrap('da') },
+      { key = 'd[', desc = 'Separate Key', handler = h.separate_key_wrap('d[') },
+      { key = 'd]', desc = 'Separate Key', handler = h.separate_key_wrap('d]') },
+      { key = 'ci', desc = 'Separate Key', handler = h.separate_key_wrap('ci') },
+      { key = 'ca', desc = 'Separate Key', handler = h.separate_key_wrap('ca') },
+      { key = 'c[', desc = 'Separate Key', handler = h.separate_key_wrap('c[') },
+      { key = 'c]', desc = 'Separate Key', handler = h.separate_key_wrap('c]') },
 
       -- Text Object
       { key = 'aa', mode = { 'o', 'x' }, desc = 'Around Argument', condition = tac, handler = h.around_parameter },
