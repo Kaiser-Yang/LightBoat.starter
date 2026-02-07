@@ -2,6 +2,77 @@
 
 The starter for [LightBoat](https://github.com/Kaiser-Yang/LightBoat).
 
+## Skills
+
+### Markdown Quick Insert
+
+`LightBoat` defined those quick insert aliases for markdown files (they behave like abbreviations):
+
+| Alias | Result |
+| ----- | ------ |
+| `,1` | `# ` |
+| `,2` | `## ` |
+| `,3` | `### ` |
+| `,4` | `#### ` |
+
+<!-- TODO: Finish the table and add some usage examples -->
+<!-- Usage: -->
+<!-- Input ",t" in insert mode of a markdown file, the content will be "`|`<++>" ("|" is the cursor position) -->
+<!-- and you can type the content of code and then press ",f" to jump to "<++>" and delete it -->
+<!-- Example: -->
+<!-- Input ",t": `|`<++> -->
+<!-- After typing "print('hello world')": `print('hello world')|`<++> -->
+<!-- After pressing ",f": `print('hello world')|` -->
+
+### Motion & Text Object
+
+Motion can make you move forward/backward to some specific positions in the buffer.
+All motions can be repeated by `;` and `,`.
+Motion can also be used in visual mode and operator-pending mode for quick selection,
+yanking, deleting or changing.
+
+Text object are used like `aw` (a word),
+`iw` (inner word), `as` (a sentence), `is` (inner sentence) and so on.
+With text objects,
+you can do some things like `das` (delete a sentence), `yis` (yank inner sentence) and so on.
+And it is worth noting that
+all text objects used in operator-pending mode will make the whole operation repeatable by `.`.
+
+`LightBoat` defined those key bindings for motion and text object:
+
+<!-- TODO: Finish the table -->
+
+### Swap
+
+With `nvim-treesitter-textobjects`, it is easy to swap some `treesitter` nodes.
+
+Those key bindings are defined for swapping:
+
+<!-- TODO: Finish the table-->
+
+### Surround
+
+`nvim-surround` defined those aliases for the surround objects:
+
+```lua
+opts.aliases = {
+  ["a"] = ">",
+  ["b"] = ")",
+  ["B"] = "}",
+  ["r"] = "]",
+  ["q"] = { '"', "'", "`" },
+  ["s"] = { "}", "]", ")", ">", '"', "'", "`" },
+},
+```
+
+With the default key bindings of `LightBoat`, you can do some things like:
+
+<!-- TODO: Add examples -->
+
+### Git Master
+
+<!-- TODO: -->
+
 ## Requirements
 
 - `rg`
