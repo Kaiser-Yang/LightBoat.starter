@@ -30,6 +30,8 @@ return {
     local sac = c():snippet_active()
     local dvc = c():documentation_visible()
     local svc = c():signature_visible()
+    local tac_nhc = tac:add(nhc)
+    local tac_hc = tac:add(hc)
     require('maplayer').setup({
       -- stylua: ignore start
       -- Disable Some Keys
@@ -56,7 +58,6 @@ return {
       { key = 'f', mode = 'i', desc = 'Markdown Goto Placeholder', condition = mc, handler = h.markdown_goto_placeholder },
 
       -- Motion
-      -- NOTE: If you do not use repeatable move, just remove these two lines below
       { key = ';', mode = { 'n', 'x' }, desc = 'Repeat Last Motion Forward', handler = h.semicolon, count = true },
       { key = ',', mode = { 'n', 'x' }, desc = 'Repeat Last Motion Backward', handler = h.comma, count = true },
       { key = 'f', mode = { 'n', 'x' }, desc = 'Find Next Character', handler = h.f, count = true },
@@ -98,10 +99,10 @@ return {
       { key = ']M', mode = { 'n', 'x', 'o' }, desc = 'Next Method End', condition = tac, handler = h.next_function_end },
       { key = '[]', mode = { 'n', 'x', 'o' }, desc = 'Previous Block End', condition = tac, handler = h.previous_block_end },
       { key = '][', mode = { 'n', 'x', 'o' }, desc = 'Next Block End', condition = tac, handler = h.next_block_end },
-      { key = '[[', mode = { 'n', 'x', 'o' }, desc = 'Previous Block Start', condition = tac:add(nhc), handler = h.previous_block_start },
-      { key = '[[', mode = { 'n', 'x', 'o' }, desc = 'Previous Section', condition = tac:add(hc), handler = h.previous_section },
-      { key = ']]', mode = { 'n', 'x', 'o' }, desc = 'Next Block Start', condition = tac:add(nhc), handler = h.next_block_start },
-      { key = ']]', mode = { 'n', 'x', 'o' }, desc = 'Next Section', condition = tac:add(hc), handler = h.next_section },
+      { key = '[[', mode = { 'n', 'x', 'o' }, desc = 'Previous Block Start', condition = tac_nhc, handler = h.previous_block_start },
+      { key = '[[', mode = { 'n', 'x', 'o' }, desc = 'Previous Section', condition = tac_hc, handler = h.previous_section },
+      { key = ']]', mode = { 'n', 'x', 'o' }, desc = 'Next Block Start', condition = tac_nhc, handler = h.next_block_start },
+      { key = ']]', mode = { 'n', 'x', 'o' }, desc = 'Next Section', condition = tac_hc, handler = h.next_section },
       -- WARN: This motion only works in normal mode and visual mode
       { key = '[g', mode = { 'n', 'x' }, desc = 'Previous Git Hunk', condition = igrc, handler = h.previous_hunk },
       { key = ']g', mode = { 'n', 'x' }, desc = 'Next Git Hunk', condition = igrc, handler = h.next_hunk },
