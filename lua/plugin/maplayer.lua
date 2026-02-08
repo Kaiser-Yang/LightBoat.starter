@@ -5,7 +5,14 @@ return {
     -- NOTE:
     -- When all key bindings has no overlapping,
     -- you can set "timeoutlen" with zero
+    -- The default satisfy the requirement.
+    -- When you update key bindings, be careful to check if there is any overlapping,
+    -- if there is, you should set "timeoutlen" with a proper value such as 300 or 500
     vim.o.timeoutlen = 0
+    -- NOTE:
+    -- Delete the default "gc" and "gcc" mappings provided by vim.lsp
+    -- We use "Comment.nvim" which supports much better comment experience
+    -- such as block style comment and context aware comment string
     vim.keymap.del('v', 'gc')
     vim.keymap.del('n', 'gcc')
     local c = require('lightboat.condition')
@@ -25,6 +32,12 @@ return {
     local svc = c():signature_visible()
     require('maplayer').setup({
       -- stylua: ignore start
+      -- Disable Some Keys
+      -- "<C-P>" and "<C-N>" are used to trigger builtin completion menu for words
+      -- We use "blink.cmp", so we do not need this
+      { key = '<c-p>', mode = 'i', desc = 'Nop', handler = h.nop },
+      { key = '<c-n>', mode = 'i', desc = 'Nop', handler = h.nop },
+
       -- Markdown Quick Insert
       { key = '1', mode = 'i', desc = 'Insert Markdown Title 1', condition = mc, handler = h.markdown_title(1) },
       { key = '2', mode = 'i', desc = 'Insert Markdown Title 2', condition = mc, handler = h.markdown_title(2) },
