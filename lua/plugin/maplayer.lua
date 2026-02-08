@@ -1,5 +1,7 @@
 return {
   'Kaiser-Yang/maplayer.nvim',
+  -- NOTE: We lazy load which-key, make sure this is loaded before which-key
+  priority = 1000,
   event = 'VeryLazy',
   config = function()
     -- NOTE:
@@ -36,6 +38,8 @@ return {
     local cmnvc_cnec = cmnvc:add(cnec)
     local lac = c():lsp_attached()
     local cnfnbc = c():cursor_not_first_non_blank()
+    local dec = c():add(function() return vim.fn.executable('delta') == 1 end)
+    local hcc_dec = hcc:add(dec)
     require('maplayer').setup({
       -- stylua: ignore start
       -- Disable Some Keys
@@ -227,8 +231,21 @@ return {
       { key = '<leader>gb', desc = 'Blame Line', condition = igrc, handler = h.blame_line },
       { key = '<leader>tb', desc = 'Toggle Blame', condition = igrc, handler = h.toggle_current_line_blame },
       { key = '<leader>tw', desc = 'Toggle Word Diff', condition = igrc, handler = h.toggle_word_diff },
-      { key = '[x', desc = 'Previous Git Conflict', condition = hcc, handler = h.previous_conflict },
-      { key = ']x', desc = 'Next Git Conflict', condition = hcc, handler = h.next_conflict },
+      { key = '[x', desc = 'Previous Git Conflict', condition = hcc, handler = h.previous_conflict, count = true },
+      { key = ']x', desc = 'Next Git Conflict', condition = hcc, handler = h.next_conflict, count = true },
+      { key = '<leader>xc', desc = 'Choose Current Conflict', condition = hcc, handler = h.choose_current_conflict },
+      { key = '<leader>xi', desc = 'Choose Incoming Conflict', condition = hcc, handler = h.choose_incoming_conflict },
+      { key = '<leader>xb', desc = 'Choose Both Conflict', condition = hcc, handler = h.choose_both_conflict },
+      { key = '<leader>xB', desc = 'Choose Both Reverse Conflict', condition = hcc, handler = h.choose_both_reverse_conflict },
+      { key = '<leader>xn', desc = 'Choose None Conflict', condition = hcc, handler = h.choose_none_conflict },
+      { key = '<leader>xa', desc = 'Choose Ancestor Conflict', condition = hcc, handler = h.choose_ancestor_conflict },
+      { key = '<leader>xl', desc = 'List Conflict in Quickfix', condition = hcc, handler = h.list_conflict },
+      { key = '<leader>xdi', desc = 'Diff Incoming Conflict', condition = hcc_dec, handler = h.diff_incoming_conflict },
+      { key = '<leader>xdc', desc = 'Diff Current Conflict', condition = hcc_dec, handler = h.diff_current_conflict },
+      { key = '<leader>xdb', desc = 'Diff Both Conflict', condition = hcc_dec, handler = h.diff_both_conflict },
+      { key = '<leader>xdv', desc = 'Diff Current V.S. Incoming Conflict', condition = hcc_dec, handler = h.diff_current_incoming_conflict },
+      { key = '<leader>xdV', desc = 'Diff Incoming V.S. Current Conflict', condition = hcc_dec, handler = h.diff_incoming_current_conflict },
+
       -- Comment
       { key = 'gc', desc = 'Comment', handler = h.comment },
       { key = '<m-/>', desc = 'Comment Line', handler = h.comment_line, count = true },
