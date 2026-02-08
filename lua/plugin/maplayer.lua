@@ -195,20 +195,9 @@ return {
       { key = 'S', mode = 'x', desc = 'Surround Line Mode', handler = h.surround_visual_line, count = true },
       -- NOTE:
       -- We use this tricky way to make "ys", "cs", "ds", "yS", "cS", "dS", "yss", "ysS", "ySs" and "ySS" work
-      -- when "vim.o.timeoutlen" is set to zero. If you do not want to use those keys above to update surroundings
-      -- you should comment those two lines, then update the six commented lines to configure your own key bindings
-      -- May be you want use something like "yp" or "yP" to add pairs
-      -- it's OK to just update the "key = 's'" with "key = 'p'"
-      -- and "handler = h.hack_s_wrap('s')" with "handler = h.hack_s_wrap('p')"
-      { key = 's', mode = 'o', desc = 'Surround Operation', handler = h.hack_s_wrap('s') },
-      { key = 'S', mode = 'o', desc = 'Surround Operation Line Mode', handler = h.hack_S_wrap('S') },
-      -- { key = 'cs', mode = 'n', desc = 'Change Surround', handler = h.surround_change, count = true },
-      -- { key = 'cS', mode = 'n', desc = 'Change Surround Line Mode', handler = h.surround_change_line, count = true },
-      -- { key = 'ds', mode = 'n', desc = 'Delete Surround', handler = h.surround_delete, count = true },
-      -- { key = 'ys', mode = 'n', desc = 'Add Surround', handler = h.surround_normal, count = true },
-      -- { key = 'yss', mode = 'n', desc = 'Add Surround Current', handler = h.surround_normal_current, count = true },
-      -- { key = 'yS', mode = 'n', desc = 'Add Surround Line Mode', handler = h.surround_normal_line, count = true },
-      -- { key = 'ySS', mode = 'n', desc = 'Add Surround Current Line Mode', handler = h.surround_normal_current_line, count = true },
+      -- We do not recommend to update those mappings
+      { key = 's', mode = 'o', desc = 'Surround Operation', handler = h.hack_wrap() },
+      { key = 'S', mode = 'o', desc = 'Surround Operation Line Mode', handler = h.hack_wrap('_line') },
       -- NOTE: Because we have an auto pair plugin, those two below are rarely used
       { key = '<c-g>s', mode = 'i', desc = 'Surround', handler = h.surround_insert },
       { key = '<c-g>S', mode = 'i', desc = 'Surround Line Mode', handler = h.surround_insert_line },
