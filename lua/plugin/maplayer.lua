@@ -132,20 +132,20 @@ return {
       { key = 'ie', mode = { 'o', 'x' }, desc = 'Select Edit', handler = h.select_file },
 
       -- Swap
-      { key = '<m-s>pa', mode = 'n', desc = 'Swap With Previous Argument', condition = tac, handler = h.swap_with_previous_parameter },
-      { key = '<m-s>na', mode = 'n', desc = 'Swap With Next Argument', condition = tac, handler = h.swap_with_next_parameter },
-      { key = '<m-s>pb', mode = 'n', desc = 'Swap With Previous Block', condition = tac, handler = h.swap_with_previous_block },
-      { key = '<m-s>nb', mode = 'n', desc = 'Swap With Next Block', condition = tac, handler = h.swap_with_next_block },
-      { key = '<m-s>pc', mode = 'n', desc = 'Swap With Previous Class', condition = tac, handler = h.swap_with_previous_class },
-      { key = '<m-s>nc', mode = 'n', desc = 'Swap With Next Class', condition = tac, handler = h.swap_with_next_class },
-      { key = '<m-s>pi', mode = 'n', desc = 'Swap With Previous If', condition = tac, handler = h.swap_with_previous_conditional },
-      { key = '<m-s>ni', mode = 'n', desc = 'Swap With Next If', condition = tac, handler = h.swap_with_next_conditional },
-      { key = '<m-s>pf', mode = 'n', desc = 'Swap With Previous For', condition = tac, handler = h.swap_with_previous_loop },
-      { key = '<m-s>nf', mode = 'n', desc = 'Swap With Next For', condition = tac, handler = h.swap_with_next_loop },
-      { key = '<m-s>pm', mode = 'n', desc = 'Swap With Previous Method', condition = tac, handler = h.swap_with_previous_function },
-      { key = '<m-s>nm', mode = 'n', desc = 'Swap With Next Method', condition = tac, handler = h.swap_with_next_function },
-      { key = '<m-s>pr', mode = 'n', desc = 'Swap With Previous Return', condition = tac, handler = h.swap_with_previous_return },
-      { key = '<m-s>nr', mode = 'n', desc = 'Swap With Next Return', condition = tac, handler = h.swap_with_next_return },
+      { key = '<m-s>pa', desc = 'Swap With Previous Argument', condition = tac, handler = h.swap_with_previous_parameter },
+      { key = '<m-s>na', desc = 'Swap With Next Argument', condition = tac, handler = h.swap_with_next_parameter },
+      { key = '<m-s>pb', desc = 'Swap With Previous Block', condition = tac, handler = h.swap_with_previous_block },
+      { key = '<m-s>nb', desc = 'Swap With Next Block', condition = tac, handler = h.swap_with_next_block },
+      { key = '<m-s>pc', desc = 'Swap With Previous Class', condition = tac, handler = h.swap_with_previous_class },
+      { key = '<m-s>nc', desc = 'Swap With Next Class', condition = tac, handler = h.swap_with_next_class },
+      { key = '<m-s>pi', desc = 'Swap With Previous If', condition = tac, handler = h.swap_with_previous_conditional },
+      { key = '<m-s>ni', desc = 'Swap With Next If', condition = tac, handler = h.swap_with_next_conditional },
+      { key = '<m-s>pf', desc = 'Swap With Previous For', condition = tac, handler = h.swap_with_previous_loop },
+      { key = '<m-s>nf', desc = 'Swap With Next For', condition = tac, handler = h.swap_with_next_loop },
+      { key = '<m-s>pm', desc = 'Swap With Previous Method', condition = tac, handler = h.swap_with_previous_function },
+      { key = '<m-s>nm', desc = 'Swap With Next Method', condition = tac, handler = h.swap_with_next_function },
+      { key = '<m-s>pr', desc = 'Swap With Previous Return', condition = tac, handler = h.swap_with_previous_return },
+      { key = '<m-s>nr', desc = 'Swap With Next Return', condition = tac, handler = h.swap_with_next_return },
 
       -- Completion
       -- NOTE: By default, "<c-j>" is same with "<cr>"
@@ -171,7 +171,7 @@ return {
       { key = '<c-s>', mode = 'i', desc = 'Hide Signature Help', condition = svc, handler = h.hide_signature },
 
       -- Format
-      { key = '<leader>f', mode = 'n', desc = 'Async Format', handler = h.async_format },
+      { key = '<leader>f', desc = 'Async Format', handler = h.async_format },
       { key = '<leader>f', mode = 'v', desc = 'Format Selection', handler = h.async_format_selection },
 
       -- Autopair
@@ -203,19 +203,19 @@ return {
       { key = '<c-g>S', mode = 'i', desc = 'Surround Line Mode', handler = h.surround_insert_line },
 
       -- Git
-      { key = '<leader>ga', mode = 'n', desc = 'Stage Hunk', condition = igrc, handler = h.stage_hunk },
+      { key = '<leader>ga', desc = 'Stage Hunk', condition = igrc, handler = h.stage_hunk },
       { key = '<leader>ga', mode = 'v', desc = 'Stage Selection', condition = igrc, handler = h.stage_selection },
-      { key = '<leader>gA', mode = 'n', desc = 'Stage Buffer', condition = igrc, handler = h.stage_buffer },
-      { key = '<leader>gu', mode = 'n', desc = 'Undo Stage Hunk', condition = igrc, handler = h.undo_stage_hunk },
-      { key = '<leader>gU', mode = 'n', desc = 'Unstage Buffer', condition = igrc, handler = h.unstage_buffer },
-      { key = '<leader>gr', mode = 'n', desc = 'Reset Hunk', condition = igrc, handler = h.reset_hunk },
+      { key = '<leader>gA', desc = 'Stage Buffer', condition = igrc, handler = h.stage_buffer },
+      { key = '<leader>gu', desc = 'Undo Stage Hunk', condition = igrc, handler = h.undo_stage_hunk },
+      { key = '<leader>gU', desc = 'Unstage Buffer', condition = igrc, handler = h.unstage_buffer },
+      { key = '<leader>gr', desc = 'Reset Hunk', condition = igrc, handler = h.reset_hunk },
       { key = '<leader>gr', mode = 'v', desc = 'Reset Selection', condition = igrc, handler = h.reset_selection },
-      { key = '<leader>gR', mode = 'n', desc = 'Reset Buffer', condition = igrc, handler = h.reset_buffer },
-      { key = '<leader>gd', mode = 'n', desc = 'Hunk Diff Inline', condition = igrc, handler = h.preview_hunk_inline },
-      { key = '<leader>gD', mode = 'n', desc = 'Hunk Diff', condition = igrc, handler = h.preview_hunk },
-      { key = '<leader>gb', mode = 'n', desc = 'Blame Line', condition = igrc, handler = h.blame_line },
-      { key = '<leader>gtb', mode = 'n', desc = 'Toggle Current Line Blame', condition = igrc, handler = h.toggle_current_line_blame },
-      { key = '<leader>gtw', mode = 'n', desc = 'Toggle Word Diff', condition = igrc, handler = h.toggle_word_diff },
+      { key = '<leader>gR', desc = 'Reset Buffer', condition = igrc, handler = h.reset_buffer },
+      { key = '<leader>gd', desc = 'Hunk Diff Inline', condition = igrc, handler = h.preview_hunk_inline },
+      { key = '<leader>gD', desc = 'Hunk Diff', condition = igrc, handler = h.preview_hunk },
+      { key = '<leader>gb', desc = 'Blame Line', condition = igrc, handler = h.blame_line },
+      { key = '<leader>gtb', desc = 'Toggle Current Line Blame', condition = igrc, handler = h.toggle_current_line_blame },
+      { key = '<leader>gtw', desc = 'Toggle Word Diff', condition = igrc, handler = h.toggle_word_diff },
       { key = '[x', desc = 'Previous Git Conflict', condition = hcc, handler = h.previous_conflict },
       { key = ']x', desc = 'Next Git Conflict', condition = hcc, handler = h.next_conflict },
       -- Comment
@@ -229,12 +229,12 @@ return {
       { key = '<m-?>', mode = 'i', desc = 'Comment Line Block Style', handler = h.comment_line_block_style_insert },
       { key = 'gb', mode = 'v', desc = 'Comment Selection Block Style', handler = h.comment_selection_block_style },
       { key = '<m-?>', mode = 'v', desc = 'Comment Selection Block Style', handler = h.comment_selection_block_style },
-      { key = '<leader>O', mode = 'n', desc = 'Comment Above', handler = h.comment_above },
-      { key = '<leader>o', mode = 'n', desc = 'Comment Below', handler = h.comment_below },
-      { key = '<leader>A', mode = 'n', desc = 'Comment Eol', handler = h.comment_eol },
-      { key = '<leader>cO', mode = 'n', desc = 'Comment Above Block Style', handler = h.comment_above_block_style },
-      { key = '<leader>co', mode = 'n', desc = 'Comment Below Block Style', handler = h.comment_below_block_style },
-      { key = '<leader>cA', mode = 'n', desc = 'Comment Eol Block Style', handler = h.comment_eol_block_style },
+      { key = '<leader>O', desc = 'Comment Above', handler = h.comment_above },
+      { key = '<leader>o', desc = 'Comment Below', handler = h.comment_below },
+      { key = '<leader>A', desc = 'Comment Eol', handler = h.comment_eol },
+      { key = '<leader>cO', desc = 'Comment Above Block Style', handler = h.comment_above_block_style },
+      { key = '<leader>co', desc = 'Comment Below Block Style', handler = h.comment_below_block_style },
+      { key = '<leader>cA', desc = 'Comment Eol Block Style', handler = h.comment_eol_block_style },
 
       -- stylua: ignore end
     })
