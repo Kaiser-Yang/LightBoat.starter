@@ -30,8 +30,12 @@ return {
     local sac = c():snippet_active()
     local dvc = c():documentation_visible()
     local svc = c():signature_visible()
+    local cnec = c():cursor_not_eol()
     local tac_nhc = tac:add(nhc)
     local tac_hc = tac:add(hc)
+    local cmnvc_cnec = cmnvc:add(cnec)
+    local lac = c():lsp_attached()
+    local cnfnbc = c():cursor_not_first_non_blank()
     require('maplayer').setup({
       -- stylua: ignore start
       -- Disable Some Keys
@@ -150,9 +154,12 @@ return {
       -- Completion
       -- NOTE: By default, "<c-j>" is same with "<cr>"
       { key = '<c-j>', mode = { 'i', 'c' }, desc = 'Select Next Completion Item', condition = cmvc, handler = h.next_completion_item },
-      -- NOTE: By default, "<c-k>" is used to insert digraph, see ":help i_CTRL-K" and ":help c_CTRL-K"
+      -- NOTE:
+      -- By default, "<c-k>" is used to insert digraph, see ":help i_CTRL-K" and ":help c_CTRL-K"
+      -- This hack will make it work as default when completion menu is invisible and cursor is at EOL
       { key = '<c-k>', mode = { 'i', 'c' }, desc = 'Select Previous Completion Item', condition = cmvc, handler = h.previous_completion_item },
-      { key = '<c-k>', mode = { 'i', 'c' }, desc = 'Delete Content After Cursor', condition = cmnvc, handler = h.delete_content_after_cursor },
+      { key = '<c-k>', mode = 'i', desc = 'Delete to EOL', condition = cmnvc_cnec, handler = h.delete_to_eol_insert },
+      { key = '<c-k>', mode = 'c', desc = 'Delete to EOL', condition = cmnvc_cnec, handler = h.delete_to_eol_command },
       { key = '<tab>', mode = 'i', desc = 'Snippet Forward', condition = sac, handler = h.snippet_forward },
       { key = '<s-tab>', mode = 'i', desc = 'Snippet Backward', condition = sac, handler = h.snippet_backward },
       -- NOTE: Those four below behaviour like the default ones
@@ -160,6 +167,10 @@ return {
       { key = '<c-x><c-o>', mode = { 'i', 'c' }, desc = 'Hide Completion', condition = cmvc,  handler = h.hide_completion },
       { key = '<c-y>', mode = { 'i', 'c' }, desc = 'Accept Completion Item', condition = cisc, handler = h.accept_completion_item },
       { key = '<c-e>', mode = { 'i', 'c' }, desc = 'Cancel Completion', condition = cmvc, handler = h.cancel_completion },
+      -- NOTE:
+      -- By default, "<c-y>" and "<c-e>" are used to insert content above or below the cursor
+      -- This hack will make it still work as default when the cusor is already at the end of the line in insert mode
+      { key = '<c-e>', mode = 'i', desc = 'Cursor to EOL', condition = cmnvc_cnec, handler = h.cursor_to_eol_insert },
       -- NOTE: By default, "<c-u>" are used to delete content before
       { key = '<c-u>', mode = 'i', desc = 'Scroll Documentation Up', condition = dvc, handler = h.scroll_documentation_up, priority = 2 },
       { key = '<c-u>', mode = 'i', desc = 'Scroll Signature Up', condition = svc, handler = h.scroll_signature_up, priority = 1 },
@@ -214,8 +225,8 @@ return {
       { key = '<leader>gd', desc = 'Hunk Diff Inline', condition = igrc, handler = h.preview_hunk_inline },
       { key = '<leader>gD', desc = 'Hunk Diff', condition = igrc, handler = h.preview_hunk },
       { key = '<leader>gb', desc = 'Blame Line', condition = igrc, handler = h.blame_line },
-      { key = '<leader>gtb', desc = 'Toggle Current Line Blame', condition = igrc, handler = h.toggle_current_line_blame },
-      { key = '<leader>gtw', desc = 'Toggle Word Diff', condition = igrc, handler = h.toggle_word_diff },
+      { key = '<leader>tb', desc = 'Toggle Blame', condition = igrc, handler = h.toggle_current_line_blame },
+      { key = '<leader>tw', desc = 'Toggle Word Diff', condition = igrc, handler = h.toggle_word_diff },
       { key = '[x', desc = 'Previous Git Conflict', condition = hcc, handler = h.previous_conflict },
       { key = ']x', desc = 'Next Git Conflict', condition = hcc, handler = h.next_conflict },
       -- Comment
@@ -232,10 +243,40 @@ return {
       { key = '<leader>O', desc = 'Comment Above', handler = h.comment_above },
       { key = '<leader>o', desc = 'Comment Below', handler = h.comment_below },
       { key = '<leader>A', desc = 'Comment Eol', handler = h.comment_eol },
-      { key = '<leader>cO', desc = 'Comment Above Block Style', handler = h.comment_above_block_style },
-      { key = '<leader>co', desc = 'Comment Below Block Style', handler = h.comment_below_block_style },
-      { key = '<leader>cA', desc = 'Comment Eol Block Style', handler = h.comment_eol_block_style },
+      { key = '<leader>bO', desc = 'Comment Above Block Style', handler = h.comment_above_block_style },
+      { key = '<leader>bo', desc = 'Comment Below Block Style', handler = h.comment_below_block_style },
+      { key = '<leader>bA', desc = 'Comment Eol Block Style', handler = h.comment_eol_block_style },
 
+      -- Togglers
+      { key = '<leader>tt', desc = 'Toggle Treesitter Highlight', condition = tac, handler = h.toggle_treesitter_highlight },
+      { key = '<leader>ti', desc = 'Toggle Inlay Hint', condition = lac, handler = h.toggle_inlay_hint },
+      { key = '<leader>ts', desc = 'Toggle Spell', handler = h.toggle_spell },
+      { key = '<leader>te', desc = 'Toggle Expandtab', handler = h.toggle_expandtab },
+
+      -- Inherit from Shell
+      -- NOTE:
+      -- By default "<C-A>" is used to insert previously inserted text
+      { key = '<c-a>', mode = 'i', 'Cursor to First Non-blank', condition = cnfnbc, handler = h.cursor_to_first_non_blank_insert },
+      -- NOTE:
+      -- By default "<C-A>" is used to insert all commands
+      -- whose names match the pattern before cursor of command mode
+      { key = '<c-a>', mode = 'c', 'Cursor to BOL', condition = cnfnbc, handler = h.cursor_to_bol_command },
+      { key = '<m-d>', mode = 'i', 'Delete to EOW', condition = cnec, handler = h.delete_to_eow_insert },
+
+      -- Window
+      { key = '<leader>k', desc = 'Split Above', handler = h.split_above },
+      { key = '<leader>j', desc = 'Split Below', handler = h.split_below },
+      { key = '<leader>h', desc = 'Split Left', handler = h.split_left },
+      { key = '<leader>l', desc = 'Split Right', handler = h.split_right },
+      { key = '<leader>T', desc = 'Split Tab (Full Screen)', handler = h.split_tab },
+      { key = '<c-k>', desc = 'Cursor to Above Window', handler = h.cursor_to_above_window },
+      { key = '<c-j>', desc = 'Cursor to Below Window', handler = h.cursor_to_below_window },
+      { key = '<c-h>', desc = 'Cursor to Left Window', handler = h.cursor_to_left_window },
+      { key = '<c-l>', desc = 'Cursor to Right Window', handler = h.cursor_to_right_window },
+
+      -- System Clipboard
+      -- NOTE: This one is similar with "d" you and use "<m-x>d" to delete one line in normal mode
+      { key = '<m-x>', mode = { 'n', 'x' }, desc = 'System Cut', handler = h.system_cut, count = true },
       -- stylua: ignore end
     })
   end,
