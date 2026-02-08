@@ -1,7 +1,6 @@
 return {
   'Kaiser-Yang/maplayer.nvim',
-  lazy = false,
-  priority = 1000,
+  event = 'VeryLazy',
   config = function()
     -- NOTE:
     -- When all key bindings has no overlapping,
