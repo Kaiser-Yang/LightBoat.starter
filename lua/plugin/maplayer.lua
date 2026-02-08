@@ -51,11 +51,11 @@ return {
       { key = 'x', mode = 'i', desc = 'Insert Markdown Todo', condition = mc, handler = h.markdown_todo },
       { key = 'a', mode = 'i', desc = 'Insert Markdown Link', condition = mc, handler = h.markdown_link },
       { key = 'b', mode = 'i', desc = 'Insert Markdown Bold Text', condition = mc, handler = h.markdown_bold },
-      { key = 'd', mode = 'i', desc = 'Delete Current Line', condition = mc, handler = h.markdown_delete_line },
+      { key = 'd', mode = 'i', desc = 'Insert Markdown Delete Line', condition = mc, handler = h.markdown_delete_line },
       { key = 'i', mode = 'i', desc = 'Insert Markdown Italic Text', condition = mc, handler = h.markdown_italic },
       { key = 'M', mode = 'i', desc = 'Insert Markdown Math Block', condition = mc, handler = h.markdown_math_block },
       { key = 'c', mode = 'i', desc = 'Insert Markdown Code Block', condition = mc, handler = h.markdown_code_block },
-      { key = 'f', mode = 'i', desc = 'Markdown Goto Placeholder', condition = mc, handler = h.markdown_goto_placeholder },
+      { key = 'f', mode = 'i', desc = 'Goto&Delete Markdown Placeholder', condition = mc, handler = h.markdown_goto_placeholder },
 
       -- Motion
       { key = ';', mode = { 'n', 'x' }, desc = 'Repeat Last Motion Forward', handler = h.semicolon, count = true },
