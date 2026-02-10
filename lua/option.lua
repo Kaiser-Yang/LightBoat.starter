@@ -1,4 +1,6 @@
 vim.g.highlight_on_yank = true
+vim.g.highlight_on_yank_limit = 1000
+vim.g.highlight_on_yank_duration = 300
 vim.g.conform_on_save = true
 vim.g.conform_on_save_reguess_indent = true
 vim.g.conform_formatexpr_auto_set = true
@@ -38,11 +40,7 @@ vim.o.syntax = 'on'
 --- @class LightBoat.Opt
 vim.g.lightboat_opt = {
   --- @type string[]
-  mason_ensure_installed = {},
-  --- @type string[]
   treesitter_ensure_installed = {},
-  --- @type string[]
-  lsp_enabled = {},
 }
 
 -- vim.g.loaded_matchit = 1

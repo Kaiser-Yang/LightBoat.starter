@@ -49,6 +49,14 @@ return {
           or vim.v.operator == 'g@' and vim.o.operatorfunc:find('nvim%-surround')
       end
     )
+    local iltllc = c():add(function()
+      local lnum, col = unpack(vim.api.nvim_win_get_cursor(0))
+      local content_before_cursor = vim.api.nvim_get_current_line():sub(1, col)
+      if not content_before_cursor:match('^%s*$') or lnum == 1 then return '<tab>' end
+      local last_line_indent = vim.fn.indent(vim.fn.line('.') - 1)
+      local current_line_indent = vim.fn.indent(vim.fn.line('.'))
+      return last_line_indent > current_line_indent
+    end)
     require('maplayer').setup({
       -- stylua: ignore start
       -- Disable Some Keys
@@ -120,9 +128,6 @@ return {
       { key = '[[', mode = { 'n', 'x', 'o' }, desc = 'Previous Section', condition = tac_hc, handler = h.previous_section },
       { key = ']]', mode = { 'n', 'x', 'o' }, desc = 'Next Block Start', condition = tac_nhc, handler = h.next_block_start },
       { key = ']]', mode = { 'n', 'x', 'o' }, desc = 'Next Section', condition = tac_hc, handler = h.next_section },
-      -- WARN: This motion only works in normal mode and visual mode
-      { key = '[g', mode = { 'n', 'x' }, desc = 'Previous Git Hunk', condition = igrc, handler = h.previous_hunk },
-      { key = ']g', mode = { 'n', 'x' }, desc = 'Next Git Hunk', condition = igrc, handler = h.next_hunk },
       -- NOTE: By default, "[t" and "]t" are mapped to ":tabprevious" and ":tabnext"
       { key = '[t', mode = { 'n', 'x', 'o' }, desc = 'Previous Todo', handler = h.previous_todo },
       { key = ']t', mode = { 'n', 'x', 'o' }, desc = 'Next Todo', handler = h.next_todo },
@@ -143,8 +148,6 @@ return {
       { key = 'ir', mode = { 'o', 'x' }, desc = 'Inside Return', condition = tac, handler = h.inside_return },
       { key = 'ac', mode = { 'o', 'x' }, desc = 'Around Class', condition = tac, handler = h.around_class },
       { key = 'ic', mode = { 'o', 'x' }, desc = 'Inside Class', condition = tac, handler = h.inside_class },
-      { key = 'ah', mode = { 'x', 'o' }, desc = 'Select Hunk', condition = igrc, handler = h.select_hunk },
-      { key = 'ih', mode = { 'x', 'o' }, desc = 'Select Hunk', condition = igrc, handler = h.select_hunk },
       { key = 'ae', mode = { 'o', 'x' }, desc = 'Select Edit', handler = h.select_file },
       { key = 'ie', mode = { 'o', 'x' }, desc = 'Select Edit', handler = h.select_file },
 
@@ -167,21 +170,13 @@ return {
       -- Completion
       { key = '<c-n>', mode = { 'i', 'c' }, desc = 'Select Next Completion Item', condition = cmvc, handler = h.next_completion_item },
       { key = '<c-p>', mode = { 'i', 'c' }, desc = 'Select Previous Completion Item', condition = cmvc, handler = h.previous_completion_item },
-      -- NOTE:
-      -- By default, "<c-k>" is used to insert digraph, see ":help i_CTRL-K" and ":help c_CTRL-K"
-      { key = '<c-k>', mode = 'i', desc = 'Delete to EOL', condition = cnec, handler = h.delete_to_eol_insert },
-      { key = '<c-k>', mode = 'c', desc = 'Delete to EOL', condition = cnec, handler = h.delete_to_eol_command },
       { key = '<tab>', mode = 'i', desc = 'Snippet Forward', condition = sac, handler = h.snippet_forward },
+      { key = '<tab>', mode = 'i', desc = 'Auto Indent', condition = iltllc, handler = h.auto_indent },
       { key = '<s-tab>', mode = 'i', desc = 'Snippet Backward', condition = sac, handler = h.snippet_backward },
-      -- NOTE: Those four below behaviour like the default ones
       { key = '<c-x><c-o>', mode = { 'i', 'c' }, desc = 'Show Completion', condition = cmnvc, handler = h.show_completion },
       { key = '<c-x><c-o>', mode = { 'i', 'c' }, desc = 'Hide Completion', condition = cmvc,  handler = h.hide_completion },
       { key = '<c-y>', mode = { 'i', 'c' }, desc = 'Accept Completion Item', condition = cisc, handler = h.accept_completion_item },
       { key = '<c-e>', mode = { 'i', 'c' }, desc = 'Cancel Completion', condition = cmvc, handler = h.cancel_completion },
-      -- NOTE:
-      -- By default, "<c-y>" and "<c-e>" are used to insert content above or below the cursor
-      -- This hack will make it still work as default when the cusor is already at the end of the line in insert mode
-      { key = '<c-e>', mode = 'i', desc = 'Cursor to EOL', condition = cmnvc_cnec, handler = h.cursor_to_eol_insert },
       -- NOTE: By default, "<c-u>" are used to delete content before
       { key = '<c-u>', mode = 'i', desc = 'Scroll Documentation Up', condition = dvc, handler = h.scroll_documentation_up, priority = 2 },
       { key = '<c-u>', mode = 'i', desc = 'Scroll Signature Up', condition = svc, handler = h.scroll_signature_up, priority = 1 },
@@ -193,8 +188,10 @@ return {
       { key = '<c-s>', mode = 'i', desc = 'Hide Signature Help', condition = svc, handler = h.hide_signature },
 
       -- Format
-      { key = '<leader>f', desc = 'Async Format', handler = h.async_format },
-      { key = '<leader>f', mode = 'v', desc = 'Format Selection', handler = h.async_format_selection },
+      -- NOTE:
+      -- We will format automatically on save, therefore this one is not used frequently.
+      -- It will only be useful when the format on save occurs errors such as timeout
+      { key = '<m-F>', desc = 'Async Format', handler = h.async_format },
 
       -- Autopair
       { key = '(', mode = 'i', desc = 'Autopair', handler = h.auto_pair_wrap('('), replace_keycodes = false },
@@ -226,6 +223,11 @@ return {
       { key = '<c-g>S', mode = 'i', desc = 'Surround Line Mode', handler = h.surround_insert_line },
 
       -- Git
+      -- WARN: This motion only works in normal mode and visual mode
+      { key = '[g', mode = { 'n', 'x' }, desc = 'Previous Git Hunk', condition = igrc, handler = h.previous_hunk },
+      { key = ']g', mode = { 'n', 'x' }, desc = 'Next Git Hunk', condition = igrc, handler = h.next_hunk },
+      { key = 'ah', mode = { 'x', 'o' }, desc = 'Select Hunk', condition = igrc, handler = h.select_hunk },
+      { key = 'ih', mode = { 'x', 'o' }, desc = 'Select Hunk', condition = igrc, handler = h.select_hunk },
       { key = '<leader>ga', desc = 'Stage Hunk', condition = igrc, handler = h.stage_hunk },
       { key = '<leader>ga', mode = 'v', desc = 'Stage Selection', condition = igrc, handler = h.stage_selection },
       { key = '<leader>gA', desc = 'Stage Buffer', condition = igrc, handler = h.stage_buffer },
@@ -237,6 +239,8 @@ return {
       { key = '<leader>gd', desc = 'Hunk Diff Inline', condition = igrc, handler = h.preview_hunk_inline },
       { key = '<leader>gD', desc = 'Hunk Diff', condition = igrc, handler = h.preview_hunk },
       { key = '<leader>gb', desc = 'Blame Line', condition = igrc, handler = h.blame_line },
+      { key = '<leader>gt', desc = 'Diff this', condition = igrc, handler = h.diff_this },
+      { key = '<leader>gq', desc = 'Quickfix All Hunk', condition = igrc, handler = h.quickfix_all_hunk },
       { key = '<leader>tb', desc = 'Toggle Blame', condition = igrc, handler = h.toggle_current_line_blame },
       { key = '<leader>tw', desc = 'Toggle Word Diff', condition = igrc, handler = h.toggle_word_diff },
       { key = '[x', desc = 'Previous Git Conflict', condition = hcc, handler = h.previous_conflict, count = true },
@@ -287,6 +291,14 @@ return {
       -- whose names match the pattern before cursor of command mode
       { key = '<c-a>', mode = 'c', 'Cursor to BOL', condition = cnfnbc, handler = h.cursor_to_bol_command },
       { key = '<m-d>', mode = 'i', 'Delete to EOW', condition = cnec, handler = h.delete_to_eow_insert },
+      -- NOTE:
+      -- By default, "<c-y>" and "<c-e>" are used to insert content above or below the cursor
+      -- This hack will make it still work as default when the cusor is already at the end of the line in insert mode
+      { key = '<c-e>', mode = 'i', desc = 'Cursor to EOL', condition = cmnvc_cnec, handler = h.cursor_to_eol_insert },
+      -- NOTE:
+      -- By default, "<c-k>" is used to insert digraph, see ":help i_CTRL-K" and ":help c_CTRL-K"
+      { key = '<c-k>', mode = 'i', desc = 'Delete to EOL', condition = cnec, handler = h.delete_to_eol_insert },
+      { key = '<c-k>', mode = 'c', desc = 'Delete to EOL', condition = cnec, handler = h.delete_to_eol_command },
 
       -- Window
       { key = '<leader>k', desc = 'Split Above', handler = h.split_above },
