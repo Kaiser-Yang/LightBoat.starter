@@ -10,7 +10,10 @@ return {
     -- The default satisfy the requirement.
     -- When you update key bindings, be careful to check if there is any overlapping,
     -- if there is, you should set "timeoutlen" with a proper value such as 300 or 500
-    vim.o.timeoutlen = 0
+    -- NOTE:
+    -- which-key.nvim can not be used in vscode neovim extension,
+    -- so we must set "timeoutlen" with a proper value to make it work
+    vim.o.timeoutlen = vim.g.vscode and 300 or 0
     -- NOTE:
     -- Delete the default "gc" and "gcc" mappings provided by vim.lsp
     -- We use "Comment.nvim" which supports much better comment experience
