@@ -12,8 +12,6 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
---- @type LightBoat.Opt
-vim.g.lightboat_opts = {}
 require('lazy').setup({
   spec = {
     -- TODO: update this with url
