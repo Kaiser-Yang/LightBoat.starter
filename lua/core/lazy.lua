@@ -14,8 +14,14 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
   spec = {
-    -- TODO: update this with url
-    { dir = vim.fn.expand('~') .. '/repo/LightBoat', import = 'lightboat.plugin' },
+    {
+      'Kaiser-Yang/LightBoat',
+      -- TODO:
+      -- remove those when finishing refactor
+      version = 'refactor',
+      dir = vim.fn.expand('~') .. '/repo/LightBoat',
+      import = 'lightboat.plugin',
+    },
     { import = 'plugin' },
   },
 })

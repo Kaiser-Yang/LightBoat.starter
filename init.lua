@@ -1,2 +1,2 @@
-require('core.option')
+require('option')
 require('core.lazy')

@@ -5,6 +5,7 @@ vim.g.conform_formatexpr_auto_set = true
 vim.g.treesitter_highlight_auto_start = true
 vim.g.treesitter_foldexpr_auto_set = true
 vim.g.treesitter_indentexpr_auto_set = true
+vim.g.nohlsearch_auto_run = true
 
 -- INFO:
 -- Disable entire built-in ftplugin mappings to avoid conflicts.
@@ -43,3 +44,6 @@ vim.g.lightboat_opt = {
   --- @type string[]
   lsp_enabled = {},
 }
+
+-- vim.g.loaded_matchit = 1
+-- vim.o.cmdheight = 0
