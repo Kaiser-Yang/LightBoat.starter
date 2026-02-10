@@ -165,14 +165,12 @@ return {
       { key = '<m-s>nr', desc = 'Swap With Next Return', condition = tac, handler = h.swap_with_next_return },
 
       -- Completion
-      -- NOTE: By default, "<c-j>" is same with "<cr>"
-      { key = '<c-j>', mode = { 'i', 'c' }, desc = 'Select Next Completion Item', condition = cmvc, handler = h.next_completion_item },
+      { key = '<c-n>', mode = { 'i', 'c' }, desc = 'Select Next Completion Item', condition = cmvc, handler = h.next_completion_item },
+      { key = '<c-p>', mode = { 'i', 'c' }, desc = 'Select Previous Completion Item', condition = cmvc, handler = h.previous_completion_item },
       -- NOTE:
       -- By default, "<c-k>" is used to insert digraph, see ":help i_CTRL-K" and ":help c_CTRL-K"
-      -- This hack will make it work as default when completion menu is invisible and cursor is at EOL
-      { key = '<c-k>', mode = { 'i', 'c' }, desc = 'Select Previous Completion Item', condition = cmvc, handler = h.previous_completion_item },
-      { key = '<c-k>', mode = 'i', desc = 'Delete to EOL', condition = cmnvc_cnec, handler = h.delete_to_eol_insert },
-      { key = '<c-k>', mode = 'c', desc = 'Delete to EOL', condition = cmnvc_cnec, handler = h.delete_to_eol_command },
+      { key = '<c-k>', mode = 'i', desc = 'Delete to EOL', condition = cnec, handler = h.delete_to_eol_insert },
+      { key = '<c-k>', mode = 'c', desc = 'Delete to EOL', condition = cnec, handler = h.delete_to_eol_command },
       { key = '<tab>', mode = 'i', desc = 'Snippet Forward', condition = sac, handler = h.snippet_forward },
       { key = '<s-tab>', mode = 'i', desc = 'Snippet Backward', condition = sac, handler = h.snippet_backward },
       -- NOTE: Those four below behaviour like the default ones
@@ -297,6 +295,7 @@ return {
       { key = '<leader>l', desc = 'Split Right', handler = h.split_right },
       { key = '<leader>T', desc = 'Split Tab (Full Screen)', handler = h.split_tab },
       { key = '<c-k>', desc = 'Cursor to Above Window', handler = h.cursor_to_above_window },
+      -- NOTE: By default, "<C-J>" is an alias of "<CR>"
       { key = '<c-j>', desc = 'Cursor to Below Window', handler = h.cursor_to_below_window },
       { key = '<c-h>', desc = 'Cursor to Left Window', handler = h.cursor_to_left_window },
       { key = '<c-l>', desc = 'Cursor to Right Window', handler = h.cursor_to_right_window },
