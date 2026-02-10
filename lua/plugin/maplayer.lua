@@ -40,6 +40,12 @@ return {
     local cnfnbc = c():cursor_not_first_non_blank()
     local dec = c():add(function() return vim.fn.executable('delta') == 1 end)
     local hcc_dec = hcc:add(dec)
+    local hsc = c():add(
+      function()
+        return vim.tbl_contains({ 'y', 'd', 'c' })
+          or vim.v.operator == 'g@' and vim.o.operatorfunc:find('nvim%-surround')
+      end
+    )
     require('maplayer').setup({
       -- stylua: ignore start
       -- Disable Some Keys
@@ -207,8 +213,8 @@ return {
 
       -- Surround
       -- NOTE: By default "s" and "S" in visual mode is an alias of "c"
-      { key = 's', mode = 'x', desc = 'Surround', handler = h.surround_visual, count = true },
-      { key = 'S', mode = 'x', desc = 'Surround Line Mode', handler = h.surround_visual_line, count = true },
+      { key = 's', mode = 'x', desc = 'Surround', condition = hsc, handler = h.surround_visual, count = true },
+      { key = 'S', mode = 'x', desc = 'Surround Line Mode',condition = hsc, handler = h.surround_visual_line, count = true },
       -- NOTE:
       -- We use this tricky way to make "ys", "cs", "ds", "yS", "cS", "dS", "yss", "ysS", "ySs" and "ySS" work
       -- We do not recommend to update those mappings
