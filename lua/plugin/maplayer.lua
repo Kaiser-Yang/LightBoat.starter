@@ -27,6 +27,13 @@ return {
     local cmnvc = c():completion_menu_not_visible()
     local cisc = c():completion_item_selected()
     local sac = c():snippet_active()
+    local snac = c():snippet_not_active()
+    local snac_epc = snac:add(function()
+      local line = vim.api.nvim_get_current_line()
+      local char_after_cursor = line:sub(vim.fn.col('.'), vim.fn.col('.'))
+      local pairs = { '(', ')', '[', ']', '{', '}', '"', "'", '`' }
+      return vim.tbl_contains(pairs, char_after_cursor)
+    end)
     local dvc = c():documentation_visible()
     local svc = c():signature_visible()
     local cnec = c():cursor_not_eol()
@@ -43,22 +50,16 @@ return {
           or vim.v.operator == 'g@' and vim.o.operatorfunc:find('nvim%-surround')
       end
     )
-    local iltllc = c():add(function()
+    local snac_iltllc = snac:add(function()
       local lnum, col = unpack(vim.api.nvim_win_get_cursor(0))
       local content_before_cursor = vim.api.nvim_get_current_line():sub(1, col)
-      if not content_before_cursor:match('^%s*$') or lnum == 1 then return '<tab>' end
+      if not content_before_cursor:match('^%s*$') or lnum == 1 then return false end
       local last_line_indent = vim.fn.indent(vim.fn.line('.') - 1)
       local current_line_indent = vim.fn.indent(vim.fn.line('.'))
       return last_line_indent > current_line_indent
     end)
     require('maplayer').setup({
       -- stylua: ignore start
-      -- Disable Some Keys
-      -- "<C-P>" and "<C-N>" are used to trigger builtin completion menu for words
-      -- We use "blink.cmp", so we do not need this
-      { key = '<c-p>', mode = 'i', desc = 'Nop', handler = h.nop },
-      { key = '<c-n>', mode = 'i', desc = 'Nop', handler = h.nop },
-
       -- Markdown Quick Insert
       { key = '1', mode = 'i', desc = 'Insert Markdown Title 1', condition = mc, handler = h.markdown_title(1) },
       { key = '2', mode = 'i', desc = 'Insert Markdown Title 2', condition = mc, handler = h.markdown_title(2) },
@@ -85,10 +86,6 @@ return {
       { key = 'T', mode = { 'n', 'x' }, desc = 'Till Previous Character', handler = h.T, count = true },
       { key = '[s', mode = { 'n', 'x', 'o' }, desc = 'Previous Misspelled Word', condition = sc, handler = h.previous_misspelled, count = true },
       { key = ']s', mode = { 'n', 'x', 'o' }, desc = 'Next Misspelled Word', condition = sc, handler = h.next_misspelled, count = true },
-
-      -- Basic Text Object
-      { key = 'ae', mode = { 'o', 'x' }, desc = 'Select Edit', handler = h.select_file },
-      { key = 'ie', mode = { 'o', 'x' }, desc = 'Select Edit', handler = h.select_file },
 
       -- Treesitter Motion
       -- NOTE: By deafault, "[a" and "]a" are mapped to ":prevvious" and ":next"
@@ -169,7 +166,6 @@ return {
       { key = '<c-n>', mode = { 'i', 'c' }, desc = 'Select Next Completion Item', condition = cmvc, handler = h.next_completion_item },
       { key = '<c-p>', mode = { 'i', 'c' }, desc = 'Select Previous Completion Item', condition = cmvc, handler = h.previous_completion_item },
       { key = '<tab>', mode = 'i', desc = 'Snippet Forward', condition = sac, handler = h.snippet_forward },
-      { key = '<tab>', mode = 'i', desc = 'Auto Indent', condition = iltllc, handler = h.auto_indent },
       { key = '<s-tab>', mode = 'i', desc = 'Snippet Backward', condition = sac, handler = h.snippet_backward },
       { key = '<c-x><c-o>', mode = { 'i', 'c' }, desc = 'Show Completion', condition = cmnvc, handler = h.show_completion },
       { key = '<c-x><c-o>', mode = { 'i', 'c' }, desc = 'Hide Completion', condition = cmvc,  handler = h.hide_completion },
@@ -204,6 +200,7 @@ return {
       { key = '<bs>', mode = 'i', desc = 'Autopair BS', handler = h.auto_pair_wrap('<bs>'), replace_keycodes = false },
       { key = '<m-e>', mode = 'i', desc = 'Autopair Fastwarp', handler = h.auto_pair_wrap('<m-e>'), replace_keycodes = false },
       { key = '<m-E>', mode = 'i', desc = 'Autopair Reverse Fastwarp', handler = h.auto_pair_wrap('<m-E>'), replace_keycodes = false },
+      { key = '<tab>', mode = 'i', desc = 'Autopair Tabout', condition = snac_epc, handler = h.auto_pair_wrap('<m-tab>'), replace_keycodes = false },
       { key = '<space>', mode = 'i', desc = 'Autopair Space', handler = h.auto_pair_wrap('<space>'), replace_keycodes = false },
 
       -- Surround
@@ -255,6 +252,9 @@ return {
       { key = '<leader>xdv', desc = 'Diff Current V.S. Incoming Conflict', condition = hcc_dec, handler = h.diff_current_incoming_conflict },
       { key = '<leader>xdV', desc = 'Diff Incoming V.S. Current Conflict', condition = hcc_dec, handler = h.diff_incoming_current_conflict },
 
+      -- Picker
+      { key = '<leader>st', desc = 'Search Todo', handler = h.todo_picker },
+
       -- Comment
       { key = '<m-/>', desc = 'Comment Line', handler = h.comment_line, count = true },
       { key = '<m-/>', mode = 'i', desc = 'Comment Line', handler = h.comment_line_insert },
@@ -266,7 +266,14 @@ return {
       { key = '<leader>ts', desc = 'Toggle Spell', handler = h.toggle_spell },
       { key = '<leader>te', desc = 'Toggle Expandtab', handler = h.toggle_expandtab },
 
-      -- Inherit from Shell
+      -- Indent
+      { key = '[|', mode = { 'n', 'x', 'o' }, desc = 'Top of Indent', handler = h.goto_indent_top },
+      { key = ']|', mode = { 'n', 'x', 'o' }, desc = 'Bottom of Indent', handler = h.goto_indent_bottom },
+      { key = 'i|', mode = { 'x', 'o' }, desc = 'Inside Indent Line', handler = h.inside_indent, count = true },
+      { key = 'a|', mode = { 'x', 'o' }, desc = 'Around Indent Line', handler = h.around_indent, count = true },
+      { key = '<leader>ti', desc = 'Toggle Indent Line', handler = h.toggle_indent_line },
+
+      -- Basic
       -- NOTE:
       -- By default "<C-A>" is used to insert previously inserted text
       { key = '<c-a>', mode = 'i', 'Cursor to First Non-blank', condition = cnfnbc, handler = h.cursor_to_first_non_blank_insert },
@@ -283,8 +290,10 @@ return {
       -- By default, "<c-k>" is used to insert digraph, see ":help i_CTRL-K" and ":help c_CTRL-K"
       { key = '<c-k>', mode = 'i', desc = 'Delete to EOL', condition = cnec, handler = h.delete_to_eol_insert },
       { key = '<c-k>', mode = 'c', desc = 'Delete to EOL', condition = cnec, handler = h.delete_to_eol_command },
-
-      -- Window
+      -- Basic Text Object
+      { key = 'ae', mode = { 'o', 'x' }, desc = 'Select Edit', handler = h.select_file },
+      { key = 'ie', mode = { 'o', 'x' }, desc = 'Select Edit', handler = h.select_file },
+      { key = '<tab>', mode = 'i', desc = 'Auto Indent', condition = snac_iltllc, handler = h.auto_indent },
       { key = '<leader>k', desc = 'Split Above', handler = h.split_above },
       { key = '<leader>j', desc = 'Split Below', handler = h.split_below },
       { key = '<leader>h', desc = 'Split Left', handler = h.split_left },
@@ -295,17 +304,8 @@ return {
       { key = '<c-j>', desc = 'Cursor to Below Window', handler = h.cursor_to_below_window },
       { key = '<c-h>', desc = 'Cursor to Left Window', handler = h.cursor_to_left_window },
       { key = '<c-l>', desc = 'Cursor to Right Window', handler = h.cursor_to_right_window },
-
-      -- System Clipboard
       -- NOTE: This one is similar to "d" you and use "<m-x>d" to delete one line in normal mode
       { key = '<m-x>', mode = { 'n', 'x' }, desc = 'System Cut', handler = h.system_cut, count = true },
-
-      -- Indent
-      { key = '[|', mode = { 'n', 'x', 'o' }, desc = 'Top of Indent', handler = h.goto_indent_top },
-      { key = ']|', mode = { 'n', 'x', 'o' }, desc = 'Bottom of Indent', handler = h.goto_indent_bottom },
-      { key = 'i|', mode = { 'x', 'o' }, desc = 'Inside Indent Line', handler = h.inside_indent, count = true },
-      { key = 'a|', mode = { 'x', 'o' }, desc = 'Around Indent Line', handler = h.around_indent, count = true },
-      { key = '<leader>ti', desc = 'Toggle Indent Line', handler = h.toggle_indent_line },
 
       -- stylua: ignore end
     })
