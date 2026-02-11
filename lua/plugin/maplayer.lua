@@ -256,22 +256,9 @@ return {
       { key = '<leader>xdV', desc = 'Diff Incoming V.S. Current Conflict', condition = hcc_dec, handler = h.diff_incoming_current_conflict },
 
       -- Comment
-      { key = 'gc', desc = 'Comment', handler = h.comment },
       { key = '<m-/>', desc = 'Comment Line', handler = h.comment_line, count = true },
       { key = '<m-/>', mode = 'i', desc = 'Comment Line', handler = h.comment_line_insert },
-      { key = 'gc', mode = 'v', desc = 'Comment Selection', handler = h.comment_selection },
-      { key = '<m-/>', mode = 'v', desc = 'Comment Selection', handler = h.comment_selection },
-      { key = 'gb', desc = 'Comment Block Style', handler = h.comment_block_style },
-      { key = '<m-?>', desc = 'Comment Line Block Style', handler = h.comment_line_block_style, count = true },
-      { key = '<m-?>', mode = 'i', desc = 'Comment Line Block Style', handler = h.comment_line_block_style_insert },
-      { key = 'gb', mode = 'v', desc = 'Comment Selection Block Style', handler = h.comment_selection_block_style },
-      { key = '<m-?>', mode = 'v', desc = 'Comment Selection Block Style', handler = h.comment_selection_block_style },
-      { key = '<leader>O', desc = 'Comment Above', handler = h.comment_above },
-      { key = '<leader>o', desc = 'Comment Below', handler = h.comment_below },
-      { key = '<leader>A', desc = 'Comment Eol', handler = h.comment_eol },
-      { key = '<leader>bO', desc = 'Comment Above Block Style', handler = h.comment_above_block_style },
-      { key = '<leader>bo', desc = 'Comment Below Block Style', handler = h.comment_below_block_style },
-      { key = '<leader>bA', desc = 'Comment Eol Block Style', handler = h.comment_eol_block_style },
+      { key = '<m-/>', mode = 'x', desc = 'Comment Selection', handler = h.comment_selection },
 
       -- Togglers
       { key = '<leader>tt', desc = 'Toggle Treesitter Highlight', condition = tac, handler = h.toggle_treesitter_highlight },
