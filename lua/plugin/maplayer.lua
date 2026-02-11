@@ -1,16 +1,14 @@
 return {
   'Kaiser-Yang/maplayer.nvim',
-  -- NOTE: We lazy load which-key, make sure this is loaded before which-key
+  -- We lazy load which-key, make sure this is loaded before which-key
   priority = 1000,
   event = 'VeryLazy',
   config = function()
-    -- NOTE:
     -- When all key bindings has no overlapping,
     -- you can set "timeoutlen" with zero
     -- The default satisfy the requirement.
     -- When you update key bindings, be careful to check if there is any overlapping,
     -- if there is, you should set "timeoutlen" with a proper value such as 300 or 500
-    -- NOTE:
     -- which-key.nvim can not be used in vscode neovim extension,
     -- so we must set "timeoutlen" with a proper value to make it work
     vim.o.timeoutlen = vim.g.vscode and 300 or 0
@@ -88,33 +86,33 @@ return {
       { key = ']s', mode = { 'n', 'x', 'o' }, desc = 'Next Misspelled Word', condition = sc, handler = h.next_misspelled, count = true },
 
       -- Treesitter Motion
-      -- NOTE: By deafault, "[a" and "]a" are mapped to ":prevvious" and ":next"
+      -- By deafault, "[a" and "]a" are mapped to ":prevvious" and ":next"
       { key = '[a', mode = { 'n', 'x', 'o' }, desc = 'Previous Argument Start', condition = tac, handler = h.previous_parameter_start },
       { key = ']a', mode = { 'n', 'x', 'o' }, desc = 'Next Argument Start', condition = tac, handler = h.next_parameter_start },
-      -- NOTE: By deafault, "[A" and "]A" are mapped to ":rewind" and ":last"
+      -- By deafault, "[A" and "]A" are mapped to ":rewind" and ":last"
       { key = '[A', mode = { 'n', 'x', 'o' }, desc = 'Previous Argument End', condition = tac, handler = h.previous_parameter_end },
       { key = ']A', mode = { 'n', 'x', 'o' }, desc = 'Next Argument End', condition = tac, handler = h.next_parameter_end },
-      -- NOTE: By default, "[i", "]i", "[I", and "]I" are used to show information of keywords under cursor
+      -- By default, "[i", "]i", "[I", and "]I" are used to show information of keywords under cursor
       { key = '[i', mode = { 'n', 'x', 'o' }, desc = 'Previous If Start', condition = tac, handler = h.rempove_previous_conditional_start },
       { key = ']i', mode = { 'n', 'x', 'o' }, desc = 'Next If Start', condition = tac, handler = h.rempove_next_conditional_start },
       { key = '[I', mode = { 'n', 'x', 'o' }, desc = 'Previous If End', condition = tac, handler = h.rempove_previous_conditional_end },
       { key = ']I', mode = { 'n', 'x', 'o' }, desc = 'Next If End', condition = tac, handler = h.rempove_next_conditional_end },
-      -- NOTE: By default, "[f", "]f" are aliases of "gf"
+      -- By default, "[f", "]f" are aliases of "gf"
       { key = '[f', mode = { 'n', 'x', 'o' }, desc = 'Previous For Start', condition = tac, handler = h.previous_loop_start },
       { key = ']f', mode = { 'n', 'x', 'o' }, desc = 'Next For Start', condition = tac, handler = h.next_loop_start },
       { key = '[F', mode = { 'n', 'x', 'o' }, desc = 'Previous For End', condition = tac, handler = h.previous_loop_end },
       { key = ']F', mode = { 'n', 'x', 'o' }, desc = 'Next For End', condition = tac, handler = h.next_loop_end },
-      -- NOTE: By default "[r" and "]r" are used to search "rare" words
+      -- By default "[r" and "]r" are used to search "rare" words
       { key = '[r', mode = { 'n', 'x', 'o' }, desc = 'Previous Return Start', condition = tac, handler = h.previous_return_start },
       { key = ']r', mode = { 'n', 'x', 'o' }, desc = 'Next Return Start', condition = tac, handler = h.next_return_start },
       { key = '[R', mode = { 'n', 'x', 'o' }, desc = 'Previous Return End', condition = tac, handler = h.previous_return_end },
       { key = ']R', mode = { 'n', 'x', 'o' }, desc = 'Next Return End', condition = tac, handler = h.next_return_end },
-      -- NOTE: By default, "[c" and "]c" are used to navigate changes in the buffer
+      -- By default, "[c" and "]c" are used to navigate changes in the buffer
       { key = '[c', mode = { 'n', 'x', 'o' }, desc = 'Previous Class Start', condition = tac, handler = h.previous_class_start },
       { key = ']c', mode = { 'n', 'x', 'o' }, desc = 'Next Class Start', condition = tac, handler = h.next_class_start },
       { key = '[C', mode = { 'n', 'x', 'o' }, desc = 'Previous Class End', condition = tac, handler = h.previous_class_end },
       { key = ']C', mode = { 'n', 'x', 'o' }, desc = 'Next Class End', condition = tac, handler = h.next_class_end },
-      -- NOTE: Those ten mappings below behavior like the default ones
+      -- Those ten mappings below behavior like the default ones
       { key = '[m', mode = { 'n', 'x', 'o' }, desc = 'Previous Method Start', condition = tac, handler = h.previous_function_start },
       { key = ']m', mode = { 'n', 'x', 'o' }, desc = 'Next Method Start', condition = tac, handler = h.next_function_start },
       { key = '[M', mode = { 'n', 'x', 'o' }, desc = 'Previous Method End', condition = tac, handler = h.previous_function_end },
@@ -125,7 +123,7 @@ return {
       { key = '[[', mode = { 'n', 'x', 'o' }, desc = 'Previous Section', condition = tac_hc, handler = h.previous_section },
       { key = ']]', mode = { 'n', 'x', 'o' }, desc = 'Next Block Start', condition = tac_nhc, handler = h.next_block_start },
       { key = ']]', mode = { 'n', 'x', 'o' }, desc = 'Next Section', condition = tac_hc, handler = h.next_section },
-      -- NOTE: By default, "[t" and "]t" are mapped to ":tabprevious" and ":tabnext"
+      -- By default, "[t" and "]t" are mapped to ":tabprevious" and ":tabnext"
       { key = '[t', mode = { 'n', 'x', 'o' }, desc = 'Previous Todo', handler = h.previous_todo },
       { key = ']t', mode = { 'n', 'x', 'o' }, desc = 'Next Todo', handler = h.next_todo },
 
@@ -134,7 +132,7 @@ return {
       { key = 'ia', mode = { 'o', 'x' }, desc = 'Inside Argument', condition = tac, handler = h.inside_parameter },
       { key = 'am', mode = { 'o', 'x' }, desc = 'Around Method', condition = tac, handler = h.around_function },
       { key = 'im', mode = { 'o', 'x' }, desc = 'Inside Method', condition = tac, handler = h.inside_function },
-      -- NOTE: By default, "ab", "aB", "ib" and "iB" are aliases of "a(", "a{", "i(" and "i{" respectively
+      -- By default, "ab", "aB", "ib" and "iB" are aliases of "a(", "a{", "i(" and "i{" respectively
       { key = 'ab', mode = { 'o', 'x' }, desc = 'Around Block', condition = tac, handler = h.around_block },
       { key = 'ib', mode = { 'o', 'x' }, desc = 'Inside Block', condition = tac, handler = h.inside_block },
       { key = 'ai', mode = { 'o', 'x' }, desc = 'Around If', condition = tac, handler = h.around_conditional },
@@ -171,17 +169,16 @@ return {
       { key = '<c-x><c-o>', mode = { 'i', 'c' }, desc = 'Hide Completion', condition = cmvc,  handler = h.hide_completion },
       { key = '<c-y>', mode = { 'i', 'c' }, desc = 'Accept Completion Item', condition = cisc, handler = h.accept_completion_item },
       { key = '<c-e>', mode = { 'i', 'c' }, desc = 'Cancel Completion', condition = cmvc, handler = h.cancel_completion },
-      -- NOTE: By default, "<c-u>" are used to delete content before
+      -- By default, "<c-u>" are used to delete content before
       { key = '<c-u>', mode = 'i', desc = 'Scroll Documentation Up', condition = dvc, handler = h.scroll_documentation_up, priority = 2 },
       { key = '<c-u>', mode = 'i', desc = 'Scroll Signature Up', condition = svc, handler = h.scroll_signature_up, priority = 1 },
-      -- NOTE: By default, "<c-d>" and "<c-t>" are used to delete or add indent in insert mode
+      -- By default, "<c-d>" and "<c-t>" are used to delete or add indent in insert mode
       { key = '<c-d>', mode = 'i', desc = 'Scroll Documentation Down', condition = dvc, handler = h.scroll_documentation_down, priority = 2 },
       { key = '<c-d>', mode = 'i', desc = 'Scroll Signature Down', condition = svc, handler = h.scroll_signature_down, priority = 1 },
       { key = '<c-s>', mode = 'i', desc = 'Show Signature Help', condition = svc, handler = h.show_signature },
       { key = '<c-s>', mode = 'i', desc = 'Hide Signature Help', condition = svc, handler = h.hide_signature },
 
       -- Format
-      -- NOTE:
       -- We will format automatically on save, therefore this one is not used frequently.
       -- It will only be useful when the format on save occurs errors such as timeout
       { key = '<m-F>', desc = 'Async Format', handler = h.async_format },
@@ -204,15 +201,14 @@ return {
       { key = '<space>', mode = 'i', desc = 'Autopair Space', handler = h.auto_pair_wrap('<space>'), replace_keycodes = false },
 
       -- Surround
-      -- NOTE: By default "s" and "S" in visual mode is an alias of "c"
+      -- By default "s" and "S" in visual mode is an alias of "c"
       { key = 's', mode = 'x', desc = 'Surround', condition = hsc, handler = h.surround_visual, count = true },
       { key = 'S', mode = 'x', desc = 'Surround Line Mode',condition = hsc, handler = h.surround_visual_line, count = true },
-      -- NOTE:
       -- We use this tricky way to make "ys", "cs", "ds", "yS", "cS", "dS", "yss", "ysS", "ySs" and "ySS" work
       -- We do not recommend to update those mappings
       { key = 's', mode = 'o', desc = 'Surround Operation', handler = h.hack_wrap() },
       { key = 'S', mode = 'o', desc = 'Surround Operation Line Mode', handler = h.hack_wrap('_line') },
-      -- NOTE: Because we have an auto pair plugin, those two below are rarely used
+      -- Because we have an auto pair plugin, those two below are rarely used
       { key = '<c-g>s', mode = 'i', desc = 'Surround', handler = h.surround_insert },
       { key = '<c-g>S', mode = 'i', desc = 'Surround Line Mode', handler = h.surround_insert_line },
 
@@ -274,19 +270,15 @@ return {
       { key = '<leader>ti', desc = 'Toggle Indent Line', handler = h.toggle_indent_line },
 
       -- Basic
-      -- NOTE:
       -- By default "<C-A>" is used to insert previously inserted text
       { key = '<c-a>', mode = 'i', 'Cursor to First Non-blank', condition = cnfnbc, handler = h.cursor_to_first_non_blank_insert },
-      -- NOTE:
       -- By default "<C-A>" is used to insert all commands
       -- whose names match the pattern before cursor of command mode
       { key = '<c-a>', mode = 'c', 'Cursor to BOL', condition = cnfnbc, handler = h.cursor_to_bol_command },
       { key = '<m-d>', mode = 'i', 'Delete to EOW', condition = cnec, handler = h.delete_to_eow_insert },
-      -- NOTE:
       -- By default, "<c-y>" and "<c-e>" are used to insert content above or below the cursor
       -- This hack will make it still work as default when the cusor is already at the end of the line in insert mode
       { key = '<c-e>', mode = 'i', desc = 'Cursor to EOL', condition = cmnvc_cnec, handler = h.cursor_to_eol_insert },
-      -- NOTE:
       -- By default, "<c-k>" is used to insert digraph, see ":help i_CTRL-K" and ":help c_CTRL-K"
       { key = '<c-k>', mode = 'i', desc = 'Delete to EOL', condition = cnec, handler = h.delete_to_eol_insert },
       { key = '<c-k>', mode = 'c', desc = 'Delete to EOL', condition = cnec, handler = h.delete_to_eol_command },
@@ -300,11 +292,11 @@ return {
       { key = '<leader>l', desc = 'Split Right', handler = h.split_right },
       { key = '<leader>T', desc = 'Split Tab (Full Screen)', handler = h.split_tab },
       { key = '<c-k>', desc = 'Cursor to Above Window', handler = h.cursor_to_above_window },
-      -- NOTE: By default, "<C-J>" is an alias of "<CR>"
+      -- By default, "<C-J>" is an alias of "<CR>"
       { key = '<c-j>', desc = 'Cursor to Below Window', handler = h.cursor_to_below_window },
       { key = '<c-h>', desc = 'Cursor to Left Window', handler = h.cursor_to_left_window },
       { key = '<c-l>', desc = 'Cursor to Right Window', handler = h.cursor_to_right_window },
-      -- NOTE: This one is similar to "d" you and use "<m-x>d" to delete one line in normal mode
+      -- This one is similar to "d" you and use "<m-x>d" to delete one line in normal mode
       { key = '<m-x>', mode = { 'n', 'x' }, desc = 'System Cut', handler = h.system_cut, count = true },
 
       -- stylua: ignore end
