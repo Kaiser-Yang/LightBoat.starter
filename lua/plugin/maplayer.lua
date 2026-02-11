@@ -14,12 +14,6 @@ return {
     -- which-key.nvim can not be used in vscode neovim extension,
     -- so we must set "timeoutlen" with a proper value to make it work
     vim.o.timeoutlen = vim.g.vscode and 300 or 0
-    -- NOTE:
-    -- Delete the default "gc" and "gcc" mappings provided by vim.lsp
-    -- We use "Comment.nvim" which supports much better comment experience
-    -- such as block style comment and context aware comment string
-    vim.keymap.del('v', 'gc')
-    vim.keymap.del('n', 'gcc')
     local c = require('lightboat.condition')
     local h = require('lightboat.handler')
     local mc = c():filetype('markdown'):last_key(',')
@@ -82,7 +76,7 @@ return {
       { key = 'c', mode = 'i', desc = 'Insert Markdown Code Block', condition = mc, handler = h.markdown_code_block },
       { key = 'f', mode = 'i', desc = 'Goto&Delete Markdown Placeholder', condition = mc, handler = h.markdown_goto_placeholder },
 
-      -- Motion
+      -- Basic Motion
       { key = ';', mode = { 'n', 'x' }, desc = 'Repeat Last Motion Forward', handler = h.semicolon, count = true },
       { key = ',', mode = { 'n', 'x' }, desc = 'Repeat Last Motion Backward', handler = h.comma, count = true },
       { key = 'f', mode = { 'n', 'x' }, desc = 'Find Next Character', handler = h.f, count = true },
@@ -91,6 +85,12 @@ return {
       { key = 'T', mode = { 'n', 'x' }, desc = 'Till Previous Character', handler = h.T, count = true },
       { key = '[s', mode = { 'n', 'x', 'o' }, desc = 'Previous Misspelled Word', condition = sc, handler = h.previous_misspelled, count = true },
       { key = ']s', mode = { 'n', 'x', 'o' }, desc = 'Next Misspelled Word', condition = sc, handler = h.next_misspelled, count = true },
+
+      -- Basic Text Object
+      { key = 'ae', mode = { 'o', 'x' }, desc = 'Select Edit', handler = h.select_file },
+      { key = 'ie', mode = { 'o', 'x' }, desc = 'Select Edit', handler = h.select_file },
+
+      -- Treesitter Motion
       -- NOTE: By deafault, "[a" and "]a" are mapped to ":prevvious" and ":next"
       { key = '[a', mode = { 'n', 'x', 'o' }, desc = 'Previous Argument Start', condition = tac, handler = h.previous_parameter_start },
       { key = ']a', mode = { 'n', 'x', 'o' }, desc = 'Next Argument Start', condition = tac, handler = h.next_parameter_start },
@@ -102,7 +102,7 @@ return {
       { key = ']i', mode = { 'n', 'x', 'o' }, desc = 'Next If Start', condition = tac, handler = h.rempove_next_conditional_start },
       { key = '[I', mode = { 'n', 'x', 'o' }, desc = 'Previous If End', condition = tac, handler = h.rempove_previous_conditional_end },
       { key = ']I', mode = { 'n', 'x', 'o' }, desc = 'Next If End', condition = tac, handler = h.rempove_next_conditional_end },
-      -- NOTE: By default, "[f", "]f" are alias of "gf"
+      -- NOTE: By default, "[f", "]f" are aliases of "gf"
       { key = '[f', mode = { 'n', 'x', 'o' }, desc = 'Previous For Start', condition = tac, handler = h.previous_loop_start },
       { key = ']f', mode = { 'n', 'x', 'o' }, desc = 'Next For Start', condition = tac, handler = h.next_loop_start },
       { key = '[F', mode = { 'n', 'x', 'o' }, desc = 'Previous For End', condition = tac, handler = h.previous_loop_end },
@@ -132,7 +132,7 @@ return {
       { key = '[t', mode = { 'n', 'x', 'o' }, desc = 'Previous Todo', handler = h.previous_todo },
       { key = ']t', mode = { 'n', 'x', 'o' }, desc = 'Next Todo', handler = h.next_todo },
 
-      -- Text Object
+      -- Treesitter Text Object
       { key = 'aa', mode = { 'o', 'x' }, desc = 'Around Argument', condition = tac, handler = h.around_parameter },
       { key = 'ia', mode = { 'o', 'x' }, desc = 'Inside Argument', condition = tac, handler = h.inside_parameter },
       { key = 'am', mode = { 'o', 'x' }, desc = 'Around Method', condition = tac, handler = h.around_function },
@@ -148,8 +148,6 @@ return {
       { key = 'ir', mode = { 'o', 'x' }, desc = 'Inside Return', condition = tac, handler = h.inside_return },
       { key = 'ac', mode = { 'o', 'x' }, desc = 'Around Class', condition = tac, handler = h.around_class },
       { key = 'ic', mode = { 'o', 'x' }, desc = 'Inside Class', condition = tac, handler = h.inside_class },
-      { key = 'ae', mode = { 'o', 'x' }, desc = 'Select Edit', handler = h.select_file },
-      { key = 'ie', mode = { 'o', 'x' }, desc = 'Select Edit', handler = h.select_file },
 
       -- Swap
       { key = '<m-s>pa', desc = 'Swap With Previous Argument', condition = tac, handler = h.swap_with_previous_parameter },
@@ -183,7 +181,6 @@ return {
       -- NOTE: By default, "<c-d>" and "<c-t>" are used to delete or add indent in insert mode
       { key = '<c-d>', mode = 'i', desc = 'Scroll Documentation Down', condition = dvc, handler = h.scroll_documentation_down, priority = 2 },
       { key = '<c-d>', mode = 'i', desc = 'Scroll Signature Down', condition = svc, handler = h.scroll_signature_down, priority = 1 },
-      -- NOTE: By default, "<c-s>" is binded by vim.lsp to signature help
       { key = '<c-s>', mode = 'i', desc = 'Show Signature Help', condition = svc, handler = h.show_signature },
       { key = '<c-s>', mode = 'i', desc = 'Hide Signature Help', condition = svc, handler = h.hide_signature },
 
@@ -229,12 +226,12 @@ return {
       { key = 'ah', mode = { 'x', 'o' }, desc = 'Select Hunk', condition = igrc, handler = h.select_hunk },
       { key = 'ih', mode = { 'x', 'o' }, desc = 'Select Hunk', condition = igrc, handler = h.select_hunk },
       { key = '<leader>ga', desc = 'Stage Hunk', condition = igrc, handler = h.stage_hunk },
-      { key = '<leader>ga', mode = 'v', desc = 'Stage Selection', condition = igrc, handler = h.stage_selection },
+      { key = '<leader>ga', mode = 'x', desc = 'Stage Selection', condition = igrc, handler = h.stage_selection },
       { key = '<leader>gA', desc = 'Stage Buffer', condition = igrc, handler = h.stage_buffer },
       { key = '<leader>gu', desc = 'Undo Stage Hunk', condition = igrc, handler = h.undo_stage_hunk },
       { key = '<leader>gU', desc = 'Unstage Buffer', condition = igrc, handler = h.unstage_buffer },
       { key = '<leader>gr', desc = 'Reset Hunk', condition = igrc, handler = h.reset_hunk },
-      { key = '<leader>gr', mode = 'v', desc = 'Reset Selection', condition = igrc, handler = h.reset_selection },
+      { key = '<leader>gr', mode = 'x', desc = 'Reset Selection', condition = igrc, handler = h.reset_selection },
       { key = '<leader>gR', desc = 'Reset Buffer', condition = igrc, handler = h.reset_buffer },
       { key = '<leader>gd', desc = 'Hunk Diff Inline', condition = igrc, handler = h.preview_hunk_inline },
       { key = '<leader>gD', desc = 'Hunk Diff', condition = igrc, handler = h.preview_hunk },
@@ -313,7 +310,7 @@ return {
       { key = '<c-l>', desc = 'Cursor to Right Window', handler = h.cursor_to_right_window },
 
       -- System Clipboard
-      -- NOTE: This one is similar with "d" you and use "<m-x>d" to delete one line in normal mode
+      -- NOTE: This one is similar to "d" you and use "<m-x>d" to delete one line in normal mode
       { key = '<m-x>', mode = { 'n', 'x' }, desc = 'System Cut', handler = h.system_cut, count = true },
       -- stylua: ignore end
     })
