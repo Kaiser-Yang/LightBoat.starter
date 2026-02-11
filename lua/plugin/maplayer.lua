@@ -4,6 +4,8 @@ return {
   priority = 1000,
   event = 'VeryLazy',
   config = function()
+    -- We have provide another key binding for commenting current line
+    vim.api.nvim_del_keymap('n', 'gcc')
     -- When all key bindings has no overlapping,
     -- you can set "timeoutlen" with zero
     -- The default satisfy the requirement.
