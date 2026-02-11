@@ -9,12 +9,10 @@ vim.g.treesitter_foldexpr_auto_set = true
 vim.g.treesitter_indentexpr_auto_set = true
 vim.g.nohlsearch_auto_run = true
 
--- INFO:
 -- Disable entire built-in ftplugin mappings to avoid conflicts.
 -- See https://github.com/neovim/neovim/tree/master/runtime/ftplugin for built-in ftplugins.
 vim.g.no_plugin_maps = true
 
--- INFO:
 -- We use nvim-tree instead of netrw, so disable it
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -35,7 +33,8 @@ vim.o.ignorecase = true
 vim.o.smartcase = true
 vim.o.foldopen = 'block,mark,percent,quickfix,search,tag,undo'
 vim.o.foldlevel = 99999
-vim.o.syntax = 'on'
+vim.o.foldcolumn = 'auto'
+vim.o.fillchars = 'fold: ,foldopen:,foldclose:,foldsep: '
 
 --- @class LightBoat.Opt
 vim.g.lightboat_opt = {
