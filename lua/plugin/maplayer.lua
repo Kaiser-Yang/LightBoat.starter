@@ -299,6 +299,14 @@ return {
       -- System Clipboard
       -- NOTE: This one is similar to "d" you and use "<m-x>d" to delete one line in normal mode
       { key = '<m-x>', mode = { 'n', 'x' }, desc = 'System Cut', handler = h.system_cut, count = true },
+
+      -- Indent
+      { key = '[|', mode = { 'n', 'x', 'o' }, desc = 'Top of Indent', handler = h.goto_indent_top },
+      { key = ']|', mode = { 'n', 'x', 'o' }, desc = 'Bottom of Indent', handler = h.goto_indent_bottom },
+      { key = 'i|', mode = { 'x', 'o' }, desc = 'Inside Indent Line', handler = h.inside_indent, count = true },
+      { key = 'a|', mode = { 'x', 'o' }, desc = 'Around Indent Line', handler = h.around_indent, count = true },
+      { key = '<leader>ti', desc = 'Toggle Indent Line', handler = h.toggle_indent_line },
+
       -- stylua: ignore end
     })
   end,
