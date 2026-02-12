@@ -18,7 +18,6 @@ return {
     local h = require('lightboat.handler')
     local r = h.repmove_wrap
     local u = require('lightboat.util')
-    vim.keymap.set({ 'x', 'o' }, 'xx', function() u.key.feedkeys('<plug>(blink-indent-inside)', 'm') end, {})
     local toggle_blink_indent = function()
       local indent = require('blink.indent')
       local status = indent.is_enabled() == false
@@ -80,7 +79,7 @@ return {
     -- Used for "ys", "ds", "cs"...
     local hsc = c():add(
       function()
-        return vim.tbl_contains({ 'y', 'd', 'c' })
+        return vim.tbl_contains({ 'y', 'd', 'c' }, vim.v.operator)
           or vim.v.operator == 'g@' and vim.o.operatorfunc:find('nvim%-surround')
       end
     )
@@ -119,8 +118,8 @@ return {
       { key = 'F', mode = { 'n', 'x' }, desc = 'Find Previous Character', handler = h.F, count = true },
       { key = 't', mode = { 'n', 'x' }, desc = 'Till Next Character', handler = h.t, count = true },
       { key = 'T', mode = { 'n', 'x' }, desc = 'Till Previous Character', handler = h.T, count = true },
-      { key = '[s', mode = { 'n', 'x', 'o' }, desc = 'Previous Misspelled Word', condition = sc, handler = h.previous_misspelled, count = true },
-      { key = ']s', mode = { 'n', 'x', 'o' }, desc = 'Next Misspelled Word', condition = sc, handler = h.next_misspelled, count = true },
+      { key = '[s', mode = { 'n', 'x', 'o' }, desc = 'Previous Misspelled Word', condition = sc, handler = h.previous_misspelled, count = true, expr = true },
+      { key = '[s', mode = { 'n', 'x', 'o' }, desc = 'Previous Misspelled Word', condition = sc, handler = h.previous_misspelled, count = true, expr = true },
 
       -- Treesitter Motion
       -- By deafault, "[a" and "]a" are mapped to ":prevvious" and ":next"
@@ -237,12 +236,12 @@ return {
 
       -- Surround
       -- By default "s" and "S" in visual mode is an alias of "c"
-      { key = 's', mode = 'x', desc = 'Surround', condition = hsc, handler = h.surround_visual, count = true, fallback = false },
-      { key = 'S', mode = 'x', desc = 'Surround Line Mode',condition = hsc, handler = h.surround_visual_line, count = true, fallback = false },
+      { key = 's', mode = 'x', desc = 'Surround', handler = h.surround_visual, count = true, fallback = false },
+      { key = 'S', mode = 'x', desc = 'Surround Line Mode', handler = h.surround_visual_line, count = true, fallback = false },
       -- We use this tricky way to make "ys", "cs", "ds", "yS", "cS", "dS", "yss", "ysS", "ySs" and "ySS" work
       -- We do not recommend to update those mappings
-      { key = 's', mode = 'o', desc = 'Surround Operation', handler = h.hack_wrap(), fallback = false },
-      { key = 'S', mode = 'o', desc = 'Surround Operation Line Mode', handler = h.hack_wrap('_line'), fallback = false },
+      { key = 's', mode = 'o', desc = 'Surround Operation', condition = hsc, handler = h.hack_wrap(), fallback = false },
+      { key = 'S', mode = 'o', desc = 'Surround Operation Line Mode', condition = hsc, handler = h.hack_wrap('_line'), fallback = fals },
       -- Because we have an auto pair plugin, those two below are rarely used
       { key = '<c-g>s', mode = 'i', desc = 'Surround', handler = h.surround_insert },
       { key = '<c-g>S', mode = 'i', desc = 'Surround Line Mode', handler = h.surround_insert_line },
@@ -268,8 +267,8 @@ return {
       { key = '<leader>gq', desc = 'Quickfix All Hunk', condition = igrc, handler = h.quickfix_all_hunk, fallback = false },
       { key = '<leader>tb', desc = 'Toggle Blame', condition = igrc, handler = h.toggle_current_line_blame, fallback = false },
       { key = '<leader>tw', desc = 'Toggle Word Diff', condition = igrc, handler = h.toggle_word_diff, fallback = false },
-      { key = '[x', desc = 'Previous Git Conflict', condition = hcc, handler = h.previous_conflict, count = true, fallback = false },
-      { key = ']x', desc = 'Next Git Conflict', condition = hcc, handler = h.next_conflict, count = true, fallback = false },
+      { key = '[x', mode = { 'n', 'x', 'o' }, desc = 'Previous Git Conflict', condition = hcc, handler = h.previous_conflict, count = true, fallback = false, expr = true },
+      { key = ']x', mode = { 'n', 'x', 'o' }, desc = 'Next Git Conflict', condition = hcc, handler = h.next_conflict, count = true, fallback = false, expr = true },
       { key = '<leader>xc', desc = 'Choose Current Conflict', condition = hcc, handler = h.choose_current_conflict, fallback = false },
       { key = '<leader>xi', desc = 'Choose Incoming Conflict', condition = hcc, handler = h.choose_incoming_conflict, fallback = false },
       { key = '<leader>xb', desc = 'Choose Both Conflict', condition = hcc, handler = h.choose_both_conflict, fallback = false },
@@ -298,10 +297,10 @@ return {
       { key = '<leader>te', desc = 'Toggle Expandtab', handler = h.toggle_expandtab },
 
       -- Indent
-      { key = '[|', mode = { 'n', 'x', 'o' }, desc = 'Top of Indent', handler = r('<plug>(blink-indent-top)', '<plug>(blink-indent-bottom)', 1) },
-      { key = ']|', mode = { 'n', 'x', 'o' }, desc = 'Bottom of Indent', handler = r('<plug>(blink-indent-top)', '<plug>(blink-indent-bottom)', 2) },
-      { key = 'i|', mode = { 'x', 'o' }, desc = 'Inside Indent Line', handler = '<plug>(blink-indent-inside)', count = true },
-      { key = 'a|', mode = { 'x', 'o' }, desc = 'Around Indent Line', handler = '<plug>(blink-indent-around)', count = true },
+      { key = '[|', mode = { 'n', 'x', 'o' }, desc = 'Top of Indent', handler = r('<plug>(blink-indent-top)', '<plug>(blink-indent-bottom)', 1), expr = true },
+      { key = ']|', mode = { 'n', 'x', 'o' }, desc = 'Bottom of Indent', handler = r('<plug>(blink-indent-top)', '<plug>(blink-indent-bottom)', 2), expr = true },
+      { key = 'i|', mode = { 'n', 'o' }, desc = 'Inside Indent Line', handler = '<plug>(blink-indent-inside)', count = true, expr = true },
+      { key = 'a|', mode = { 'n', 'o' }, desc = 'Around Indent Line', handler = '<plug>(blink-indent-around)', count = true, expr = true },
       { key = '<leader>ti', desc = 'Toggle Indent Line', handler = toggle_blink_indent },
 
       -- Basic
@@ -369,6 +368,8 @@ return {
       { key = '<leftmouse>', mode = { 'n', 'i' }, desc = p .. 'Mouse Click', handler = h.picker_wrap('mouse_click') },
       { key = '<2-leftmouse>', mode = { 'n', 'i' }, desc = p .. 'Mouse Double Click', handler = h.picker_wrap('double_mouse_click') },
       { key = '<f1>', mode = { 'n', 'i' }, desc = p .. 'Which Key', handler = h.picker_wrap('which_key') },
+      { key = '<pageup>', mode = { 'n', 'i' }, desc = p .. 'Results Scrolling Up', handler = h.picker_wrap('results_scrolling_up') },
+      { key = '<pagedown>', mode = { 'n', 'i' }, desc = p .. 'Results Scrolling Down', handler = h.picker_wrap('results_scrolling_down') },
     })
     for _, mapping in ipairs(mappings) do mapping.opts.buffer = true end
     vim.api.nvim_create_autocmd('FileType', { pattern = vim.g.picker_filetype, callback = function()
