@@ -41,9 +41,9 @@ vim.o.fillchars = 'fold: ,foldopen:,foldclose:,foldsep: '
 --- @class LightBoat.Opt
 vim.g.lightboat_opt = {
   --- @type string[]
-  treesitter_ensure_installed = {},
+  treesitter_ensure_installed = { 'lua' },
   --- @type string[]
-  mason_ensure_installed = {},
+  mason_ensure_installed = { 'lua_ls' },
 }
 
 -- vim.g.loaded_matchit = 1
