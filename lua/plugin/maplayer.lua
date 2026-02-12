@@ -370,11 +370,16 @@ return {
       { key = '<f1>', mode = { 'n', 'i' }, desc = p .. 'Which Key', handler = h.picker_wrap('which_key') },
       { key = '<pageup>', mode = { 'n', 'i' }, desc = p .. 'Results Scrolling Up', handler = h.picker_wrap('results_scrolling_up') },
       { key = '<pagedown>', mode = { 'n', 'i' }, desc = p .. 'Results Scrolling Down', handler = h.picker_wrap('results_scrolling_down') },
+      { key = '<c-q>', mode = { 'n', 'i' }, desc = p .. 'Send Selected to Qflist', handler = h.picker_wrap('send_selected_to_qflist', 'open_qflist') },
     })
     for _, mapping in ipairs(mappings) do mapping.opts.buffer = true end
     vim.api.nvim_create_autocmd('FileType', { pattern = vim.g.picker_filetype, callback = function()
       for _, mapping in ipairs(mappings) do vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts) end
     end})
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "TelescopePreviewerLoaded",
+      callback = function() vim.wo.wrap = true end,
+    })
     -- stylua: ignore end
   end,
 }
