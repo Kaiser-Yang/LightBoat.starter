@@ -1,5 +1,7 @@
+vim.g.big_file_limit = 1024 * 1024 -- 1 MB
+vim.g.bif_file_average_every_line = 200
 vim.g.highlight_on_yank = true
-vim.g.highlight_on_yank_limit = 1000
+vim.g.highlight_on_yank_limit = 1024 -- 1 KB
 vim.g.highlight_on_yank_duration = 300
 vim.g.conform_on_save = true
 vim.g.conform_on_save_reguess_indent = true
