@@ -58,8 +58,8 @@ return {
       local current_line_indent = vim.fn.indent(vim.fn.line('.'))
       return last_line_indent > current_line_indent
     end)
+    -- stylua: ignore start
     require('maplayer').setup({
-      -- stylua: ignore start
       -- Markdown Quick Insert
       { key = '1', mode = 'i', desc = 'Insert Markdown Title 1', condition = mc, handler = h.markdown_title(1) },
       { key = '2', mode = 'i', desc = 'Insert Markdown Title 2', condition = mc, handler = h.markdown_title(2) },
@@ -300,8 +300,49 @@ return {
       { key = '<c-l>', desc = 'Cursor to Right Window', handler = h.cursor_to_right_window },
       -- This one is similar to "d" you and use "<m-x>d" to delete one line in normal mode
       { key = '<m-x>', mode = { 'n', 'x' }, desc = 'System Cut', handler = h.system_cut, count = true },
-
-      -- stylua: ignore end
     })
+    vim.api.nvim_create_autocmd('FileType', { pattern = vim.g.picker_filetype, callback = function()
+      local p = vim.g.picker_keymap_prefix
+      local mappings = require('maplayer').make({
+        { key = '<c-n>', mode = 'i', desc = p .. 'Move Selection Next', handler = h.picker_wrap('move_selection_next') },
+        { key = '<c-p>', mode = 'i', desc = p .. 'Move Selection Previous', handler = h.picker_wrap('move_selection_previous') },
+        { key = '<c-c>', mode = 'i', desc = p .. 'Close', handler = h.picker_wrap('close') },
+        { key = '<c-r><c-w>', mode = 'i', desc = p .. 'Insert Original Cword', handler = h.picker_wrap('insert_original_cword') },
+        { key = '<c-r><c-a>', mode = 'i', desc = p .. 'Insert Original CWORD', handler = h.picker_wrap('insert_original_cWORD') },
+        { key = '<c-r><c-f>', mode = 'i', desc = p .. 'Insert Original Cfile', handler = h.picker_wrap('insert_original_cfile') },
+        { key = '<c-r><c-l>', mode = 'i', desc = p .. 'Insert Original Cline', handler = h.picker_wrap('insert_original_cline') },
+        -- { key = '<c-l>', mode = 'i', desc = p .. 'Complete Tag', handler = h.picker_wrap('complete_tag') },
+
+        { key = '<esc>', desc = p .. 'Close', handler = h.picker_wrap('close') },
+        { key = '<c-c>', desc = p .. 'Close', handler = h.picker_wrap('close') },
+        { key = '<q>', desc = p .. 'Close', handler = h.picker_wrap('close') },
+        { key = 'j', desc = p .. 'Move Selection Next', handler = h.picker_wrap('move_selection_next') },
+        { key = 'k', desc = p .. 'Move Selection Previous', handler = h.picker_wrap('move_selection_previous') },
+        { key = 'H', desc = p .. 'Move To Top', handler = h.picker_wrap('move_to_top') },
+        { key = 'M', desc = p .. 'Move To Middle', handler = h.picker_wrap('move_to_middle') },
+        { key = 'L', desc = p .. 'Move To Bottom', handler = h.picker_wrap('move_to_bottom') },
+        { key = 'gg', desc = p .. 'Move To Top', handler = h.picker_wrap('move_to_top') },
+        { key = 'G', desc = p .. 'Move To Bottom', handler = h.picker_wrap('move_to_bottom') },
+        { key = '?', desc = p .. 'Which Key', handler = h.picker_wrap('which_key') },
+
+        { key = '<cr>', mode = { 'n', 'i' }, desc = p .. 'Select Default', handler = h.picker_wrap('select_default') },
+        { key = '<c-x>', mode = { 'n', 'i' }, desc = p .. 'Select Horizontal', handler = h.picker_wrap('select_horizontal') },
+        { key = '<c-v>', mode = { 'n', 'i' }, desc = p .. 'Select Vertical', handler = h.picker_wrap('select_vertical') },
+        { key = '<c-t>', mode = { 'n', 'i' }, desc = p .. 'Select Tab', handler = h.picker_wrap('select_tab') },
+        { key = '<c-u>', mode = { 'n', 'i' }, desc = p .. 'Preview Scrolling Up', handler = h.picker_wrap('preview_scrolling_up') },
+        { key = '<c-d>', mode = { 'n', 'i' }, desc = p .. 'Preview Scrolling Down', handler = h.picker_wrap('preview_scrolling_down') },
+        { key = '<tab>', mode = { 'n', 'i' }, desc = p .. 'Toggle Selection', handler = h.picker_wrap('toggle_selection', 'move_selection_worse') },
+        { key = '<s-tab>', mode = { 'n', 'i' }, desc = p .. 'Toggle Selection', handler = h.picker_wrap('move_selection_better', 'toggle_selection') },
+        { key = '<m-a>', mode = { 'n', 'i' }, desc = p .. 'Smart Select All', handler = h.picker_wrap('smart_select_all') },
+        { key = '<leftmouse>', mode = { 'n', 'i' }, desc = p .. 'Mouse Click', handler = h.picker_wrap('mouse_click') },
+        { key = '<2-leftmouse>', mode = { 'n', 'i' }, desc = p .. 'Mouse Double Click', handler = h.picker_wrap('double_mouse_click') },
+        { key = '<f1>', mode = { 'n', 'i' }, desc = p .. 'Which Key', handler = h.picker_wrap('which_key') },
+      })
+      for _, mapping in ipairs(mappings) do
+        mapping.opts.buffer = true
+        vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
+      end
+    end})
+    -- stylua: ignore end
   end,
 }
