@@ -125,9 +125,6 @@ return {
       { key = '[[', mode = { 'n', 'x', 'o' }, desc = 'Previous Section', condition = tac_hc, handler = h.previous_section },
       { key = ']]', mode = { 'n', 'x', 'o' }, desc = 'Next Block Start', condition = tac_nhc, handler = h.next_block_start },
       { key = ']]', mode = { 'n', 'x', 'o' }, desc = 'Next Section', condition = tac_hc, handler = h.next_section },
-      -- By default, "[t" and "]t" are mapped to ":tabprevious" and ":tabnext"
-      { key = '[t', mode = { 'n', 'x', 'o' }, desc = 'Previous Todo', handler = h.previous_todo },
-      { key = ']t', mode = { 'n', 'x', 'o' }, desc = 'Next Todo', handler = h.next_todo },
 
       -- Treesitter Text Object
       { key = 'aa', mode = { 'o', 'x' }, desc = 'Around Argument', condition = tac, handler = h.around_parameter },
@@ -265,11 +262,10 @@ return {
       { key = '<leader>te', desc = 'Toggle Expandtab', handler = h.toggle_expandtab },
 
       -- Indent
-      { key = '[|', mode = { 'n', 'x', 'o' }, desc = 'Top of Indent', handler = h.goto_indent_top },
-      { key = ']|', mode = { 'n', 'x', 'o' }, desc = 'Bottom of Indent', handler = h.goto_indent_bottom },
-      { key = 'i|', mode = { 'x', 'o' }, desc = 'Inside Indent Line', handler = h.inside_indent, count = true },
-      { key = 'a|', mode = { 'x', 'o' }, desc = 'Around Indent Line', handler = h.around_indent, count = true },
-      { key = '<leader>ti', desc = 'Toggle Indent Line', handler = h.toggle_indent_line },
+      { key = '[|', mode = { 'n', 'x', 'o' }, desc = 'Top of Indent', handler = '<plug>(blink-indent-top)' },
+      { key = ']|', mode = { 'n', 'x', 'o' }, desc = 'Bottom of Indent', handler = '<plug>(blink-indent-bottom)' },
+      { key = 'i|', mode = { 'x', 'o' }, desc = 'Inside Indent Line', handler = '<plug>(blink-indent-inside)', count = true },
+      { key = 'a|', mode = { 'x', 'o' }, desc = 'Around Indent Line', handler = '<plug>(blink-indent-around)', count = true },
 
       -- Basic
       -- By default "<C-A>" is used to insert previously inserted text
@@ -302,7 +298,7 @@ return {
       { key = '<m-x>', mode = { 'n', 'x' }, desc = 'System Cut', handler = h.system_cut, count = true },
     })
     vim.api.nvim_create_autocmd('FileType', { pattern = vim.g.picker_filetype, callback = function()
-      local p = vim.g.picker_keymap_prefix
+      local p = vim.g.picker_keymap_desc_prefix
       local mappings = require('maplayer').make({
         { key = '<c-n>', mode = 'i', desc = p .. 'Move Selection Next', handler = h.picker_wrap('move_selection_next') },
         { key = '<c-p>', mode = 'i', desc = p .. 'Move Selection Previous', handler = h.picker_wrap('move_selection_previous') },
