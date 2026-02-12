@@ -2,7 +2,6 @@
 -- See https://github.com/topics/neovim-colorscheme to find one you like and set it here
 return {
   'ellisonleao/gruvbox.nvim',
-  lazy = false,
   priority = 1000,
   opts = {},
   config = function(_, opts)

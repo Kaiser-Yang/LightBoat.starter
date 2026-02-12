@@ -42,6 +42,8 @@ vim.o.fillchars = 'fold: ,foldopen:,foldclose:,foldsep: '
 vim.g.lightboat_opt = {
   --- @type string[]
   treesitter_ensure_installed = {},
+  --- @type string[]
+  mason_ensure_installed = {},
 }
 
 -- vim.g.loaded_matchit = 1
