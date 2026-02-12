@@ -15,7 +15,7 @@ vim.g.nohlsearch_auto_run = true
 -- See https://github.com/neovim/neovim/tree/master/runtime/ftplugin for built-in ftplugins.
 vim.g.no_plugin_maps = true
 
--- We use nvim-tree instead of netrw, so disable it
+-- We use another explore instead of netrw, so disable it
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
