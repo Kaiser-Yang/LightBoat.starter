@@ -30,9 +30,9 @@ return {
     local snac = c():snippet_not_active()
     local snac_epc = snac:add(function()
       local line = vim.api.nvim_get_current_line()
-      local char_after_cursor = line:sub(vim.fn.col('.'), vim.fn.col('.'))
-      local pairs = { '(', ')', '[', ']', '{', '}', '"', "'", '`' }
-      return vim.tbl_contains(pairs, char_after_cursor)
+      local cursor_column = vim.api.nvim_win_get_cursor(0)[2]
+      local content_before_cursor = line:sub(1, cursor_column)
+      return not content_before_cursor:match('^%s*$')
     end)
     local dvc = c():documentation_visible()
     local svc = c():signature_visible()
