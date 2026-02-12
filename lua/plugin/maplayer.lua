@@ -16,40 +16,65 @@ return {
     vim.o.timeoutlen = vim.g.vscode and 300 or 0
     local c = require('lightboat.condition')
     local h = require('lightboat.handler')
+    -- In markdown files and the last pressed key is ","
     local mc = c():filetype('markdown'):last_key(',')
+    -- The option "spell" is on
     local sc = c():add(function() return vim.wo.spell end)
+    -- cwd or current buffer is in a git repository path
     local igrc = c():is_git_repository()
+    -- There are some conflicts in cwd or current buffer
     local hcc = c():has_conflict()
+    -- There is a treesitter parser attached to current buffer
     local tac = c():treesitter_available()
+    -- Current buffer is a help buffer
     local hc = c():filetype('help')
+    -- Current buffer is not a help buffer
     local nhc = c():not_filetype('help')
+    -- Completion menu is visible
     local cmvc = c():completion_menu_visible()
+    -- Completion menu is not visible
     local cmnvc = c():completion_menu_not_visible()
+    -- There is a item selected in the completion menu
     local cisc = c():completion_item_selected()
+    -- Snippet is active
     local sac = c():snippet_active()
+    -- Snippet is not active
     local snac = c():snippet_not_active()
+    -- Snippet is not active and cursor is after indentation
     local snac_epc = snac:add(function()
       local line = vim.api.nvim_get_current_line()
       local cursor_column = vim.api.nvim_win_get_cursor(0)[2]
       local content_before_cursor = line:sub(1, cursor_column)
       return not content_before_cursor:match('^%s*$')
     end)
+    -- The documentation of completion item is visible
     local dvc = c():documentation_visible()
+    -- The signature help window is visible
     local svc = c():signature_visible()
+    -- The cursor is not at the end of the line
     local cnec = c():cursor_not_eol()
+    -- Treesitter is available and not in a help buffer
     local tac_nhc = tac:add(nhc)
+    -- Treesitter is available and in a help buffer
     local tac_hc = tac:add(hc)
+    -- Completion menu is not visible and cursor is not at the end of the line
     local cmnvc_cnec = cmnvc:add(cnec)
+    -- There is at least one LSP client attached to current buffer
     local lac = c():lsp_attached()
+    -- Cursor is not at the first non blank character
     local cnfnbc = c():cursor_not_first_non_blank()
+    -- "delta" is executable
     local dec = c():add(function() return vim.fn.executable('delta') == 1 end)
+    -- Conflicts found and "delta" is executable
     local hcc_dec = hcc:add(dec)
+    -- Used for "ys", "ds", "cs"...
     local hsc = c():add(
       function()
         return vim.tbl_contains({ 'y', 'd', 'c' })
           or vim.v.operator == 'g@' and vim.o.operatorfunc:find('nvim%-surround')
       end
     )
+    -- Snippet is not active and current line's indentation is less than last line's
     local snac_iltllc = snac:add(function()
       local lnum, col = unpack(vim.api.nvim_win_get_cursor(0))
       local content_before_cursor = vim.api.nvim_get_current_line():sub(1, col)
