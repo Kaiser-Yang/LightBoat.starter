@@ -14,16 +14,18 @@ return {
     -- which-key.nvim can not be used in vscode neovim extension,
     -- so we must set "timeoutlen" with a proper value to make it work
     vim.o.timeoutlen = vim.g.vscode and 300 or 0
-    local toggle_blink_indent = function()
-      local indent = require('blink.indent')
-      local status = indent.is_enabled() == false
-      require('lightboat.util').toggle_notify('Indent Line', status, { title = 'Blink Indent' })
-      indent.enable(status)
-      return true
-    end
     local c = require('lightboat.condition')
     local h = require('lightboat.handler')
     local r = h.repmove_wrap
+    local u = require('lightboat.util')
+    vim.keymap.set({ 'x', 'o' }, 'xx', function() u.key.feedkeys('<plug>(blink-indent-inside)', 'm') end, {})
+    local toggle_blink_indent = function()
+      local indent = require('blink.indent')
+      local status = indent.is_enabled() == false
+      u.toggle_notify('Indent Line', status, { title = 'Blink Indent' })
+      indent.enable(status)
+      return true
+    end
     -- In markdown files and the last pressed key is ","
     local mc = c():filetype('markdown'):last_key(',')
     -- The option "spell" is on
@@ -128,10 +130,10 @@ return {
       { key = '[A', mode = { 'n', 'x', 'o' }, desc = 'Previous Argument End', condition = tac, handler = h.previous_parameter_end, fallback = false },
       { key = ']A', mode = { 'n', 'x', 'o' }, desc = 'Next Argument End', condition = tac, handler = h.next_parameter_end, fallback = false },
       -- By default, "[i", "]i", "[I", and "]I" are used to show information of keywords under cursor
-      { key = '[i', mode = { 'n', 'x', 'o' }, desc = 'Previous If Start', condition = tac, handler = h.rempove_previous_conditional_start, fallback = false },
-      { key = ']i', mode = { 'n', 'x', 'o' }, desc = 'Next If Start', condition = tac, handler = h.rempove_next_conditional_start, fallback = false },
-      { key = '[I', mode = { 'n', 'x', 'o' }, desc = 'Previous If End', condition = tac, handler = h.rempove_previous_conditional_end, fallback = false },
-      { key = ']I', mode = { 'n', 'x', 'o' }, desc = 'Next If End', condition = tac, handler = h.rempove_next_conditional_end, fallback = false },
+      { key = '[i', mode = { 'n', 'x', 'o' }, desc = 'Previous If Start', condition = tac, handler = h.previous_conditional_start, fallback = false },
+      { key = ']i', mode = { 'n', 'x', 'o' }, desc = 'Next If Start', condition = tac, handler = h.next_conditional_start, fallback = false },
+      { key = '[I', mode = { 'n', 'x', 'o' }, desc = 'Previous If End', condition = tac, handler = h.previous_conditional_end, fallback = false },
+      { key = ']I', mode = { 'n', 'x', 'o' }, desc = 'Next If End', condition = tac, handler = h.next_conditional_end, fallback = false },
       -- By default, "[f", "]f" are aliases of "gf"
       { key = '[f', mode = { 'n', 'x', 'o' }, desc = 'Previous For Start', condition = tac, handler = h.previous_loop_start, fallback = false },
       { key = ']f', mode = { 'n', 'x', 'o' }, desc = 'Next For Start', condition = tac, handler = h.next_loop_start, fallback = false },
@@ -229,6 +231,7 @@ return {
       { key = '<bs>', mode = 'i', desc = 'Autopair BS', handler = h.auto_pair_wrap('<bs>'), replace_keycodes = false },
       { key = '<m-e>', mode = 'i', desc = 'Autopair Fastwarp', handler = h.auto_pair_wrap('<m-e>'), replace_keycodes = false },
       { key = '<m-E>', mode = 'i', desc = 'Autopair Reverse Fastwarp', handler = h.auto_pair_wrap('<m-E>'), replace_keycodes = false },
+      { key = '<m-c>', mode = 'i', desc = 'Autopair Close', handler = h.auto_pair_wrap('<m-)>'), replace_keycodes = false },
       { key = '<tab>', mode = 'i', desc = 'Autopair Tabout', condition = snac_epc, handler = h.auto_pair_wrap('<m-tab>'), replace_keycodes = false },
       { key = '<space>', mode = 'i', desc = 'Autopair Space', handler = h.auto_pair_wrap('<space>'), replace_keycodes = false },
 
@@ -331,47 +334,45 @@ return {
       -- This one is similar to "d" you and use "<m-x>d" to delete one line in normal mode
       { key = '<m-x>', mode = { 'n', 'x' }, desc = 'System Cut', handler = h.system_cut, count = true },
     })
+    local p = vim.g.picker_keymap_desc_prefix
+    local mappings = require('maplayer').make({
+      { key = '<c-n>', mode = 'i', desc = p .. 'Move Selection Next', handler = h.picker_wrap('move_selection_next') },
+      { key = '<c-p>', mode = 'i', desc = p .. 'Move Selection Previous', handler = h.picker_wrap('move_selection_previous') },
+      { key = '<c-c>', mode = 'i', desc = p .. 'Close', handler = h.picker_wrap('close') },
+      { key = '<c-r><c-w>', mode = 'i', desc = p .. 'Insert Original Cword', handler = h.picker_wrap('insert_original_cword') },
+      { key = '<c-r><c-a>', mode = 'i', desc = p .. 'Insert Original CWORD', handler = h.picker_wrap('insert_original_cWORD') },
+      { key = '<c-r><c-f>', mode = 'i', desc = p .. 'Insert Original Cfile', handler = h.picker_wrap('insert_original_cfile') },
+      { key = '<c-r><c-l>', mode = 'i', desc = p .. 'Insert Original Cline', handler = h.picker_wrap('insert_original_cline') },
+      -- { key = '<c-l>', mode = 'i', desc = p .. 'Complete Tag', handler = h.picker_wrap('complete_tag') },
+
+      { key = '<esc>', desc = p .. 'Close', handler = h.picker_wrap('close') },
+      { key = '<c-c>', desc = p .. 'Close', handler = h.picker_wrap('close') },
+      { key = '<q>', desc = p .. 'Close', handler = h.picker_wrap('close') },
+      { key = 'j', desc = p .. 'Move Selection Next', handler = h.picker_wrap('move_selection_next') },
+      { key = 'k', desc = p .. 'Move Selection Previous', handler = h.picker_wrap('move_selection_previous') },
+      { key = 'H', desc = p .. 'Move To Top', handler = h.picker_wrap('move_to_top') },
+      { key = 'M', desc = p .. 'Move To Middle', handler = h.picker_wrap('move_to_middle') },
+      { key = 'L', desc = p .. 'Move To Bottom', handler = h.picker_wrap('move_to_bottom') },
+      { key = 'gg', desc = p .. 'Move To Top', handler = h.picker_wrap('move_to_top') },
+      { key = 'G', desc = p .. 'Move To Bottom', handler = h.picker_wrap('move_to_bottom') },
+      { key = '?', desc = p .. 'Which Key', handler = h.picker_wrap('which_key') },
+
+      { key = '<cr>', mode = { 'n', 'i' }, desc = p .. 'Select Default', handler = h.picker_wrap('select_default') },
+      { key = '<c-x>', mode = { 'n', 'i' }, desc = p .. 'Select Horizontal', handler = h.picker_wrap('select_horizontal') },
+      { key = '<c-v>', mode = { 'n', 'i' }, desc = p .. 'Select Vertical', handler = h.picker_wrap('select_vertical') },
+      { key = '<c-t>', mode = { 'n', 'i' }, desc = p .. 'Select Tab', handler = h.picker_wrap('select_tab') },
+      { key = '<c-u>', mode = { 'n', 'i' }, desc = p .. 'Preview Scrolling Up', handler = h.picker_wrap('preview_scrolling_up') },
+      { key = '<c-d>', mode = { 'n', 'i' }, desc = p .. 'Preview Scrolling Down', handler = h.picker_wrap('preview_scrolling_down') },
+      { key = '<tab>', mode = { 'n', 'i' }, desc = p .. 'Toggle Selection', handler = h.picker_wrap('toggle_selection', 'move_selection_worse') },
+      { key = '<s-tab>', mode = { 'n', 'i' }, desc = p .. 'Toggle Selection', handler = h.picker_wrap('move_selection_better', 'toggle_selection') },
+      { key = '<m-a>', mode = { 'n', 'i' }, desc = p .. 'Smart Select All', handler = h.picker_wrap('smart_select_all') },
+      { key = '<leftmouse>', mode = { 'n', 'i' }, desc = p .. 'Mouse Click', handler = h.picker_wrap('mouse_click') },
+      { key = '<2-leftmouse>', mode = { 'n', 'i' }, desc = p .. 'Mouse Double Click', handler = h.picker_wrap('double_mouse_click') },
+      { key = '<f1>', mode = { 'n', 'i' }, desc = p .. 'Which Key', handler = h.picker_wrap('which_key') },
+    })
+    for _, mapping in ipairs(mappings) do mapping.opts.buffer = true end
     vim.api.nvim_create_autocmd('FileType', { pattern = vim.g.picker_filetype, callback = function()
-      local p = vim.g.picker_keymap_desc_prefix
-      local mappings = require('maplayer').make({
-        { key = '<c-n>', mode = 'i', desc = p .. 'Move Selection Next', handler = h.picker_wrap('move_selection_next') },
-        { key = '<c-p>', mode = 'i', desc = p .. 'Move Selection Previous', handler = h.picker_wrap('move_selection_previous') },
-        { key = '<c-c>', mode = 'i', desc = p .. 'Close', handler = h.picker_wrap('close') },
-        { key = '<c-r><c-w>', mode = 'i', desc = p .. 'Insert Original Cword', handler = h.picker_wrap('insert_original_cword') },
-        { key = '<c-r><c-a>', mode = 'i', desc = p .. 'Insert Original CWORD', handler = h.picker_wrap('insert_original_cWORD') },
-        { key = '<c-r><c-f>', mode = 'i', desc = p .. 'Insert Original Cfile', handler = h.picker_wrap('insert_original_cfile') },
-        { key = '<c-r><c-l>', mode = 'i', desc = p .. 'Insert Original Cline', handler = h.picker_wrap('insert_original_cline') },
-        -- { key = '<c-l>', mode = 'i', desc = p .. 'Complete Tag', handler = h.picker_wrap('complete_tag') },
-
-        { key = '<esc>', desc = p .. 'Close', handler = h.picker_wrap('close') },
-        { key = '<c-c>', desc = p .. 'Close', handler = h.picker_wrap('close') },
-        { key = '<q>', desc = p .. 'Close', handler = h.picker_wrap('close') },
-        { key = 'j', desc = p .. 'Move Selection Next', handler = h.picker_wrap('move_selection_next') },
-        { key = 'k', desc = p .. 'Move Selection Previous', handler = h.picker_wrap('move_selection_previous') },
-        { key = 'H', desc = p .. 'Move To Top', handler = h.picker_wrap('move_to_top') },
-        { key = 'M', desc = p .. 'Move To Middle', handler = h.picker_wrap('move_to_middle') },
-        { key = 'L', desc = p .. 'Move To Bottom', handler = h.picker_wrap('move_to_bottom') },
-        { key = 'gg', desc = p .. 'Move To Top', handler = h.picker_wrap('move_to_top') },
-        { key = 'G', desc = p .. 'Move To Bottom', handler = h.picker_wrap('move_to_bottom') },
-        { key = '?', desc = p .. 'Which Key', handler = h.picker_wrap('which_key') },
-
-        { key = '<cr>', mode = { 'n', 'i' }, desc = p .. 'Select Default', handler = h.picker_wrap('select_default') },
-        { key = '<c-x>', mode = { 'n', 'i' }, desc = p .. 'Select Horizontal', handler = h.picker_wrap('select_horizontal') },
-        { key = '<c-v>', mode = { 'n', 'i' }, desc = p .. 'Select Vertical', handler = h.picker_wrap('select_vertical') },
-        { key = '<c-t>', mode = { 'n', 'i' }, desc = p .. 'Select Tab', handler = h.picker_wrap('select_tab') },
-        { key = '<c-u>', mode = { 'n', 'i' }, desc = p .. 'Preview Scrolling Up', handler = h.picker_wrap('preview_scrolling_up') },
-        { key = '<c-d>', mode = { 'n', 'i' }, desc = p .. 'Preview Scrolling Down', handler = h.picker_wrap('preview_scrolling_down') },
-        { key = '<tab>', mode = { 'n', 'i' }, desc = p .. 'Toggle Selection', handler = h.picker_wrap('toggle_selection', 'move_selection_worse') },
-        { key = '<s-tab>', mode = { 'n', 'i' }, desc = p .. 'Toggle Selection', handler = h.picker_wrap('move_selection_better', 'toggle_selection') },
-        { key = '<m-a>', mode = { 'n', 'i' }, desc = p .. 'Smart Select All', handler = h.picker_wrap('smart_select_all') },
-        { key = '<leftmouse>', mode = { 'n', 'i' }, desc = p .. 'Mouse Click', handler = h.picker_wrap('mouse_click') },
-        { key = '<2-leftmouse>', mode = { 'n', 'i' }, desc = p .. 'Mouse Double Click', handler = h.picker_wrap('double_mouse_click') },
-        { key = '<f1>', mode = { 'n', 'i' }, desc = p .. 'Which Key', handler = h.picker_wrap('which_key') },
-      })
-      for _, mapping in ipairs(mappings) do
-        mapping.opts.buffer = true
-        vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
-      end
+      for _, mapping in ipairs(mappings) do vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts) end
     end})
     -- stylua: ignore end
   end,
