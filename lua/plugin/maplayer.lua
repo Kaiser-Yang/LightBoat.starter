@@ -276,6 +276,13 @@ return {
       { key = 'a|', mode = { 'n', 'o' }, desc = 'Around Indent Line', handler = '<plug>(blink-indent-around)', count = true, expr = true },
       { key = '<leader>ti', desc = 'Toggle Indent Line', handler = toggle_blink_indent },
 
+      -- Picker
+      -- Todo comment
+      { key = '<leader>st', desc = 'Search Todo', handler = '<cmd><cr>' },
+      -- By default, "[t" and "]t" are mapped to ":tabprevious" and ":tabnext"
+      -- Those below do not support vim.v.count
+      { key = '[t', mode = { 'n', 'x', 'o' }, desc = 'previous todo', handler = r(function() return require('todo-comments').jump_prev() end, function() return require('todo-comments').jump_next() end, 1) },
+      { key = ']t', mode = { 'n', 'x', 'o' }, desc = 'next todo', handler = r(function() return require('todo-comments').jump_prev() end, function() return require('todo-comments').jump_next() end, 2) },
       -- Basic
       -- By default "<C-A>" is used to insert previously inserted text
       { key = '<c-a>', mode = 'i', 'Cursor to First Non-blank', condition = cnfnbc, handler = h.cursor_to_first_non_blank_insert },
