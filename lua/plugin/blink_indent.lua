@@ -1,5 +1,6 @@
 return {
   'saghen/blink.indent',
+  event = 'VeryLazy',
   opts = {
     mappings = {
       object_scope = '<plug>(blink-indent-inside)',
@@ -16,24 +17,24 @@ return {
       char = '│',
       priority = 1000,
       highlights = {
-        'BlinkIndentViolet',
-        'BlinkIndentCyan',
-        'BlinkIndentBlue',
-        'BlinkIndentGreen',
-        'BlinkIndentYellow',
-        'BlinkIndentOrange',
         'BlinkIndentRed',
+        'BlinkIndentOrange',
+        'BlinkIndentYellow',
+        'BlinkIndentGreen',
+        'BlinkIndentBlue',
+        'BlinkIndentCyan',
+        'BlinkIndentViolet',
       },
       underline = {
         enabled = true,
         highlights = {
-          'BlinkIndentVioletUnderline',
-          'BlinkIndentCyanUnderline',
-          'BlinkIndentBlueUnderline',
-          'BlinkIndentGreenUnderline',
-          'BlinkIndentYellowUnderline',
-          'BlinkIndentOrangeUnderline',
           'BlinkIndentRedUnderline',
+          'BlinkIndentOrangeUnderline',
+          'BlinkIndentYellowUnderline',
+          'BlinkIndentGreenUnderline',
+          'BlinkIndentBlueUnderline',
+          'BlinkIndentCyanUnderline',
+          'BlinkIndentVioletUnderline',
         },
       },
     },
