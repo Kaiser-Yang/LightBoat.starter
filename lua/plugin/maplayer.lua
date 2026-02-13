@@ -31,8 +31,9 @@ return {
     local igrc = c():is_git_repository()
     -- There are some conflicts in cwd or current buffer
     local hcc = c():has_conflict()
-    -- There is a treesitter parser attached to current buffer
+    -- The treesitter parser supports highlight
     local thac = c():treesitter_highlight_available()
+    -- The nvim-treesitter-textobjects is installed
     local ttac = c():treesitter_textobject_available()
     -- Completion menu is visible
     local cmvc = c():completion_menu_visible()

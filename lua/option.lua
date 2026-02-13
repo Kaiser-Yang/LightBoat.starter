@@ -37,6 +37,9 @@ vim.o.foldopen = 'block,mark,percent,quickfix,search,tag,undo'
 vim.o.foldlevel = 99999
 vim.o.foldcolumn = 'auto'
 vim.o.fillchars = 'fold: ,foldopen:,foldclose:,foldsep: '
+vim.o.splitright = true
+vim.o.splitbelow = false
+vim.o.splitkeep = 'topline'
 
 --- @class LightBoat.Opt
 vim.g.lightboat_opt = {
