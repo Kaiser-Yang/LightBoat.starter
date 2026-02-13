@@ -256,9 +256,6 @@ return {
       { key = '<leader>xdv', desc = 'Diff Current V.S. Incoming Conflict', condition = hcc_dec, handler = h.diff_current_incoming_conflict, fallback = false },
       { key = '<leader>xdV', desc = 'Diff Incoming V.S. Current Conflict', condition = hcc_dec, handler = h.diff_incoming_current_conflict, fallback = false },
 
-      -- Picker
-      { key = '<leader>st', desc = 'Search Todo', handler = h.todo_picker },
-
       -- Comment
       { key = '<m-/>', desc = 'Comment Line', handler = h.comment_line, count = true },
       { key = '<m-/>', mode = 'i', desc = 'Comment Line', handler = h.comment_line_insert },
@@ -278,12 +275,18 @@ return {
       { key = '<leader>ti', desc = 'Toggle Indent Line', handler = toggle_blink_indent },
 
       -- Picker
-      -- Todo comment
-      { key = '<leader>st', desc = 'Search Todo', handler = '<cmd><cr>' },
+      { key = '<c-p>', desc = 'Serach Files', handler = h.picker_wrap('find_files') },
+      { key = '<m-f>', desc = 'Live Grep', handler = h.picker_wrap('live_grep') },
+      { key = '<leader>sb', desc = 'Search Buffer', handler = h.picker_wrap('buffers') },
+      { key = '<leader>st', desc = 'Search Todo', handler = h.picker_wrap({ 'todo-comments', 'todo' }) },
+      { key = '<leader>sw', mode = { 'n', 'x' }, desc = 'Grep Word', handler = h.picker_wrap('grep_string') },
+      { key = '<leader>sh', desc = 'Search Help', handler = h.picker_wrap('help_tags') },
+      { key = '<f1>', desc = 'Search Help', handler = h.picker_wrap('help_tags') },
       -- By default, "[t" and "]t" are mapped to ":tabprevious" and ":tabnext"
       -- Those below do not support vim.v.count
       { key = '[t', mode = { 'n', 'x', 'o' }, desc = 'previous todo', handler = r(function() return require('todo-comments').jump_prev() end, function() return require('todo-comments').jump_next() end, 1) },
       { key = ']t', mode = { 'n', 'x', 'o' }, desc = 'next todo', handler = r(function() return require('todo-comments').jump_prev() end, function() return require('todo-comments').jump_next() end, 2) },
+
       -- Basic
       -- By default "<C-A>" is used to insert previously inserted text
       { key = '<c-a>', mode = 'i', 'Cursor to First Non-blank', condition = cnfnbc, handler = h.cursor_to_first_non_blank_insert },
