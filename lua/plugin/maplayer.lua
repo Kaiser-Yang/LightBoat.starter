@@ -25,8 +25,6 @@ return {
       indent.enable(status)
       return true
     end
-    -- In markdown files and the last pressed key is ","
-    local mc = c():filetype('markdown'):last_key(',')
     -- The option "spell" is on
     local sc = c():add(function() return vim.wo.spell end)
     -- cwd or current buffer is in a git repository path
@@ -94,23 +92,6 @@ return {
     end)
     -- stylua: ignore start
     require('maplayer').setup({
-      -- Markdown Quick Insert
-      { key = '1', mode = 'i', desc = 'Insert Markdown Title 1', condition = mc, handler = h.markdown_title(1) },
-      { key = '2', mode = 'i', desc = 'Insert Markdown Title 2', condition = mc, handler = h.markdown_title(2) },
-      { key = '3', mode = 'i', desc = 'Insert Markdown Title 3', condition = mc, handler = h.markdown_title(3) },
-      { key = '4', mode = 'i', desc = 'Insert Markdown Title 4', condition = mc, handler = h.markdown_title(4) },
-      { key = 's', mode = 'i', desc = 'Insert Markdown Separate Line', condition = mc, handler = h.markdown_separate_line },
-      { key = 'm', mode = 'i', desc = 'Insert Markdown Inline Math', condition = mc, handler = h.markdown_math_inline_2 },
-      { key = 't', mode = 'i', desc = 'Insert Markdown Code Line', condition = mc, handler = h.markdown_code_line },
-      { key = 'x', mode = 'i', desc = 'Insert Markdown Todo', condition = mc, handler = h.markdown_todo },
-      { key = 'a', mode = 'i', desc = 'Insert Markdown Link', condition = mc, handler = h.markdown_link },
-      { key = 'b', mode = 'i', desc = 'Insert Markdown Bold Text', condition = mc, handler = h.markdown_bold },
-      { key = 'd', mode = 'i', desc = 'Insert Markdown Delete Line', condition = mc, handler = h.markdown_delete_line },
-      { key = 'i', mode = 'i', desc = 'Insert Markdown Italic Text', condition = mc, handler = h.markdown_italic },
-      { key = 'M', mode = 'i', desc = 'Insert Markdown Math Block', condition = mc, handler = h.markdown_math_block },
-      { key = 'c', mode = 'i', desc = 'Insert Markdown Code Block', condition = mc, handler = h.markdown_code_block },
-      { key = 'f', mode = 'i', desc = 'Goto&Delete Markdown Placeholder', condition = mc, handler = h.markdown_goto_placeholder },
-
       -- Basic Motion
       { key = ';', mode = { 'n', 'x' }, desc = 'Repeat Last Motion Forward', handler = h.semicolon, count = true },
       { key = ',', mode = { 'n', 'x' }, desc = 'Repeat Last Motion Backward', handler = h.comma, count = true },
@@ -333,8 +314,35 @@ return {
       -- This one is similar to "d" you and use "<m-x>d" to delete one line in normal mode
       { key = '<m-x>', mode = { 'n', 'x' }, desc = 'System Cut', handler = h.system_cut, count = true },
     })
+    local mm = require('maplayer').make({
+      -- Markdown Quick Insert
+      { key = '1', mode = 'i', desc = 'Insert Markdown Title 1', handler = h.markdown_title(1) },
+      { key = '2', mode = 'i', desc = 'Insert Markdown Title 2', handler = h.markdown_title(2) },
+      { key = '3', mode = 'i', desc = 'Insert Markdown Title 3', handler = h.markdown_title(3) },
+      { key = '4', mode = 'i', desc = 'Insert Markdown Title 4', handler = h.markdown_title(4) },
+      { key = 's', mode = 'i', desc = 'Insert Markdown Separate Line', handler = h.markdown_separate_line },
+      { key = 'm', mode = 'i', desc = 'Insert Markdown Inline Math', handler = h.markdown_math_inline_2 },
+      { key = 't', mode = 'i', desc = 'Insert Markdown Code Line', handler = h.markdown_code_line },
+      { key = 'x', mode = 'i', desc = 'Insert Markdown Todo', handler = h.markdown_todo },
+      { key = 'a', mode = 'i', desc = 'Insert Markdown Link', handler = h.markdown_link },
+      { key = 'b', mode = 'i', desc = 'Insert Markdown Bold Text', handler = h.markdown_bold },
+      { key = 'd', mode = 'i', desc = 'Insert Markdown Delete Line', handler = h.markdown_delete_line },
+      { key = 'i', mode = 'i', desc = 'Insert Markdown Italic Text', handler = h.markdown_italic },
+      { key = 'M', mode = 'i', desc = 'Insert Markdown Math Block', handler = h.markdown_math_block },
+      { key = 'c', mode = 'i', desc = 'Insert Markdown Code Block', handler = h.markdown_code_block },
+      { key = 'f', mode = 'i', desc = 'Goto&Delete Markdown Placeholder', handler = h.markdown_goto_placeholder },
+    })
+    for _, mapping in ipairs(mm) do mapping.opts.buffer = true end
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = 'markdown',
+      callback = function()
+        for _, mapping in ipairs(mm) do
+          vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts)
+        end
+      end
+    })
     local p = vim.g.picker_keymap_desc_prefix
-    local mappings = require('maplayer').make({
+    local pm = require('maplayer').make({
       { key = '<c-n>', mode = 'i', desc = p .. 'Move Selection Next', handler = h.picker_wrap('move_selection_next') },
       { key = '<c-p>', mode = 'i', desc = p .. 'Move Selection Previous', handler = h.picker_wrap('move_selection_previous') },
       { key = '<c-c>', mode = 'i', desc = p .. 'Close', handler = h.picker_wrap('close') },
@@ -372,9 +380,9 @@ return {
       { key = '<pagedown>', mode = { 'n', 'i' }, desc = p .. 'Results Scrolling Down', handler = h.picker_wrap('results_scrolling_down') },
       { key = '<c-q>', mode = { 'n', 'i' }, desc = p .. 'Send Selected to Qflist', handler = h.picker_wrap('send_selected_to_qflist', 'open_qflist') },
     })
-    for _, mapping in ipairs(mappings) do mapping.opts.buffer = true end
+    for _, mapping in ipairs(pm) do mapping.opts.buffer = true end
     vim.api.nvim_create_autocmd('FileType', { pattern = vim.g.picker_filetype, callback = function()
-      for _, mapping in ipairs(mappings) do vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts) end
+      for _, mapping in ipairs(pm) do vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts) end
     end})
     vim.api.nvim_create_autocmd("User", {
       pattern = "TelescopePreviewerLoaded",
