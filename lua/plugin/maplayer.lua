@@ -249,7 +249,7 @@ return {
       { key = '<leader>xB', desc = 'Choose Both Reverse Conflict', condition = hcc, handler = h.choose_both_reverse_conflict, fallback = false },
       { key = '<leader>xn', desc = 'Choose None Conflict', condition = hcc, handler = h.choose_none_conflict, fallback = false },
       { key = '<leader>xa', desc = 'Choose Ancestor Conflict', condition = hcc, handler = h.choose_ancestor_conflict, fallback = false },
-      { key = '<leader>xl', desc = 'List Conflict in Quickfix', condition = hcc, handler = h.list_conflict, fallback = false },
+      { key = '<leader>xq', desc = 'Quickfix Conflict', condition = hcc, handler = h.list_conflict, fallback = false },
       { key = '<leader>xdi', desc = 'Diff Incoming Conflict', condition = hcc_dec, handler = h.diff_incoming_conflict, fallback = false },
       { key = '<leader>xdc', desc = 'Diff Current Conflict', condition = hcc_dec, handler = h.diff_current_conflict, fallback = false },
       { key = '<leader>xdb', desc = 'Diff Both Conflict', condition = hcc_dec, handler = h.diff_both_conflict, fallback = false },
