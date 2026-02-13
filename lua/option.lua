@@ -20,10 +20,11 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 vim.g.mapleader = ' '
+vim.o.numberwidth = 1
 vim.o.winborder = 'rounded'
 vim.o.number = true
 vim.o.relativenumber = true
-vim.o.signcolumn = 'yes'
+vim.o.signcolumn = 'yes:1'
 vim.o.jumpoptions = 'stack'
 vim.o.termguicolors = true
 vim.o.scrolloff = 5
@@ -35,11 +36,10 @@ vim.o.ignorecase = true
 vim.o.smartcase = true
 vim.o.foldopen = 'block,mark,percent,quickfix,search,tag,undo'
 vim.o.foldlevel = 99999
-vim.o.foldcolumn = 'auto'
+vim.o.foldcolumn = '1'
 vim.o.fillchars = 'fold: ,foldopen:,foldclose:,foldsep: '
 vim.o.splitright = true
 vim.o.splitbelow = false
-vim.o.splitkeep = 'topline'
 
 --- @class LightBoat.Opt
 vim.g.lightboat_opt = {
