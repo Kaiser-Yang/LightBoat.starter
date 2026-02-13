@@ -3,6 +3,7 @@
 return {
   'ellisonleao/gruvbox.nvim',
   priority = 1000,
+  cond = not vim.g.vscode,
   opts = {
     overrides = {
       SignColumn = { bg = 'NONE' },
