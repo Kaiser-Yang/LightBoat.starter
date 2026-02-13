@@ -350,7 +350,6 @@ return {
       { key = '<c-r><c-a>', mode = 'i', desc = p .. 'Insert Original CWORD', handler = h.picker_wrap('insert_original_cWORD') },
       { key = '<c-r><c-f>', mode = 'i', desc = p .. 'Insert Original Cfile', handler = h.picker_wrap('insert_original_cfile') },
       { key = '<c-r><c-l>', mode = 'i', desc = p .. 'Insert Original Cline', handler = h.picker_wrap('insert_original_cline') },
-      -- { key = '<c-l>', mode = 'i', desc = p .. 'Complete Tag', handler = h.picker_wrap('complete_tag') },
 
       { key = '<esc>', desc = p .. 'Close', handler = h.picker_wrap('close') },
       { key = '<c-c>', desc = p .. 'Close', handler = h.picker_wrap('close') },
@@ -379,6 +378,7 @@ return {
       { key = '<pageup>', mode = { 'n', 'i' }, desc = p .. 'Results Scrolling Up', handler = h.picker_wrap('results_scrolling_up') },
       { key = '<pagedown>', mode = { 'n', 'i' }, desc = p .. 'Results Scrolling Down', handler = h.picker_wrap('results_scrolling_down') },
       { key = '<c-q>', mode = { 'n', 'i' }, desc = p .. 'Send Selected to Qflist', handler = h.picker_wrap('send_selected_to_qflist', 'open_qflist') },
+      { key = '<c-l>', mode = { 'n', 'i' }, desc = p .. 'Send Selected to Loclist', handler = h.picker_wrap('send_selected_to_loclist', 'open_loclist') },
     })
     for _, mapping in ipairs(pm) do mapping.opts.buffer = true end
     vim.api.nvim_create_autocmd('FileType', { pattern = vim.g.picker_filetype, callback = function()
