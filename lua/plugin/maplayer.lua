@@ -32,11 +32,8 @@ return {
     -- There are some conflicts in cwd or current buffer
     local hcc = c():has_conflict()
     -- There is a treesitter parser attached to current buffer
-    local tac = c():treesitter_available()
-    -- Current buffer is a help buffer
-    local hc = c():filetype('help')
-    -- Current buffer is not a help buffer
-    local nhc = c():not_filetype('help')
+    local thac = c():treesitter_highlight_available()
+    local ttac = c():treesitter_textobject_available()
     -- Completion menu is visible
     local cmvc = c():completion_menu_visible()
     -- Completion menu is not visible
@@ -60,10 +57,6 @@ return {
     local svc = c():signature_visible()
     -- The cursor is not at the end of the line
     local cnec = c():cursor_not_eol()
-    -- Treesitter is available and not in a help buffer
-    local tac_nhc = tac:add(nhc)
-    -- Treesitter is available and in a help buffer
-    local tac_hc = tac:add(hc)
     -- Completion menu is not visible and cursor is not at the end of the line
     local cmnvc_cnec = cmnvc:add(cnec)
     -- There is at least one LSP client attached to current buffer
@@ -104,75 +97,73 @@ return {
 
       -- Treesitter Motion
       -- By deafault, "[a" and "]a" are mapped to ":prevvious" and ":next"
-      { key = '[a', mode = { 'n', 'x', 'o' }, desc = 'Previous Argument Start', condition = tac, handler = h.previous_parameter_start, fallback = false },
-      { key = ']a', mode = { 'n', 'x', 'o' }, desc = 'Next Argument Start', condition = tac, handler = h.next_parameter_start, fallback = false },
+      { key = '[a', mode = { 'n', 'x', 'o' }, desc = 'Previous Argument Start', condition = ttac, handler = h.previous_parameter_start, fallback = false },
+      { key = ']a', mode = { 'n', 'x', 'o' }, desc = 'Next Argument Start', condition = ttac, handler = h.next_parameter_start, fallback = false },
       -- By deafault, "[A" and "]A" are mapped to ":rewind" and ":last"
-      { key = '[A', mode = { 'n', 'x', 'o' }, desc = 'Previous Argument End', condition = tac, handler = h.previous_parameter_end, fallback = false },
-      { key = ']A', mode = { 'n', 'x', 'o' }, desc = 'Next Argument End', condition = tac, handler = h.next_parameter_end, fallback = false },
+      { key = '[A', mode = { 'n', 'x', 'o' }, desc = 'Previous Argument End', condition = ttac, handler = h.previous_parameter_end, fallback = false },
+      { key = ']A', mode = { 'n', 'x', 'o' }, desc = 'Next Argument End', condition = ttac, handler = h.next_parameter_end, fallback = false },
       -- By default, "[i", "]i", "[I", and "]I" are used to show information of keywords under cursor
-      { key = '[i', mode = { 'n', 'x', 'o' }, desc = 'Previous If Start', condition = tac, handler = h.previous_conditional_start, fallback = false },
-      { key = ']i', mode = { 'n', 'x', 'o' }, desc = 'Next If Start', condition = tac, handler = h.next_conditional_start, fallback = false },
-      { key = '[I', mode = { 'n', 'x', 'o' }, desc = 'Previous If End', condition = tac, handler = h.previous_conditional_end, fallback = false },
-      { key = ']I', mode = { 'n', 'x', 'o' }, desc = 'Next If End', condition = tac, handler = h.next_conditional_end, fallback = false },
+      { key = '[i', mode = { 'n', 'x', 'o' }, desc = 'Previous If Start', condition = ttac, handler = h.previous_conditional_start, fallback = false },
+      { key = ']i', mode = { 'n', 'x', 'o' }, desc = 'Next If Start', condition = ttac, handler = h.next_conditional_start, fallback = false },
+      { key = '[I', mode = { 'n', 'x', 'o' }, desc = 'Previous If End', condition = ttac, handler = h.previous_conditional_end, fallback = false },
+      { key = ']I', mode = { 'n', 'x', 'o' }, desc = 'Next If End', condition = ttac, handler = h.next_conditional_end, fallback = false },
       -- By default, "[f", "]f" are aliases of "gf"
-      { key = '[f', mode = { 'n', 'x', 'o' }, desc = 'Previous For Start', condition = tac, handler = h.previous_loop_start, fallback = false },
-      { key = ']f', mode = { 'n', 'x', 'o' }, desc = 'Next For Start', condition = tac, handler = h.next_loop_start, fallback = false },
-      { key = '[F', mode = { 'n', 'x', 'o' }, desc = 'Previous For End', condition = tac, handler = h.previous_loop_end, fallback = false },
-      { key = ']F', mode = { 'n', 'x', 'o' }, desc = 'Next For End', condition = tac, handler = h.next_loop_end, fallback = false },
+      { key = '[f', mode = { 'n', 'x', 'o' }, desc = 'Previous For Start', condition = ttac, handler = h.previous_loop_start, fallback = false },
+      { key = ']f', mode = { 'n', 'x', 'o' }, desc = 'Next For Start', condition = ttac, handler = h.next_loop_start, fallback = false },
+      { key = '[F', mode = { 'n', 'x', 'o' }, desc = 'Previous For End', condition = ttac, handler = h.previous_loop_end, fallback = false },
+      { key = ']F', mode = { 'n', 'x', 'o' }, desc = 'Next For End', condition = ttac, handler = h.next_loop_end, fallback = false },
       -- By default "[r" and "]r" are used to search "rare" words
-      { key = '[r', mode = { 'n', 'x', 'o' }, desc = 'Previous Return Start', condition = tac, handler = h.previous_return_start, fallback = false },
-      { key = ']r', mode = { 'n', 'x', 'o' }, desc = 'Next Return Start', condition = tac, handler = h.next_return_start, fallback = false },
-      { key = '[R', mode = { 'n', 'x', 'o' }, desc = 'Previous Return End', condition = tac, handler = h.previous_return_end, fallback = false },
-      { key = ']R', mode = { 'n', 'x', 'o' }, desc = 'Next Return End', condition = tac, handler = h.next_return_end, fallback = false },
-      -- By default, "[c" and "]c" are used to navigate changes in the buffer
-      { key = '[c', mode = { 'n', 'x', 'o' }, desc = 'Previous Class Start', condition = tac, handler = h.previous_class_start, fallback = false },
-      { key = ']c', mode = { 'n', 'x', 'o' }, desc = 'Next Class Start', condition = tac, handler = h.next_class_start, fallback = false },
-      { key = '[C', mode = { 'n', 'x', 'o' }, desc = 'Previous Class End', condition = tac, handler = h.previous_class_end, fallback = false },
-      { key = ']C', mode = { 'n', 'x', 'o' }, desc = 'Next Class End', condition = tac, handler = h.next_class_end, fallback = false },
-      -- Those ten mappings below behavior like the default ones
-      { key = '[m', mode = { 'n', 'x', 'o' }, desc = 'Previous Method Start', condition = tac, handler = h.previous_function_start, fallback = false },
-      { key = ']m', mode = { 'n', 'x', 'o' }, desc = 'Next Method Start', condition = tac, handler = h.next_function_start, fallback = false },
-      { key = '[M', mode = { 'n', 'x', 'o' }, desc = 'Previous Method End', condition = tac, handler = h.previous_function_end, fallback = false },
-      { key = ']M', mode = { 'n', 'x', 'o' }, desc = 'Next Method End', condition = tac, handler = h.next_function_end, fallback = false },
-      { key = '[]', mode = { 'n', 'x', 'o' }, desc = 'Previous Block End', condition = tac, handler = h.previous_block_end, fallback = false },
-      { key = '][', mode = { 'n', 'x', 'o' }, desc = 'Next Block End', condition = tac, handler = h.next_block_end, fallback = false },
-      { key = '[[', mode = { 'n', 'x', 'o' }, desc = 'Previous Block Start', condition = tac_nhc, handler = h.previous_block_start, fallback = false },
-      { key = '[[', mode = { 'n', 'x', 'o' }, desc = 'Previous Section', condition = tac_hc, handler = h.previous_section, fallback = false },
-      { key = ']]', mode = { 'n', 'x', 'o' }, desc = 'Next Block Start', condition = tac_nhc, handler = h.next_block_start, fallback = false },
-      { key = ']]', mode = { 'n', 'x', 'o' }, desc = 'Next Section', condition = tac_hc, handler = h.next_section, fallback = false },
+      { key = '[r', mode = { 'n', 'x', 'o' }, desc = 'Previous Return Start', condition = ttac, handler = h.previous_return_start, fallback = false },
+      { key = ']r', mode = { 'n', 'x', 'o' }, desc = 'Next Return Start', condition = ttac, handler = h.next_return_start, fallback = false },
+      { key = '[R', mode = { 'n', 'x', 'o' }, desc = 'Previous Return End', condition = ttac, handler = h.previous_return_end, fallback = false },
+      { key = ']R', mode = { 'n', 'x', 'o' }, desc = 'Next Return End', condition = ttac, handler = h.next_return_end, fallback = false },
+      -- By default, "[c" and "]c" are used to navigate changes in the buffer. In most caes, we cant use "[g" and "]g" to navigate between git hunks
+      { key = '[c', mode = { 'n', 'x', 'o' }, desc = 'Previous Class Start', condition = ttac, handler = h.previous_class_start, fallback = false },
+      { key = ']c', mode = { 'n', 'x', 'o' }, desc = 'Next Class Start', condition = ttac, handler = h.next_class_start, fallback = false },
+      { key = '[C', mode = { 'n', 'x', 'o' }, desc = 'Previous Class End', condition = ttac, handler = h.previous_class_end, fallback = false },
+      { key = ']C', mode = { 'n', 'x', 'o' }, desc = 'Next Class End', condition = ttac, handler = h.next_class_end, fallback = false },
+      -- Those mappings below behavior like the default ones
+      { key = '[m', mode = { 'n', 'x', 'o' }, desc = 'Previous Method Start', condition = ttac, handler = h.previous_function_start, fallback = false },
+      { key = ']m', mode = { 'n', 'x', 'o' }, desc = 'Next Method Start', condition = ttac, handler = h.next_function_start, fallback = false },
+      { key = '[M', mode = { 'n', 'x', 'o' }, desc = 'Previous Method End', condition = ttac, handler = h.previous_function_end, fallback = false },
+      { key = ']M', mode = { 'n', 'x', 'o' }, desc = 'Next Method End', condition = ttac, handler = h.next_function_end, fallback = false },
+      { key = '[]', mode = { 'n', 'x', 'o' }, desc = 'Previous Block End', condition = ttac, handler = h.previous_block_end, fallback = false },
+      { key = '][', mode = { 'n', 'x', 'o' }, desc = 'Next Block End', condition = ttac, handler = h.next_block_end, fallback = false },
+      { key = '[[', mode = { 'n', 'x', 'o' }, desc = 'Previous Block Start', condition = ttac, handler = h.previous_block_start, fallback = false },
+      { key = ']]', mode = { 'n', 'x', 'o' }, desc = 'Next Block Start', condition = ttac, handler = h.next_block_start, fallback = false },
 
       -- Treesitter Text Object
-      { key = 'aa', mode = { 'o', 'x' }, desc = 'Around Argument', condition = tac, handler = h.around_parameter, fallback = false },
-      { key = 'ia', mode = { 'o', 'x' }, desc = 'Inside Argument', condition = tac, handler = h.inside_parameter, fallback = false },
-      { key = 'am', mode = { 'o', 'x' }, desc = 'Around Method', condition = tac, handler = h.around_function, fallback = false },
-      { key = 'im', mode = { 'o', 'x' }, desc = 'Inside Method', condition = tac, handler = h.inside_function, fallback = false },
+      { key = 'aa', mode = { 'o', 'x' }, desc = 'Around Argument', condition = ttac, handler = h.around_parameter, fallback = false },
+      { key = 'ia', mode = { 'o', 'x' }, desc = 'Inside Argument', condition = ttac, handler = h.inside_parameter, fallback = false },
+      { key = 'am', mode = { 'o', 'x' }, desc = 'Around Method', condition = ttac, handler = h.around_function, fallback = false },
+      { key = 'im', mode = { 'o', 'x' }, desc = 'Inside Method', condition = ttac, handler = h.inside_function, fallback = false },
       -- By default, "ab", "aB", "ib" and "iB" are aliases of "a(", "a{", "i(" and "i{" respectively
-      { key = 'ab', mode = { 'o', 'x' }, desc = 'Around Block', condition = tac, handler = h.around_block, fallback = false },
-      { key = 'ib', mode = { 'o', 'x' }, desc = 'Inside Block', condition = tac, handler = h.inside_block, fallback = false },
-      { key = 'ai', mode = { 'o', 'x' }, desc = 'Around If', condition = tac, handler = h.around_conditional, fallback = false },
-      { key = 'ii', mode = { 'o', 'x' }, desc = 'Inside If', condition = tac, handler = h.inside_conditional, fallback = false },
-      { key = 'af', mode = { 'o', 'x' }, desc = 'Around For', condition = tac, handler = h.around_loop, fallback = false },
-      { key = 'if', mode = { 'o', 'x' }, desc = 'Inside For', condition = tac, handler = h.inside_loop, fallback = false },
-      { key = 'ar', mode = { 'o', 'x' }, desc = 'Around Return', condition = tac, handler = h.around_return, fallback = false },
-      { key = 'ir', mode = { 'o', 'x' }, desc = 'Inside Return', condition = tac, handler = h.inside_return, fallback = false },
-      { key = 'ac', mode = { 'o', 'x' }, desc = 'Around Class', condition = tac, handler = h.around_class, fallback = false },
-      { key = 'ic', mode = { 'o', 'x' }, desc = 'Inside Class', condition = tac, handler = h.inside_class, fallback = false },
+      { key = 'ab', mode = { 'o', 'x' }, desc = 'Around Block', condition = ttac, handler = h.around_block, fallback = false },
+      { key = 'ib', mode = { 'o', 'x' }, desc = 'Inside Block', condition = ttac, handler = h.inside_block, fallback = false },
+      { key = 'ai', mode = { 'o', 'x' }, desc = 'Around If', condition = ttac, handler = h.around_conditional, fallback = false },
+      { key = 'ii', mode = { 'o', 'x' }, desc = 'Inside If', condition = ttac, handler = h.inside_conditional, fallback = false },
+      { key = 'af', mode = { 'o', 'x' }, desc = 'Around For', condition = ttac, handler = h.around_loop, fallback = false },
+      { key = 'if', mode = { 'o', 'x' }, desc = 'Inside For', condition = ttac, handler = h.inside_loop, fallback = false },
+      { key = 'ar', mode = { 'o', 'x' }, desc = 'Around Return', condition = ttac, handler = h.around_return, fallback = false },
+      { key = 'ir', mode = { 'o', 'x' }, desc = 'Inside Return', condition = ttac, handler = h.inside_return, fallback = false },
+      { key = 'ac', mode = { 'o', 'x' }, desc = 'Around Class', condition = ttac, handler = h.around_class, fallback = false },
+      { key = 'ic', mode = { 'o', 'x' }, desc = 'Inside Class', condition = ttac, handler = h.inside_class, fallback = false },
 
       -- Swap
-      { key = '<m-s>pa', desc = 'Swap With Previous Argument', condition = tac, handler = h.swap_with_previous_parameter, fallback = false },
-      { key = '<m-s>na', desc = 'Swap With Next Argument', condition = tac, handler = h.swap_with_next_parameter, fallback = false },
-      { key = '<m-s>pb', desc = 'Swap With Previous Block', condition = tac, handler = h.swap_with_previous_block, fallback = false },
-      { key = '<m-s>nb', desc = 'Swap With Next Block', condition = tac, handler = h.swap_with_next_block, fallback = false },
-      { key = '<m-s>pc', desc = 'Swap With Previous Class', condition = tac, handler = h.swap_with_previous_class, fallback = false },
-      { key = '<m-s>nc', desc = 'Swap With Next Class', condition = tac, handler = h.swap_with_next_class, fallback = false },
-      { key = '<m-s>pi', desc = 'Swap With Previous If', condition = tac, handler = h.swap_with_previous_conditional, fallback = false },
-      { key = '<m-s>ni', desc = 'Swap With Next If', condition = tac, handler = h.swap_with_next_conditional, fallback = false },
-      { key = '<m-s>pf', desc = 'Swap With Previous For', condition = tac, handler = h.swap_with_previous_loop, fallback = false },
-      { key = '<m-s>nf', desc = 'Swap With Next For', condition = tac, handler = h.swap_with_next_loop, fallback = false },
-      { key = '<m-s>pm', desc = 'Swap With Previous Method', condition = tac, handler = h.swap_with_previous_function, fallback = false },
-      { key = '<m-s>nm', desc = 'Swap With Next Method', condition = tac, handler = h.swap_with_next_function, fallback = false },
-      { key = '<m-s>pr', desc = 'Swap With Previous Return', condition = tac, handler = h.swap_with_previous_return, fallback = false },
-      { key = '<m-s>nr', desc = 'Swap With Next Return', condition = tac, handler = h.swap_with_next_return, fallback = false },
+      { key = '<m-s>pa', desc = 'Swap With Previous Argument', condition = ttac, handler = h.swap_with_previous_parameter, fallback = false },
+      { key = '<m-s>na', desc = 'Swap With Next Argument', condition = ttac, handler = h.swap_with_next_parameter, fallback = false },
+      { key = '<m-s>pb', desc = 'Swap With Previous Block', condition = ttac, handler = h.swap_with_previous_block, fallback = false },
+      { key = '<m-s>nb', desc = 'Swap With Next Block', condition = ttac, handler = h.swap_with_next_block, fallback = false },
+      { key = '<m-s>pc', desc = 'Swap With Previous Class', condition = ttac, handler = h.swap_with_previous_class, fallback = false },
+      { key = '<m-s>nc', desc = 'Swap With Next Class', condition = ttac, handler = h.swap_with_next_class, fallback = false },
+      { key = '<m-s>pi', desc = 'Swap With Previous If', condition = ttac, handler = h.swap_with_previous_conditional, fallback = false },
+      { key = '<m-s>ni', desc = 'Swap With Next If', condition = ttac, handler = h.swap_with_next_conditional, fallback = false },
+      { key = '<m-s>pf', desc = 'Swap With Previous For', condition = ttac, handler = h.swap_with_previous_loop, fallback = false },
+      { key = '<m-s>nf', desc = 'Swap With Next For', condition = ttac, handler = h.swap_with_next_loop, fallback = false },
+      { key = '<m-s>pm', desc = 'Swap With Previous Method', condition = ttac, handler = h.swap_with_previous_function, fallback = false },
+      { key = '<m-s>nm', desc = 'Swap With Next Method', condition = ttac, handler = h.swap_with_next_function, fallback = false },
+      { key = '<m-s>pr', desc = 'Swap With Previous Return', condition = ttac, handler = h.swap_with_previous_return, fallback = false },
+      { key = '<m-s>nr', desc = 'Swap With Next Return', condition = ttac, handler = h.swap_with_next_return, fallback = false },
 
       -- Completion
       { key = '<c-n>', mode = { 'i', 'c' }, desc = 'Select Next Completion Item', condition = cmvc, handler = h.next_completion_item, fallback = false },
@@ -222,7 +213,7 @@ return {
       -- We use this tricky way to make "ys", "cs", "ds", "yS", "cS", "dS", "yss", "ysS", "ySs" and "ySS" work
       -- We do not recommend to update those mappings
       { key = 's', mode = 'o', desc = 'Surround Operation', condition = hsc, handler = h.hack_wrap(), fallback = false },
-      { key = 'S', mode = 'o', desc = 'Surround Operation Line Mode', condition = hsc, handler = h.hack_wrap('_line'), fallback = fals },
+      { key = 'S', mode = 'o', desc = 'Surround Operation Line Mode', condition = hsc, handler = h.hack_wrap('_line'), fallback = false },
       -- Because we have an auto pair plugin, those two below are rarely used
       { key = '<c-g>s', mode = 'i', desc = 'Surround', handler = h.surround_insert },
       { key = '<c-g>S', mode = 'i', desc = 'Surround Line Mode', handler = h.surround_insert_line },
@@ -272,7 +263,7 @@ return {
       { key = '<m-/>', mode = 'x', desc = 'Comment Selection', handler = h.comment_selection },
 
       -- Togglers
-      { key = '<leader>tt', desc = 'Toggle Treesitter Highlight', condition = tac, handler = h.toggle_treesitter_highlight },
+      { key = '<leader>tt', desc = 'Toggle Treesitter Highlight', condition = thac, handler = h.toggle_treesitter_highlight },
       { key = '<leader>ti', desc = 'Toggle Inlay Hint', condition = lac, handler = h.toggle_inlay_hint },
       { key = '<leader>ts', desc = 'Toggle Spell', handler = h.toggle_spell },
       { key = '<leader>te', desc = 'Toggle Expandtab', handler = h.toggle_expandtab },
@@ -316,23 +307,22 @@ return {
     })
     local mm = require('maplayer').make({
       -- Markdown Quick Insert
-      { key = '1', mode = 'i', desc = 'Insert Markdown Title 1', handler = h.markdown_title(1) },
-      { key = '2', mode = 'i', desc = 'Insert Markdown Title 2', handler = h.markdown_title(2) },
-      { key = '3', mode = 'i', desc = 'Insert Markdown Title 3', handler = h.markdown_title(3) },
-      { key = '4', mode = 'i', desc = 'Insert Markdown Title 4', handler = h.markdown_title(4) },
-      { key = 's', mode = 'i', desc = 'Insert Markdown Separate Line', handler = h.markdown_separate_line },
-      { key = 'm', mode = 'i', desc = 'Insert Markdown Inline Math', handler = h.markdown_math_inline_2 },
-      { key = 't', mode = 'i', desc = 'Insert Markdown Code Line', handler = h.markdown_code_line },
-      { key = 'x', mode = 'i', desc = 'Insert Markdown Todo', handler = h.markdown_todo },
-      { key = 'a', mode = 'i', desc = 'Insert Markdown Link', handler = h.markdown_link },
-      { key = 'b', mode = 'i', desc = 'Insert Markdown Bold Text', handler = h.markdown_bold },
-      { key = 'd', mode = 'i', desc = 'Insert Markdown Delete Line', handler = h.markdown_delete_line },
-      { key = 'i', mode = 'i', desc = 'Insert Markdown Italic Text', handler = h.markdown_italic },
-      { key = 'M', mode = 'i', desc = 'Insert Markdown Math Block', handler = h.markdown_math_block },
-      { key = 'c', mode = 'i', desc = 'Insert Markdown Code Block', handler = h.markdown_code_block },
-      { key = 'f', mode = 'i', desc = 'Goto&Delete Markdown Placeholder', handler = h.markdown_goto_placeholder },
+      { key = '1', mode = 'i', desc = 'Insert Markdown Title 1', handler = h.markdown_title(1), buffer = true },
+      { key = '2', mode = 'i', desc = 'Insert Markdown Title 2', handler = h.markdown_title(2), buffer = true },
+      { key = '3', mode = 'i', desc = 'Insert Markdown Title 3', handler = h.markdown_title(3), buffer = true },
+      { key = '4', mode = 'i', desc = 'Insert Markdown Title 4', handler = h.markdown_title(4), buffer = true },
+      { key = 's', mode = 'i', desc = 'Insert Markdown Separate Line', handler = h.markdown_separate_line, buffer = true },
+      { key = 'm', mode = 'i', desc = 'Insert Markdown Inline Math', handler = h.markdown_math_inline_2, buffer = true },
+      { key = 't', mode = 'i', desc = 'Insert Markdown Code Line', handler = h.markdown_code_line, buffer = true },
+      { key = 'x', mode = 'i', desc = 'Insert Markdown Todo', handler = h.markdown_todo, buffer = true },
+      { key = 'a', mode = 'i', desc = 'Insert Markdown Link', handler = h.markdown_link, buffer = true },
+      { key = 'b', mode = 'i', desc = 'Insert Markdown Bold Text', handler = h.markdown_bold, buffer = true },
+      { key = 'd', mode = 'i', desc = 'Insert Markdown Delete Line', handler = h.markdown_delete_line, buffer = true },
+      { key = 'i', mode = 'i', desc = 'Insert Markdown Italic Text', handler = h.markdown_italic, buffer = true },
+      { key = 'M', mode = 'i', desc = 'Insert Markdown Math Block', handler = h.markdown_math_block, buffer = true },
+      { key = 'c', mode = 'i', desc = 'Insert Markdown Code Block', handler = h.markdown_code_block, buffer = true },
+      { key = 'f', mode = 'i', desc = 'Goto&Delete Markdown Placeholder', handler = h.markdown_goto_placeholder, buffer = true },
     })
-    for _, mapping in ipairs(mm) do mapping.opts.buffer = true end
     vim.api.nvim_create_autocmd('FileType', {
       pattern = 'markdown',
       callback = function()
@@ -343,44 +333,46 @@ return {
     })
     local p = vim.g.picker_keymap_desc_prefix
     local pm = require('maplayer').make({
-      { key = '<c-n>', mode = 'i', desc = p .. 'Move Selection Next', handler = h.picker_wrap('move_selection_next') },
-      { key = '<c-p>', mode = 'i', desc = p .. 'Move Selection Previous', handler = h.picker_wrap('move_selection_previous') },
-      { key = '<c-c>', mode = 'i', desc = p .. 'Close', handler = h.picker_wrap('close') },
-      { key = '<c-r><c-w>', mode = 'i', desc = p .. 'Insert Original Cword', handler = h.picker_wrap('insert_original_cword') },
-      { key = '<c-r><c-a>', mode = 'i', desc = p .. 'Insert Original CWORD', handler = h.picker_wrap('insert_original_cWORD') },
-      { key = '<c-r><c-f>', mode = 'i', desc = p .. 'Insert Original Cfile', handler = h.picker_wrap('insert_original_cfile') },
-      { key = '<c-r><c-l>', mode = 'i', desc = p .. 'Insert Original Cline', handler = h.picker_wrap('insert_original_cline') },
+      { key = '<c-n>', mode = 'i', desc = p .. 'Move Selection Next', handler = h.picker_wrap('move_selection_next'), buffer = true },
+      { key = '<c-p>', mode = 'i', desc = p .. 'Move Selection Previous', handler = h.picker_wrap('move_selection_previous'), buffer = true },
+      { key = '<c-c>', mode = 'i', desc = p .. 'Close', handler = h.picker_wrap('close'), buffer = true },
+      { key = '<c-r><c-w>', mode = 'i', desc = p .. 'Insert Cword', handler = h.picker_wrap('insert_original_cword'), buffer = true },
+      { key = '<c-r><c-a>', mode = 'i', desc = p .. 'Insert CWORD', handler = h.picker_wrap('insert_original_cWORD'), buffer = true },
+      { key = '<c-r><c-f>', mode = 'i', desc = p .. 'Insert Cfile', handler = h.picker_wrap('insert_original_cfile'), buffer = true },
+      { key = '<c-r><c-l>', mode = 'i', desc = p .. 'Insert Cline', handler = h.picker_wrap('insert_original_cline'), buffer = true },
 
-      { key = '<esc>', desc = p .. 'Close', handler = h.picker_wrap('close') },
-      { key = '<c-c>', desc = p .. 'Close', handler = h.picker_wrap('close') },
-      { key = 'q', desc = p .. 'Close', handler = h.picker_wrap('close') },
-      { key = 'j', desc = p .. 'Move Selection Next', handler = h.picker_wrap('move_selection_next') },
-      { key = 'k', desc = p .. 'Move Selection Previous', handler = h.picker_wrap('move_selection_previous') },
-      { key = 'H', desc = p .. 'Move To Top', handler = h.picker_wrap('move_to_top') },
-      { key = 'M', desc = p .. 'Move To Middle', handler = h.picker_wrap('move_to_middle') },
-      { key = 'L', desc = p .. 'Move To Bottom', handler = h.picker_wrap('move_to_bottom') },
-      { key = 'gg', desc = p .. 'Move To Top', handler = h.picker_wrap('move_to_top') },
-      { key = 'G', desc = p .. 'Move To Bottom', handler = h.picker_wrap('move_to_bottom') },
-      { key = '?', desc = p .. 'Which Key', handler = h.picker_wrap('which_key') },
+      { key = '<esc>', desc = p .. 'Close', handler = h.picker_wrap('close'), buffer = true },
+      { key = '<c-c>', desc = p .. 'Close', handler = h.picker_wrap('close'), buffer = true },
+      { key = 'q', desc = p .. 'Close', handler = h.picker_wrap('close'), buffer = true },
+      { key = 'j', desc = p .. 'Move Selection Next', handler = h.picker_wrap('move_selection_next'), buffer = true },
+      { key = 'k', desc = p .. 'Move Selection Previous', handler = h.picker_wrap('move_selection_previous'), buffer = true },
+      { key = 'H', desc = p .. 'Move To Top', handler = h.picker_wrap('move_to_top'), buffer = true },
+      { key = 'M', desc = p .. 'Move To Middle', handler = h.picker_wrap('move_to_middle'), buffer = true },
+      { key = 'L', desc = p .. 'Move To Bottom', handler = h.picker_wrap('move_to_bottom'), buffer = true },
+      { key = 'gg', desc = p .. 'Move To Top', handler = h.picker_wrap('move_to_top'), buffer = true },
+      { key = 'G', desc = p .. 'Move To Bottom', handler = h.picker_wrap('move_to_bottom'), buffer = true },
+      { key = '?', desc = p .. 'Which Key', handler = h.picker_wrap('which_key'), buffer = true },
 
-      { key = '<cr>', mode = { 'n', 'i' }, desc = p .. 'Select Default', handler = h.picker_wrap('select_default') },
-      { key = '<c-x>', mode = { 'n', 'i' }, desc = p .. 'Select Horizontal', handler = h.picker_wrap('select_horizontal') },
-      { key = '<c-v>', mode = { 'n', 'i' }, desc = p .. 'Select Vertical', handler = h.picker_wrap('select_vertical') },
-      { key = '<c-t>', mode = { 'n', 'i' }, desc = p .. 'Select Tab', handler = h.picker_wrap('select_tab') },
-      { key = '<c-u>', mode = { 'n', 'i' }, desc = p .. 'Preview Scrolling Up', handler = h.picker_wrap('preview_scrolling_up') },
-      { key = '<c-d>', mode = { 'n', 'i' }, desc = p .. 'Preview Scrolling Down', handler = h.picker_wrap('preview_scrolling_down') },
-      { key = '<tab>', mode = { 'n', 'i' }, desc = p .. 'Toggle Selection', handler = h.picker_wrap('toggle_selection', 'move_selection_worse') },
-      { key = '<s-tab>', mode = { 'n', 'i' }, desc = p .. 'Toggle Selection', handler = h.picker_wrap('move_selection_better', 'toggle_selection') },
-      { key = '<m-a>', mode = { 'n', 'i' }, desc = p .. 'Smart Select All', handler = h.picker_wrap('smart_select_all') },
-      { key = '<leftmouse>', mode = { 'n', 'i' }, desc = p .. 'Mouse Click', handler = h.picker_wrap('mouse_click') },
-      { key = '<2-leftmouse>', mode = { 'n', 'i' }, desc = p .. 'Mouse Double Click', handler = h.picker_wrap('double_mouse_click') },
-      { key = '<f1>', mode = { 'n', 'i' }, desc = p .. 'Which Key', handler = h.picker_wrap('which_key') },
-      { key = '<pageup>', mode = { 'n', 'i' }, desc = p .. 'Results Scrolling Up', handler = h.picker_wrap('results_scrolling_up') },
-      { key = '<pagedown>', mode = { 'n', 'i' }, desc = p .. 'Results Scrolling Down', handler = h.picker_wrap('results_scrolling_down') },
-      { key = '<c-q>', mode = { 'n', 'i' }, desc = p .. 'Send Selected to Qflist', handler = h.picker_wrap('send_selected_to_qflist', 'open_qflist') },
-      { key = '<c-l>', mode = { 'n', 'i' }, desc = p .. 'Send Selected to Loclist', handler = h.picker_wrap('send_selected_to_loclist', 'open_loclist') },
+      { key = '<cr>', mode = { 'n', 'i' }, desc = p .. 'Select Default', handler = h.picker_wrap('select_default'), buffer = true },
+      { key = '<c-x>', mode = { 'n', 'i' }, desc = p .. 'Select Horizontal', handler = h.picker_wrap('select_horizontal'), buffer = true },
+      { key = '<c-v>', mode = { 'n', 'i' }, desc = p .. 'Select Vertical', handler = h.picker_wrap('select_vertical'), buffer = true },
+      { key = '<c-t>', mode = { 'n', 'i' }, desc = p .. 'Select Tab', handler = h.picker_wrap('select_tab'), buffer = true },
+      { key = '<c-u>', mode = { 'n', 'i' }, desc = p .. 'Preview Scroll Up', handler = h.picker_wrap('preview_scrolling_up'), buffer = true },
+      { key = '<c-d>', mode = { 'n', 'i' }, desc = p .. 'Preview Scroll Down', handler = h.picker_wrap('preview_scrolling_down'), buffer = true },
+      { key = '<tab>', mode = { 'n', 'i' }, desc = p .. 'Toggle Selection', handler = h.picker_wrap('toggle_selection', 'move_selection_worse'), buffer = true },
+      { key = '<s-tab>', mode = { 'n', 'i' }, desc = p .. 'Toggle Selection', handler = h.picker_wrap('move_selection_better', 'toggle_selection'), buffer = true },
+      { key = '<m-a>', mode = { 'n', 'i' }, desc = p .. 'Smart Select All', handler = h.picker_wrap('smart_select_all'), buffer = true },
+      { key = '<leftmouse>', mode = { 'n', 'i' }, desc = p .. 'Mouse Click', handler = h.picker_wrap('mouse_click'), buffer = true },
+      { key = '<2-leftmouse>', mode = { 'n', 'i' }, desc = p .. 'Mouse Double Click', handler = h.picker_wrap('double_mouse_click'), buffer = true },
+      { key = '<f1>', mode = { 'n', 'i' }, desc = p .. 'Which Key', handler = h.picker_wrap('which_key'), buffer = true },
+      { key = '<c-/>', mode = { 'n', 'i' }, desc = p .. 'Which Key', handler = h.picker_wrap('which_key'), buffer = true },
+      -- Some terminal will send  for <c-/>
+      { key = '', mode = { 'n', 'i' }, desc = p .. 'Which Key', handler = h.picker_wrap('which_key'), buffer = true },
+      { key = '<pageup>', mode = { 'n', 'i' }, desc = p .. 'Results Scroll Up', handler = h.picker_wrap('results_scrolling_up'), buffer = true },
+      { key = '<pagedown>', mode = { 'n', 'i' }, desc = p .. 'Results Scroll Down', handler = h.picker_wrap('results_scrolling_down'), buffer = true },
+      { key = '<c-q>', mode = { 'n', 'i' }, desc = p .. 'Send Selected to Qflist', handler = h.picker_wrap('send_selected_to_qflist', 'open_qflist'), buffer = true },
+      { key = '<c-l>', mode = { 'n', 'i' }, desc = p .. 'Send Selected to Loclist', handler = h.picker_wrap('send_selected_to_loclist', 'open_loclist'), buffer = true },
     })
-    for _, mapping in ipairs(pm) do mapping.opts.buffer = true end
     vim.api.nvim_create_autocmd('FileType', { pattern = vim.g.picker_filetype, callback = function()
       for _, mapping in ipairs(pm) do vim.keymap.set(mapping.mode, mapping.lhs, mapping.rhs, mapping.opts) end
     end})
