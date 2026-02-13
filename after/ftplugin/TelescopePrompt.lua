@@ -2,8 +2,8 @@ local p = 'telescope|'
 local h = require('lightboat.handler')
 -- stylua: ignore start
 local mapping = {
-  { "i", "<c-n>", h.picker_action_wrap("move_selection_next"), { desc = p .. "Move Selection Next", buffer = true } },
-  { "i", "<c-p>", h.picker_action_wrap("move_selection_previous"), { desc = p .. "Move Selection Previous", buffer = true } },
+  { "i", "<c-j>", h.picker_action_wrap("move_selection_next"), { desc = p .. "Move Selection Next", buffer = true } },
+  { "i", "<c-k>", h.picker_action_wrap("move_selection_previous"), { desc = p .. "Move Selection Previous", buffer = true } },
   { "i", "<c-c>", h.picker_action_wrap("close"), { desc = p .. "Close", buffer = true } },
   { "i", "<c-r><c-w>", h.picker_action_wrap("insert_original_cword"), { desc = p .. "Insert Cword", buffer = true } },
   { "i", "<c-r><c-a>", h.picker_action_wrap("insert_original_cWORD"), { desc = p .. "Insert CWORD", buffer = true } },
