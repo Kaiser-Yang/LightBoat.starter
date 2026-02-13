@@ -353,7 +353,7 @@ return {
 
       { key = '<esc>', desc = p .. 'Close', handler = h.picker_wrap('close') },
       { key = '<c-c>', desc = p .. 'Close', handler = h.picker_wrap('close') },
-      { key = '<q>', desc = p .. 'Close', handler = h.picker_wrap('close') },
+      { key = 'q', desc = p .. 'Close', handler = h.picker_wrap('close') },
       { key = 'j', desc = p .. 'Move Selection Next', handler = h.picker_wrap('move_selection_next') },
       { key = 'k', desc = p .. 'Move Selection Previous', handler = h.picker_wrap('move_selection_previous') },
       { key = 'H', desc = p .. 'Move To Top', handler = h.picker_wrap('move_to_top') },
