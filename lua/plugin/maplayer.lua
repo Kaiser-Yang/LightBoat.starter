@@ -312,6 +312,11 @@ return {
       { key = '<c-l>', desc = 'Cursor to Right Window', handler = h.cursor_to_right_window },
       -- This one is similar to "d" you and use "<m-x>d" to delete one line in normal mode
       { key = '<m-x>', mode = { 'n', 'x' }, desc = 'System Cut', handler = h.system_cut, count = true },
+      { key = '<m-c>', mode = { 'n', 'x' }, desc = 'System Yank', handler = h.system_yank, count = true },
+      { key = '<m-v>', mode = { 'n', 'x' }, desc = 'System Put', handler = h.system_put },
+      { key = '<m-V>', desc = 'System Put Before', handler = h.system_put_before },
+      { key = '<m-v>', mode = 'i', desc = 'System Put', handler = h.system_put_insert },
+      { key = '<m-v>', mode = 'c', desc = 'System Put', handler = h.system_put_command },
     })
     -- stylua: ignore end
   end,
