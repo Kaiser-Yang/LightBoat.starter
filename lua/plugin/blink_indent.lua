@@ -1,6 +1,6 @@
 return {
   'saghen/blink.indent',
-  event = 'VeryLazy',
+  lazy = false,
   opts = {
     mappings = {
       object_scope = '<plug>(blink-indent-inside)',
