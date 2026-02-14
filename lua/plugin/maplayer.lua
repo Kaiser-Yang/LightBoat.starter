@@ -258,9 +258,9 @@ return {
       { key = '<c-p>', desc = 'Serach Files', handler = h.picker_wrap('find_files') },
       -- We can't use "<c-r>" because it's used to redo in normal mode
       { key = '<m-r>', desc = 'Resume Last Picker', handler = h.picker_wrap('resume') },
-      -- We don't want to use "<c-f>" because it's used to scroll the window
-      { key = '<m-f>', desc = 'Find', handler = h.picker_wrap('live_grep') },
-      { key = '<m-f>', mode = 'x', desc = 'Grep Selected Word', handler = h.picker_wrap('grep_string') },
+      -- By default "<C-F>" is same with <PageDown>
+      { key = '<c-f>', desc = 'Find', handler = h.picker_wrap('live_grep') },
+      { key = '<c-f>', mode = 'x', desc = 'Grep Selected Word', handler = h.picker_wrap('grep_string') },
       { key = '<f1>', desc = 'Search Help', handler = h.picker_wrap('help_tags') },
       { key = '<leader>sb', desc = 'Search Buffer', handler = h.picker_wrap('buffers') },
       { key = '<leader>st', desc = 'Search Todo', handler = h.picker_wrap({ 'todo-comments', 'todo' }) },

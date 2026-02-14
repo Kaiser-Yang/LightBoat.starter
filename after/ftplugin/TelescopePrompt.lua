@@ -1,5 +1,12 @@
 local p = 'telescope|'
 local h = require('lightboat.handler')
+local function grep_with_input_wrap(name)
+  return function()
+    local line = vim.api.nvim_get_current_line()
+    h.picker_action_wrap('close')()
+    h.picker_wrap(name, { default_text = line:sub(3) })()
+  end
+end
 -- stylua: ignore start
 local mapping = {
   { "i", "<c-j>", h.picker_action_wrap("move_selection_next"), { desc = p .. "Move Selection Next" } },
@@ -36,6 +43,8 @@ local mapping = {
   { { "n", "i" }, "<f1>", h.picker_action_wrap("which_key"), { desc = p .. "Which Key" } },
   { { "n", "i" }, "<c-q>", h.picker_action_wrap("send_selected_to_qflist", "open_qflist"), { desc = p .. "Send Selected to Qflist" } },
   { { "n", "i" }, "<c-l>", h.picker_action_wrap("send_selected_to_loclist", "open_loclist"), { desc = p .. "Send Selected to Loclist" } },
+  { { "n", "i" }, "<c-p>", grep_with_input_wrap("find_files"), { desc = p .. "Search Files with Input" } },
+  { { "n", "i" }, "<c-f>", grep_with_input_wrap("live_grep"), { desc = p .. "Find with Input" } },
 }
 -- stylua: ignore end
 
