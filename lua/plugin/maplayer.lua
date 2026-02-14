@@ -29,8 +29,6 @@ return {
     local sc = c():add(function() return vim.wo.spell end)
     -- cwd or current buffer is in a git repository path
     local igrc = c():is_git_repository()
-    -- There are some conflicts in cwd or current buffer
-    local hcc = c():has_conflict()
     -- The treesitter parser supports highlight
     local thac = c():treesitter_highlight_available()
     -- The nvim-treesitter-textobjects is installed
@@ -64,10 +62,6 @@ return {
     local lac = c():lsp_attached()
     -- Cursor is not at the first non blank character
     local cnfnbc = c():cursor_not_first_non_blank()
-    -- "delta" is executable
-    local dec = c():add(function() return vim.fn.executable('delta') == 1 end)
-    -- Conflicts found and "delta" is executable
-    local hcc_dec = hcc:add(dec)
     -- Used for "ys", "ds", "cs"...
     local hsc = c():add(
       function()
@@ -241,20 +235,6 @@ return {
       { key = '<leader>gq', desc = 'Quickfix All Hunk', condition = igrc, handler = h.quickfix_all_hunk, fallback = false },
       { key = '<leader>tb', desc = 'Toggle Blame', condition = igrc, handler = h.toggle_current_line_blame, fallback = false },
       { key = '<leader>tw', desc = 'Toggle Word Diff', condition = igrc, handler = h.toggle_word_diff, fallback = false },
-      { key = '[x', mode = { 'n', 'x', 'o' }, desc = 'Previous Git Conflict', condition = hcc, handler = h.previous_conflict, count = true, fallback = false, expr = true },
-      { key = ']x', mode = { 'n', 'x', 'o' }, desc = 'Next Git Conflict', condition = hcc, handler = h.next_conflict, count = true, fallback = false, expr = true },
-      { key = '<leader>xc', desc = 'Choose Current Conflict', condition = hcc, handler = h.choose_current_conflict, fallback = false },
-      { key = '<leader>xi', desc = 'Choose Incoming Conflict', condition = hcc, handler = h.choose_incoming_conflict, fallback = false },
-      { key = '<leader>xb', desc = 'Choose Both Conflict', condition = hcc, handler = h.choose_both_conflict, fallback = false },
-      { key = '<leader>xB', desc = 'Choose Both Reverse Conflict', condition = hcc, handler = h.choose_both_reverse_conflict, fallback = false },
-      { key = '<leader>xn', desc = 'Choose None Conflict', condition = hcc, handler = h.choose_none_conflict, fallback = false },
-      { key = '<leader>xa', desc = 'Choose Ancestor Conflict', condition = hcc, handler = h.choose_ancestor_conflict, fallback = false },
-      { key = '<leader>xq', desc = 'Quickfix Conflict', condition = hcc, handler = h.list_conflict, fallback = false },
-      { key = '<leader>xdi', desc = 'Diff Incoming Conflict', condition = hcc_dec, handler = h.diff_incoming_conflict, fallback = false },
-      { key = '<leader>xdc', desc = 'Diff Current Conflict', condition = hcc_dec, handler = h.diff_current_conflict, fallback = false },
-      { key = '<leader>xdb', desc = 'Diff Both Conflict', condition = hcc_dec, handler = h.diff_both_conflict, fallback = false },
-      { key = '<leader>xdv', desc = 'Diff Current V.S. Incoming Conflict', condition = hcc_dec, handler = h.diff_current_incoming_conflict, fallback = false },
-      { key = '<leader>xdV', desc = 'Diff Incoming V.S. Current Conflict', condition = hcc_dec, handler = h.diff_incoming_current_conflict, fallback = false },
 
       -- Comment
       { key = '<m-/>', desc = 'Comment Line', handler = h.comment_line, count = true },
