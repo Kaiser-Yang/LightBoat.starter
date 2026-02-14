@@ -4,7 +4,6 @@ local h = require('lightboat.handler')
 local mapping = {
   { "i", "<c-j>", h.picker_action_wrap("move_selection_next"), { desc = p .. "Move Selection Next", buffer = true } },
   { "i", "<c-k>", h.picker_action_wrap("move_selection_previous"), { desc = p .. "Move Selection Previous", buffer = true } },
-  { "i", "<c-c>", h.picker_action_wrap("close"), { desc = p .. "Close", buffer = true } },
   { "i", "<c-r><c-w>", h.picker_action_wrap("insert_original_cword"), { desc = p .. "Insert Cword", buffer = true } },
   { "i", "<c-r><c-a>", h.picker_action_wrap("insert_original_cWORD"), { desc = p .. "Insert CWORD", buffer = true } },
   { "i", "<c-r><c-f>", h.picker_action_wrap("insert_original_cfile"), { desc = p .. "Insert Cfile", buffer = true } },
@@ -12,7 +11,6 @@ local mapping = {
 
   -- Picker normal-mode mappings
   { "n", "<esc>", h.picker_action_wrap("close"), { desc = p .. "Close", buffer = true } },
-  { "n", "<c-c>", h.picker_action_wrap("close"), { desc = p .. "Close", buffer = true } },
   { "n", "q", h.picker_action_wrap("close"), { desc = p .. "Close", buffer = true } },
   { "n", "j", h.picker_action_wrap("move_selection_next"), { desc = p .. "Move Selection Next", buffer = true } },
   { "n", "k", h.picker_action_wrap("move_selection_previous"), { desc = p .. "Move Selection Previous", buffer = true } },
@@ -21,11 +19,11 @@ local mapping = {
   { "n", "L", h.picker_action_wrap("move_to_bottom"), { desc = p .. "Move To Bottom", buffer = true } },
   { "n", "gg", h.picker_action_wrap("move_to_top"), { desc = p .. "Move To Top", buffer = true } },
   { "n", "G", h.picker_action_wrap("move_to_bottom"), { desc = p .. "Move To Bottom", buffer = true } },
-  { "n", "?", h.picker_action_wrap("which_key"), { desc = p .. "Which Key", buffer = true } },
 
   -- Picker mappings for both normal and insert mode
+  { { "n", "i" }, "<c-c>", h.picker_action_wrap("close"), { desc = p .. "Close", buffer = true } },
   { { "n", "i" }, "<cr>", h.picker_action_wrap("select_default"), { desc = p .. "Select Default", buffer = true } },
-  { { "n", "i" }, "<c-x>", h.picker_action_wrap("select_horizontal"), { desc = p .. "Select Horizontal", buffer = true } },
+  { { "n", "i" }, "<c-s>", h.picker_action_wrap("select_horizontal"), { desc = p .. "Select Horizontal", buffer = true } },
   { { "n", "i" }, "<c-v>", h.picker_action_wrap("select_vertical"), { desc = p .. "Select Vertical", buffer = true } },
   { { "n", "i" }, "<c-t>", h.picker_action_wrap("select_tab"), { desc = p .. "Select Tab", buffer = true } },
   { { "n", "i" }, "<c-u>", h.picker_action_wrap("preview_scrolling_up"), { desc = p .. "Preview Scroll Up", buffer = true } },
@@ -36,11 +34,6 @@ local mapping = {
   { { "n", "i" }, "<leftmouse>", h.picker_action_wrap("mouse_click"), { desc = p .. "Mouse Click", buffer = true } },
   { { "n", "i" }, "<2-leftmouse>", h.picker_action_wrap("double_mouse_click"), { desc = p .. "Mouse Double Click", buffer = true } },
   { { "n", "i" }, "<f1>", h.picker_action_wrap("which_key"), { desc = p .. "Which Key", buffer = true } },
-  { { "n", "i" }, "<c-/>", h.picker_action_wrap("which_key"), { desc = p .. "Which Key", buffer = true } },
-  -- Some terminal will send 0x1F for <c-/>
-  { { "n", "i" }, "", h.picker_action_wrap("which_key"), { desc = p .. "Which Key", buffer = true } },
-  { { "n", "i" }, "<pageup>", h.picker_action_wrap("results_scrolling_up"), { desc = p .. "Results Scroll Up", buffer = true } },
-  { { "n", "i" }, "<pagedown>", h.picker_action_wrap("results_scrolling_down"), { desc = p .. "Results Scroll Down", buffer = true } },
   { { "n", "i" }, "<c-q>", h.picker_action_wrap("send_selected_to_qflist", "open_qflist"), { desc = p .. "Send Selected to Qflist", buffer = true } },
   { { "n", "i" }, "<c-l>", h.picker_action_wrap("send_selected_to_loclist", "open_loclist"), { desc = p .. "Send Selected to Loclist", buffer = true } },
 }

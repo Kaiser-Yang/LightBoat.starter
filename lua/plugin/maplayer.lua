@@ -256,12 +256,14 @@ return {
 
       -- Picker
       { key = '<c-p>', desc = 'Serach Files', handler = h.picker_wrap('find_files') },
-      { key = '<m-f>', desc = 'Live Grep', handler = h.picker_wrap('live_grep') },
+      { key = '<c-r>', desc = 'Resume Last Picker', handler = h.picker_wrap('resume') },
+      -- We don't want to use "<c-f>" because it's used to scroll the window
+      { key = '<m-f>', desc = 'Find', handler = h.picker_wrap('live_grep') },
+      { key = '<m-f>', mode = 'x', desc = 'Grep Selected Word', handler = h.picker_wrap('grep_string') },
+      { key = '<f1>', desc = 'Search Help', handler = h.picker_wrap('help_tags') },
       { key = '<leader>sb', desc = 'Search Buffer', handler = h.picker_wrap('buffers') },
       { key = '<leader>st', desc = 'Search Todo', handler = h.picker_wrap({ 'todo-comments', 'todo' }) },
-      { key = '<leader>sw', mode = { 'n', 'x' }, desc = 'Grep Word', handler = h.picker_wrap('grep_string') },
-      { key = '<leader>sh', desc = 'Search Help', handler = h.picker_wrap('help_tags') },
-      { key = '<f1>', desc = 'Search Help', handler = h.picker_wrap('help_tags') },
+      { key = '<leader>sw', desc = 'Grep Word under Cursor', handler = h.picker_wrap('grep_string') },
       -- By default, "[t" and "]t" are mapped to ":tabprevious" and ":tabnext"
       -- Those below do not support vim.v.count
       { key = '[t', mode = { 'n', 'x', 'o' }, desc = 'previous todo', handler = r(function() return require('todo-comments').jump_prev() end, function() return require('todo-comments').jump_next() end, 1) },
