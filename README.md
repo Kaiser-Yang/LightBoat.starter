@@ -2,6 +2,101 @@
 
 The starter for [LightBoat](https://github.com/Kaiser-Yang/LightBoat).
 
+## Requirements
+
+* `git`
+* `curl`
+* `unzip`
+* `tar`
+* `gzip`
+* `tree-sitter`
+## How to remove one plugin?
+
+For example, if you want to remove `neovim/nvim-lspconfig`,
+you just need to create a file `lua/plugin/<name>.lua` with the following content:
+
+```lua
+return {
+  "neovim/nvim-lspconfig",
+  enabled = false,
+}
+```
+
+The filename can be any one except `init`.
+We recommend you to name it with the plugin name for better readability.
+
+## How to add a new plugin?
+
+You just need to create a new file `lua/plugin/<name>.lua`,
+and the name can be any one except `init`.
+
+And add the plugin into the file with `return` statement, you can see `lua/plugin/colorscheme.lua`
+for a example. Actually, you can return an array of plugins in the `return` statement,
+which means those below are OK:
+
+```lua
+return {
+  {
+    -- plugin A goes here
+  },
+  {
+    -- plugin B goes here
+  },
+  -- Maybe there are some more
+}
+```
+
+This is helpful for you to manage a bunch of related plugins.
+
+## How to change the configuration of a plugin?
+
+If the plugin is not installed by `LightBoat`,
+you just need to create a new file `lua/plugin/<name>.lua`,
+and the name can be any except `init`.
+You just put your configuration in the `opts` field, and in most cases,
+you need to see the repository page of the plugin to learn how to configure.
+
+For example, i can create `lua/plugin/blink_cmp.lua`
+and add those below to disable documentation auto show:
+
+```lua
+return {
+  'saghen/blink.cmp',
+  opts = {
+    completion = { documentation = { auto_show = false } }
+  }
+}
+```
+
+**NOTE**: All your configuration will override the old ones,
+which means if the old field is an array for which configure will be replaced wholely.
+
+## Plugins
+
+### `folke/lazy.nvim.git`
+
+Requirements:
+
+* `git`
+
+This is the plugin manager for `LightBoat`.
+
+### `neovim/nvim-lspconfig`
+
+As to `nvim 0.11`,
+this plugin only provides the default configuration for LSP servers
+and some commands to control LSP clients.
+
+This plugin can be removed as to `nvim 0.12`,
+because `nvim 0.12` will have built-in `lsp start`, `lsp stop` and `lsp restart` commands
+to control the LSP clients.
+And you can just copy a few LSP configuration files you used to `after/lsp/`
+(you can remain file names) from this plugin's repository,
+after which you can remove this plugin.
+
+The URL for LSP configuration files:
+[neovim/nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/tree/master/lsp).
+
 ## Skills
 
 ### Markdown Quick Insert
