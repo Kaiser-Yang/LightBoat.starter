@@ -1,9 +1,9 @@
 local h = require('lightboat.handler')
 local u = require('lightboat.util')
 local function last_key()
-  local last_key = u.key.last_key()
-  if last_key == nil then return false end
-  return last_key:match(',$') ~= nil
+  local key = u.key.last_key()
+  if key == nil then return false end
+  return key:match(',$') ~= nil
 end
 local mappings = {
   -- Markdown insert mappings
