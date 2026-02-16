@@ -7,9 +7,9 @@ vim.g.lightboat_opt = {
 }
 vim.g.blink_cmp_unique_priority = function(ctx)
   if ctx.mode == 'cmdline' then
-    return { 'cmdline', 'path', 'buffer', 'ripgrep', 'dictionary' }
+    return { 'cmdline', 'path', 'buffer' }
   else
-    return { 'snippets', 'lsp', 'dictionary', 'buffer', 'ripgrep' }
+    return { 'snippets', 'lsp', 'ripgrep', 'dictionary', 'buffer' }
   end
 end
 vim.g.highlight_on_yank = true
