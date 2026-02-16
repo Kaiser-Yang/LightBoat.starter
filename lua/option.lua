@@ -3,8 +3,15 @@ vim.g.lightboat_opt = {
   --- @type string[]
   treesitter_ensure_installed = { 'lua' },
   --- @type string[]
-  mason_ensure_installed = { 'lua_ls' },
+  mason_ensure_installed = { 'lua-language-server', 'stylua' },
 }
+vim.g.blink_cmp_unique_priority = function(ctx)
+  if ctx.mode == 'cmdline' then
+    return { 'cmdline', 'path', 'buffer', 'ripgrep', 'dictionary' }
+  else
+    return { 'snippets', 'lsp', 'dictionary', 'buffer', 'ripgrep' }
+  end
+end
 vim.g.highlight_on_yank = true
 vim.g.highlight_on_yank_limit = 1024 -- 1 KB
 vim.g.highlight_on_yank_duration = 300
@@ -99,4 +106,8 @@ vim.o.foldlevel = 99999
 vim.o.foldcolumn = '1'
 vim.o.fillchars = 'fold: ,foldopen:,foldclose:,foldsep: '
 vim.o.splitright = true
+
+vim.filetype.add({ pattern = { ['.*.bazelrc'] = 'bazelrc', }, })
+
+vim.treesitter.language.register('objc', { 'objcpp' })
 vim.o.splitbelow = false
