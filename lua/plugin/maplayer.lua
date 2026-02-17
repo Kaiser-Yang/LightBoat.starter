@@ -130,10 +130,16 @@ return {
       -- Picker
       { key = '<c-p>', desc = 'Serach Files', handler = h.picker_wrap('find_files') },
       -- By default "<C-F>" is same with <PageDown>
-      { key = '<c-f>', mode = 'x', desc = 'Grep Selected Word', handler = h.picker_wrap('grep_string') },
-      { key = '<f1>', desc = 'Search Help', handler = h.picker_wrap('help_tags') },
-      { key = '<leader>sb', desc = 'Search Buffer', handler = h.picker_wrap('buffers') },
-      { key = '<leader>st', desc = 'Search Todo', handler = h.picker_wrap({ 'todo-comments', 'todo' }) },
+      { key = '<f1>', desc = 'Search Help', handler = '<cmd>Telescope help_tags<cr>' },
+      { key = '<leader>sb', desc = 'Search Buffer', handler = '<cmd>Telescope buffers<cr>' },
+      { key = '<leader>st', desc = 'Search Todo', handler = '<cmd>Telescope todo-comments todo' },
+      { key = '<leader>sw', desc = 'Search Word under Cursor', handler = '<cmd>Telescope grep_string<cr>' },
+      { key = '<leader>sr', desc = 'Search Register', handler = '<cmd>Telescope registers<cr>' },
+      { key = '<leader>sm', desc = 'Search Man Page', handler = '<cmd>Telescope man_pages<cr>' },
+      { key = '<leader>sk', desc = 'Search Key Mapping', handler = '<cmd>Telescope keymaps<cr>' },
+      { key = '<leader>sh', desc = 'Search Highlight', handler = '<cmd>Telescope highlights<cr>' },
+      { key = '<leader>sc', desc = 'Search Current Buffer', handler = '<cmd>Telescope current_buffer_fuzzy_find<cr>' },
+      { key = '<leader>ss', desc = 'Search Spell Suggestion', handler = '<cmd>Telescope spell_suggest<cr>' },
       -- By default, "[t" and "]t" are mapped to ":tabprevious" and ":tabnext"
       -- Those below do not support vim.v.count
 
