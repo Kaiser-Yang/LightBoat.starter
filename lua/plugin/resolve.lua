@@ -16,29 +16,29 @@ return {
       local previous_conflict = h.repmove_wrap(resolve.prev_conflict, resolve.next_conflict, 1)
       local next_conflict = h.repmove_wrap(resolve.prev_conflict, resolve.next_conflict, 2)
       local mapping = {
-        { { 'n', 'x' }, '[x', previous_conflict, { desc = 'Previous Git Conflict' } },
-        { { 'n', 'x' }, ']x', next_conflict, { desc = 'Next Git Conflict' } },
-        { 'n', '<leader>xc', resolve.choose_ours, { desc = 'Choose Current Conflict' } },
-        { 'n', '<leader>xi', resolve.choose_theirs, { desc = 'Choose Incoming Conflict' } },
-        { 'n', '<leader>xb', resolve.choose_both, { desc = 'Choose Both Conflict' } },
-        { 'n', '<leader>xB', resolve.choose_both_reverse, { desc = 'Choose Both Reverse Conflict' } },
-        { 'n', '<leader>xn', resolve.choose_none, { desc = 'Choose None Conflict' } },
-        { 'n', '<leader>xa', resolve.choose_base, { desc = 'Choose Ancestor Conflict' } },
-        { 'n', '<leader>xq', resolve.list_conflicts, { desc = 'Quickfix Conflict' } },
+        { { 'n', 'x' }, '[x', previous_conflict, { desc = 'Conflict' } },
+        { { 'n', 'x' }, ']x', next_conflict, { desc = 'Conflict' } },
+        { 'n', '<leader>xc', resolve.choose_ours, { desc = 'Choose Current' } },
+        { 'n', '<leader>xi', resolve.choose_theirs, { desc = 'Choose Incoming' } },
+        { 'n', '<leader>xb', resolve.choose_both, { desc = 'Choose Both' } },
+        { 'n', '<leader>xB', resolve.choose_both_reverse, { desc = 'Choose Both Reverse' } },
+        { 'n', '<leader>xn', resolve.choose_none, { desc = 'Choose None' } },
+        { 'n', '<leader>xa', resolve.choose_base, { desc = 'Choose Ancestor' } },
+        { 'n', '<leader>xq', resolve.list_conflicts, { desc = 'Quickfix Conflict of Buffer' } },
       }
       if vim.fn.executable('delta') == 1 then
         mapping = vim.list_extend(mapping, {
-          { 'n', '<leader>xdi', resolve.show_diff_theirs, { desc = 'Diff Incoming Conflict' } },
-          { 'n', '<leader>xdc', resolve.show_diff_ours, { desc = 'Diff Current Conflict' } },
-          { 'n', '<leader>xdb', resolve.show_diff_both, { desc = 'Diff Both Conflict' } },
-          { 'n', '<leader>xdv', resolve.show_diff_ours_vs_theirs, { desc = 'Diff Current V.S. Incoming Conflict' } },
-          { 'n', '<leader>xdV', resolve.show_diff_theirs_vs_ours, { desc = 'Diff Incoming V.S. Current Conflict' } },
+          { 'n', '<leader>xdi', resolve.show_diff_theirs, { desc = 'Incoming' } },
+          { 'n', '<leader>xdc', resolve.show_diff_ours, { desc = 'Current' } },
+          { 'n', '<leader>xdb', resolve.show_diff_both, { desc = 'Both' } },
+          { 'n', '<leader>xdv', resolve.show_diff_ours_vs_theirs, { desc = 'Current V.S. Incoming' } },
+          { 'n', '<leader>xdV', resolve.show_diff_theirs_vs_ours, { desc = 'Incoming V.S. Current' } },
         })
       end
       if require('lightboat.util').plugin_available('which-key.nvim') then
         local wk = require('which-key')
         wk.add({ '<leader>x', desc = 'Conflict', buffer = args.bufnr })
-        wk.add({ '<leader>xd', desc = 'Conflict Diff', buffer = args.bufnr })
+        wk.add({ '<leader>xd', desc = 'Diff', buffer = args.bufnr })
       end
       for _, m in ipairs(mapping) do
         m[4].buffer = args.bufnr

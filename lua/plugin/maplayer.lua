@@ -23,16 +23,16 @@ return {
       { key = '<c-a>', mode = 'i', 'Cursor to BOL', handler = h.cursor_to_bol_insert, fallback = false },
       -- By default "<C-A>" is used to insert all commands
       -- whose names match the pattern before cursor of command mode
-      { key = '<c-a>', mode = 'c', 'Cursor to BOL', handler = h.cursor_to_bol_command, fallback = false },
-      { key = '<m-d>', mode = 'i', 'Delete to EOW', handler = h.delete_to_eow_insert, fallback = false },
-      { key = '<m-d>', mode = 'c', 'Delete to EOW', handler = h.delete_to_eow_command, fallback = false },
-      { key = 'ae', mode = { 'o', 'x' }, desc = 'Select Edit', handler = h.select_file, fallback = false },
-      { key = 'ie', mode = { 'o', 'x' }, desc = 'Select Edit', handler = h.select_file, fallback = false },
+      { key = '<c-a>', mode = 'c', desc = 'Cursor to BOL', handler = h.cursor_to_bol_command, fallback = false },
+      { key = '<m-d>', mode = 'i', desc = 'Delete to EOW', handler = h.delete_to_eow_insert, fallback = false },
+      { key = '<m-d>', mode = 'c', desc = 'Delete to EOW', handler = h.delete_to_eow_command, fallback = false },
+      { key = 'ae', mode = { 'o', 'x' }, desc = 'Edit', handler = h.select_file, fallback = false },
+      { key = 'ie', mode = { 'o', 'x' }, desc = 'Edit', handler = h.select_file, fallback = false },
       -- These two are similar to "d" and "y",
       -- you and use "<m-x>d" or "<m-x><m-x>" to delete one line in normal mode
-      { key = '<m-x>', mode = 'o', desc = 'System Cut', handler = h.system_cut, expr = true, fallback = false },
+      { key = '<m-x>', mode = 'o', desc = 'Line', handler = h.system_cut, expr = true, fallback = false },
       { key = '<m-x>', mode = { 'n', 'x' }, desc = 'System Cut', handler = h.system_cut, fallback = false },
-      { key = '<m-c>', mode = 'o', desc = 'System Yank', handler = h.system_yank, expr = true, fallback = false },
+      { key = '<m-c>', mode = 'o', desc = 'Line', handler = h.system_yank, expr = true, fallback = false },
       { key = '<m-c>', mode = { 'n', 'x' }, desc = 'System Yank', handler = h.system_yank, fallback = false },
       { key = '<m-v>', mode = { 'n', 'x' }, desc = 'System Put', handler = h.system_put, fallback = false },
       { key = '<m-v>', mode = 'i', desc = 'System Put', handler = h.system_put_insert, fallback = false },
@@ -44,54 +44,54 @@ return {
       { key = '<m-/>', desc = 'Comment Line', handler = h.comment_line, fallback = false },
       { key = '<m-/>', mode = 'i', desc = 'Comment Line', handler = h.comment_line_insert, fallback = false },
       { key = '<m-/>', mode = 'x', desc = 'Comment Selection', handler = h.comment_selection, fallback = false },
-      { key = '<leader>ti', desc = 'Toggle Inlay Hint', handler = h.toggle_inlay_hint, fallback = false },
-      { key = '<leader>ts', desc = 'Toggle Spell', handler = h.toggle_spell, fallback = false },
-      { key = '<leader>tt', desc = 'Toggle Treesitter Highlight', handler = h.toggle_treesitter },
+      { key = '<leader>ti', desc = 'Inlay Hint', handler = h.toggle_inlay_hint, fallback = false },
+      { key = '<leader>ts', desc = 'Spell', handler = h.toggle_spell, fallback = false },
+      { key = '<leader>tt', desc = 'Treesitter Highlight', handler = h.toggle_treesitter },
 
       -- Repmove Motion
       { key = ';', mode = { 'n', 'x' }, desc = 'Repeat Last Motion Forward', handler = h.semicolon, fallback = false },
       { key = ',', mode = { 'n', 'x' }, desc = 'Repeat Last Motion Backward', handler = h.comma, fallback = false },
-      { key = 'f', mode = { 'n', 'x' }, desc = 'Find Next Character', handler = h.f, fallback = false },
-      { key = 'F', mode = { 'n', 'x' }, desc = 'Find Previous Character', handler = h.F, fallback = false },
-      { key = 't', mode = { 'n', 'x' }, desc = 'Till Next Character', handler = h.t, fallback = false },
-      { key = 'T', mode = { 'n', 'x' }, desc = 'Till Previous Character', handler = h.T, fallback = false },
-      { key = '[s', mode = { 'n', 'x' }, desc = 'Previous Misspelled Word', handler = h.previous_misspelled, fallback = false },
-      { key = ']s', mode = { 'n', 'x' }, desc = 'Next Misspelled Word', handler = h.next_misspelled, fallback = false },
-      { key = '[f', mode = { 'n', 'x', 'o' }, desc = 'Previous For Start', handler = h.previous_loop_start, fallback = false },
-      { key = ']f', mode = { 'n', 'x' }, desc = 'Next For Start', handler = h.next_loop_start, fallback = false },
-      { key = '[F', mode = { 'n', 'x' }, desc = 'Previous For End', handler = h.previous_loop_end, fallback = false },
-      { key = ']F', mode = { 'n', 'x', 'o' }, desc = 'Next For End', handler = h.next_loop_end, fallback = false },
-      { key = '[m', mode = { 'n', 'x', 'o' }, desc = 'Previous Method Start', handler = h.previous_function_start, fallback = false },
-      { key = ']m', mode = { 'n', 'x' }, desc = 'Next Method Start', handler = h.next_function_start, fallback = false },
-      { key = '[M', mode = { 'n', 'x' }, desc = 'Previous Method End', handler = h.previous_function_end, fallback = false },
-      { key = ']M', mode = { 'n', 'x', 'o' }, desc = 'Next Method End', handler = h.next_function_end, fallback = false },
-      { key = '[o', mode = { 'n', 'x' }, desc = 'Previous Call Start', handler = h.previous_call_start, fallback = false },
-      { key = ']o', mode = { 'n', 'x' }, desc = 'Next Call Start', handler = h.next_call_start, fallback = false },
-      { key = '[O', mode = { 'n', 'x' }, desc = 'Previous Call End', handler = h.previous_call_end, fallback = false },
-      { key = ']O', mode = { 'n', 'x' }, desc = 'Next Call End', handler = h.next_call_end, fallback = false },
+      { key = 'f', mode = { 'n', 'x' }, desc = 'Move to Next Character', handler = h.f, fallback = false },
+      { key = 'F', mode = { 'n', 'x' }, desc = 'Move to Previous Character', handler = h.F, fallback = false },
+      { key = 't', mode = { 'n', 'x' }, desc = 'Move till Next Character', handler = h.t, fallback = false },
+      { key = 'T', mode = { 'n', 'x' }, desc = 'Move till Previous Character', handler = h.T, fallback = false },
+      { key = '[s', mode = { 'n', 'x' }, desc = 'Misspelled Word', handler = h.previous_misspelled, fallback = false },
+      { key = ']s', mode = { 'n', 'x' }, desc = 'Misspelled Word', handler = h.next_misspelled, fallback = false },
+      { key = '[f', mode = { 'n', 'x', 'o' }, desc = 'For Start', handler = h.previous_loop_start, fallback = false },
+      { key = ']f', mode = { 'n', 'x' }, desc = 'For Start', handler = h.next_loop_start, fallback = false },
+      { key = '[F', mode = { 'n', 'x' }, desc = 'For End', handler = h.previous_loop_end, fallback = false },
+      { key = ']F', mode = { 'n', 'x', 'o' }, desc = 'For End', handler = h.next_loop_end, fallback = false },
+      { key = '[m', mode = { 'n', 'x', 'o' }, desc = 'Method Start', handler = h.previous_function_start, fallback = false },
+      { key = ']m', mode = { 'n', 'x' }, desc = 'Method Start', handler = h.next_function_start, fallback = false },
+      { key = '[M', mode = { 'n', 'x' }, desc = 'Method End', handler = h.previous_function_end, fallback = false },
+      { key = ']M', mode = { 'n', 'x', 'o' }, desc = 'Method End', handler = h.next_function_end, fallback = false },
+      { key = '[o', mode = { 'n', 'x' }, desc = 'Call Start', handler = h.previous_call_start, fallback = false },
+      { key = ']o', mode = { 'n', 'x' }, desc = 'Call Start', handler = h.next_call_start, fallback = false },
+      { key = '[O', mode = { 'n', 'x' }, desc = 'Call End', handler = h.previous_call_end, fallback = false },
+      { key = ']O', mode = { 'n', 'x' }, desc = 'Call End', handler = h.next_call_end, fallback = false },
       -- By default "[t" and "]t" are mapped to ":tp" and ":tn"
-      { key = '[t', mode = { 'n', 'x' }, desc = 'previous todo', handler = h.previous_todo, fallback = false },
-      { key = ']t', mode = { 'n', 'x' }, desc = 'next todo', handler = h.next_todo, fallback = false },
-      { key = '[[', mode = { 'n', 'x', 'o' }, desc = 'Previous Block Start', handler = h.previous_block_start, fallback = false },
-      { key = ']]', mode = { 'n', 'x' }, desc = 'Next Block Start', handler = h.next_block_start, fallback = false },
-      { key = '[]', mode = { 'n', 'x' }, desc = 'Previous Block End', handler = h.previous_block_end, fallback = false },
-      { key = '][', mode = { 'n', 'x', 'o' }, desc = 'Next Block End', handler = h.next_block_end, fallback = false },
+      { key = '[t', mode = { 'n', 'x' }, desc = 'Todo', handler = h.previous_todo, fallback = false },
+      { key = ']t', mode = { 'n', 'x' }, desc = 'Todo', handler = h.next_todo, fallback = false },
+      { key = '[[', mode = { 'n', 'x', 'o' }, desc = 'Block Start', handler = h.previous_block_start, fallback = false },
+      { key = ']]', mode = { 'n', 'x' }, desc = 'Block Start', handler = h.next_block_start, fallback = false },
+      { key = '[]', mode = { 'n', 'x' }, desc = 'Block End', handler = h.previous_block_end, fallback = false },
+      { key = '][', mode = { 'n', 'x', 'o' }, desc = 'Block End', handler = h.next_block_end, fallback = false },
 
       -- Treesitter Text Object
-      { key = 'af', mode = { 'o', 'x' }, desc = 'Around For', handler = h.around_loop, fallback = false },
-      { key = 'if', mode = { 'o', 'x' }, desc = 'Inside For', handler = h.inside_loop, fallback = false },
-      { key = 'am', mode = { 'o', 'x' }, desc = 'Around Method', handler = h.around_function, fallback = false },
-      { key = 'im', mode = { 'o', 'x' }, desc = 'Inside Method', handler = h.inside_function, fallback = false },
-      { key = 'ao', mode = { 'o', 'x' }, desc = 'Around Call', handler = h.around_call, fallback = false },
-      { key = 'io', mode = { 'o', 'x' }, desc = 'Inside Call', handler = h.inside_call, fallback = false },
+      { key = 'af', mode = { 'o', 'x' }, desc = 'For', handler = h.around_loop, fallback = false },
+      { key = 'if', mode = { 'o', 'x' }, desc = 'For', handler = h.inside_loop, fallback = false },
+      { key = 'am', mode = { 'o', 'x' }, desc = 'Method', handler = h.around_function, fallback = false },
+      { key = 'im', mode = { 'o', 'x' }, desc = 'Method', handler = h.inside_function, fallback = false },
+      { key = 'ao', mode = { 'o', 'x' }, desc = 'Call', handler = h.around_call, fallback = false },
+      { key = 'io', mode = { 'o', 'x' }, desc = 'Call', handler = h.inside_call, fallback = false },
 
       -- Swap
-      { key = '<m-s>pf', desc = 'Swap With Previous For', handler = h.swap_with_previous_loop, fallback = false },
-      { key = '<m-s>nf', desc = 'Swap With Next For', handler = h.swap_with_next_loop, fallback = false },
-      { key = '<m-s>po', desc = 'Swap With Previous Call', handler = h.swap_with_previous_call, fallback = false },
-      { key = '<m-s>no', desc = 'Swap With Next Call', handler = h.swap_with_next_call, fallback = false },
-      { key = '<m-s>pm', desc = 'Swap With Previous Method', handler = h.swap_with_previous_function, fallback = false },
-      { key = '<m-s>nm', desc = 'Swap With Next Method', handler = h.swap_with_next_function, fallback = false },
+      { key = '<m-s>pf', desc = 'For', handler = h.swap_with_previous_loop, fallback = false },
+      { key = '<m-s>nf', desc = 'For', handler = h.swap_with_next_loop, fallback = false },
+      { key = '<m-s>po', desc = 'Call', handler = h.swap_with_previous_call, fallback = false },
+      { key = '<m-s>no', desc = 'Call', handler = h.swap_with_next_call, fallback = false },
+      { key = '<m-s>pm', desc = 'Method', handler = h.swap_with_previous_function, fallback = false },
+      { key = '<m-s>nm', desc = 'Method', handler = h.swap_with_next_function, fallback = false },
 
       -- Completion
       -- By default <C-J> is an alias of <CR>
@@ -112,34 +112,32 @@ return {
       { key = 'S', mode = 'x', desc = 'Surround Line Mode', handler = h.surround_visual_line, count = true, fallback = false },
       -- We use this tricky way to make "ys", "cs", "ds", "yS", "cS", "dS", "yss", "ysS" work
       -- We do not recommend to update those mappings
-      { key = 's', mode = 'o', desc = 'Surround Operation', handler = h.hack_wrap(), fallback = false },
+      { key = 's', mode = 'o', desc = 'Surround', handler = h.hack_wrap(), fallback = false },
       -- "yS" will be same with "ys$", if you want surround in line mode you can use "ysS" instead
       -- If you do not want this, you just need to remove the "true"
-      { key = 'S', mode = 'o', desc = 'Surround Operation Line Mode', handler = h.hack_wrap('_line', true), fallback = false },
+      { key = 'S', mode = 'o', desc = 'Surround EOL or Line Mode', handler = h.hack_wrap('_line', true), fallback = false },
       -- Because we have an auto pair plugin, those two below are rarely used
       { key = '<c-g>s', mode = 'i', desc = 'Surround', handler = h.surround_insert, fallback = false },
       { key = '<c-g>S', mode = 'i', desc = 'Surround Line Mode', handler = h.surround_insert_line, fallback = false },
 
       -- Indent
-      { key = '[|', mode = { 'n', 'x', 'o' }, desc = 'Top of Indent', handler = h.indent_top },
-      { key = ']|', mode = { 'n', 'x', 'o' }, desc = 'Bottom of Indent', handler = h.indent_bottom },
-      { key = 'i|', mode = { 'x', 'o' }, desc = 'Inside Indent Line', handler = h.inside_indent },
-      { key = 'a|', mode = { 'x', 'o' }, desc = 'Around Indent Line', handler = h.around_indent },
-      { key = '<leader>tI', desc = 'Toggle Indent Line', handler = h.toggle_indent_line },
+      { key = '[|', mode = { 'n', 'x', 'o' }, desc = 'Indent Start', handler = h.indent_top },
+      { key = ']|', mode = { 'n', 'x', 'o' }, desc = 'Indent End', handler = h.indent_bottom },
+      { key = 'i|', mode = { 'x', 'o' }, desc = 'Indent Line', handler = h.inside_indent },
+      { key = 'a|', mode = { 'x', 'o' }, desc = 'Indent Line', handler = h.around_indent },
+      { key = '<leader>tI', desc = 'Indent Line', handler = h.toggle_indent_line },
 
       -- Picker
-      { key = '<c-p>', desc = 'Serach Files', handler = h.picker_wrap('find_files') },
-      -- By default "<C-F>" is same with <PageDown>
       { key = '<f1>', desc = 'Search Help', handler = '<cmd>Telescope help_tags<cr>' },
-      { key = '<leader>sb', desc = 'Search Buffer', handler = '<cmd>Telescope buffers<cr>' },
-      { key = '<leader>st', desc = 'Search Todo', handler = '<cmd>Telescope todo-comments todo' },
-      { key = '<leader>sw', desc = 'Search Word under Cursor', handler = '<cmd>Telescope grep_string<cr>' },
-      { key = '<leader>sr', desc = 'Search Register', handler = '<cmd>Telescope registers<cr>' },
-      { key = '<leader>sm', desc = 'Search Man Page', handler = '<cmd>Telescope man_pages<cr>' },
-      { key = '<leader>sk', desc = 'Search Key Mapping', handler = '<cmd>Telescope keymaps<cr>' },
-      { key = '<leader>sh', desc = 'Search Highlight', handler = '<cmd>Telescope highlights<cr>' },
-      { key = '<leader>sc', desc = 'Search Current Buffer', handler = '<cmd>Telescope current_buffer_fuzzy_find<cr>' },
-      { key = '<leader>ss', desc = 'Search Spell Suggestion', handler = '<cmd>Telescope spell_suggest<cr>' },
+      { key = '<leader>sb', desc = 'Buffer', handler = '<cmd>Telescope buffers<cr>' },
+      { key = '<leader>st', desc = 'Todo', handler = '<cmd>Telescope todo-comments todo<cr>' },
+      { key = '<leader>sw', desc = 'Word under Cursor', handler = '<cmd>Telescope grep_string<cr>' },
+      { key = '<leader>sr', desc = 'Register', handler = '<cmd>Telescope registers<cr>' },
+      { key = '<leader>sm', desc = 'Man Page', handler = '<cmd>Telescope man_pages<cr>' },
+      { key = '<leader>sk', desc = 'Key Mapping', handler = '<cmd>Telescope keymaps<cr>' },
+      { key = '<leader>sh', desc = 'Highlight', handler = '<cmd>Telescope highlights<cr>' },
+      { key = '<leader>sc', desc = 'Current Buffer', handler = '<cmd>Telescope current_buffer_fuzzy_find<cr>' },
+      { key = '<leader>ss', desc = 'Spell Suggestion', handler = '<cmd>Telescope spell_suggest<cr>' },
       -- By default, "[t" and "]t" are mapped to ":tabprevious" and ":tabnext"
       -- Those below do not support vim.v.count
 
@@ -175,5 +173,14 @@ return {
       { key = ']O', mode = 'o', desc = 'Nop', handler = h.nop, fallback = false },
     })
     -- stylua: ignore end
+    if u.plugin_available('which-key.nvim') then
+      local wk = require('which-key')
+      wk.add({ '[', mode = { 'n', 'x', 'o' }, desc = 'Previous' })
+      wk.add({ ']', mode = { 'n', 'x', 'o' }, desc = 'Next' })
+      wk.add({ '<leader>s', mode = { 'n', 'x' }, desc = 'Search' })
+      wk.add({ '<leader>t', mode = { 'n', 'x' }, desc = 'Toggle' })
+      wk.add({ '<m-s>p', mode = 'n', desc = 'Swap with Previous' })
+      wk.add({ '<m-s>n', mode = 'n', desc = 'Swap with Next' })
+    end
   end,
 }

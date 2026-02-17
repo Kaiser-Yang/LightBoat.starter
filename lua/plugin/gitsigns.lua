@@ -35,34 +35,34 @@ return {
       local previous_hunk, next_hunk = unpack(r(function() g.nav_hunk('prev') end, function() g.nav_hunk('next') end))
       local diff_this = function() g.diffthis('~') end
       local mapping = {
-        { { 'n', 'x' }, '[g', previous_hunk, { desc = 'Previous Git Hunk' } },
-        { { 'n', 'x' }, ']g', next_hunk, { desc = 'Next Git Hunk' } },
-        { { 'x', 'o' }, 'ah', g.select_hunk, { desc = 'Select Hunk' } },
-        { { 'x', 'o' }, 'ih', g.select_hunk, { desc = 'Select Hunk' } },
-        { 'x', '<leader>ga', stage_selection, { desc = 'Stage Selection' } },
-        { 'x', '<leader>gr', reset_selection, { desc = 'Reset Selection' } },
-        { 'n', '<leader>ga', g.stage_hunk, { desc = 'Stage Hunk' } },
-        { 'n', '<leader>gA', g.stage_buffer, { desc = 'Stage Buffer' } },
-        { 'n', '<leader>gu', g.undo_stage_hunk, { desc = 'Undo Stage Hunk' } },
-        { 'n', '<leader>gU', g.reset_buffer_index, { desc = 'Unstage Buffer' } },
+        { { 'n', 'x' }, '[g', previous_hunk, { desc = 'Git Hunk' } },
+        { { 'n', 'x' }, ']g', next_hunk, { desc = 'Git Hunk' } },
+        { { 'x', 'o' }, 'ah', g.select_hunk, { desc = 'Git Hunk' } },
+        { { 'x', 'o' }, 'ih', g.select_hunk, { desc = 'Git Hunk' } },
+        { 'x', '<leader>ga', stage_selection, { desc = 'Add' } },
+        { 'x', '<leader>gr', reset_selection, { desc = 'Reset' } },
+        { 'n', '<leader>ga', g.stage_hunk, { desc = 'Add Hunk' } },
+        { 'n', '<leader>gA', g.stage_buffer, { desc = 'Add Buffer' } },
+        { 'n', '<leader>gu', g.undo_stage_hunk, { desc = 'Undo Add Hunk' } },
+        { 'n', '<leader>gU', g.reset_buffer_index, { desc = 'Undo Add Buffer' } },
         { 'n', '<leader>gr', g.reset_hunk, { desc = 'Reset Hunk' } },
         { 'n', '<leader>gR', g.reset_buffer, { desc = 'Reset Buffer' } },
-        { 'n', '<leader>gd', g.preview_hunk_inline, { desc = 'Hunk Diff Inline' } },
-        { 'n', '<leader>gD', g.preview_hunk, { desc = 'Hunk Diff' } },
-        { 'n', '<leader>gb', g.blame_line, { desc = 'Blame Line' } },
+        { 'n', '<leader>gd', g.preview_hunk, { desc = 'Diff' } },
+        { 'n', '<leader>gD', g.preview_hunk_inline, { desc = 'Diff Inline' } },
         { 'n', '<leader>gt', diff_this, { desc = 'Diff this' } },
+        { 'n', '<leader>gb', g.blame_line, { desc = 'Blame Line' } },
         { 'n', '<leader>gq', quickfix_all_hunk, { desc = 'Quickfix All Hunk' } },
-        { 'n', '<leader>tgb', toggle_current_line_blame, { desc = 'Toggle Blame' } },
-        { 'n', '<leader>tgw', toggle_word_diff, { desc = 'Toggle Word Diff' } },
-        { 'n', '<leader>tgs', toggle_signs, { desc = 'Toggle Sign' } },
-        { 'n', '<leader>tgn', toggle_numhl, { desc = 'Toggle Line Number Highlight' } },
-        { 'n', '<leader>tgl', toggle_linehl, { desc = 'Toggle Line Highlight' } },
-        { 'n', '<leader>tgd', toggle_deleted, { desc = 'Toggle Deleted' } },
+        { 'n', '<leader>tgb', toggle_current_line_blame, { desc = 'Blame' } },
+        { 'n', '<leader>tgw', toggle_word_diff, { desc = 'Word Diff' } },
+        { 'n', '<leader>tgs', toggle_signs, { desc = 'Sign' } },
+        { 'n', '<leader>tgn', toggle_numhl, { desc = 'Line Number Highlight' } },
+        { 'n', '<leader>tgl', toggle_linehl, { desc = 'Line Highlight' } },
+        { 'n', '<leader>tgd', toggle_deleted, { desc = 'Deleted' } },
       }
       if require('lightboat.util').plugin_available('which-key.nvim') then
         local wk = require('which-key')
         wk.add({ '<leader>g', desc = 'Git', mode = { 'n', 'x' }, buffer = true })
-        wk.add({ '<leader>tg', desc = 'Toggle Git', mode = { 'n', 'x' }, buffer = true })
+        wk.add({ '<leader>tg', desc = 'Git', mode = { 'n', 'x' }, buffer = true })
       end
       for _, m in ipairs(mapping) do
         m[4].buffer = buffer

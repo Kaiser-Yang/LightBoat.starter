@@ -81,8 +81,9 @@ return {
       ['<f1>'] = { ag.which_key({ keybind_width = 14, max_height = 0.2 }), type = 'action', opts = { desc = 'Which Key' } },
       ['<c-q>'] = { a.send_selected_to_qflist + a.open_qflist, type = 'action', opts = { desc = 'Send Selected to Qflist' }, },
       ['<c-l>'] = { a.send_selected_to_loclist + a.open_loclist, type = 'action', opts = { desc = 'Send Selected to Loclist' }, },
-      ['<c-p>'] = { grep_with_input_wrap('find_files'), type = 'action', opts = { desc = 'Search Files with Input' } },
-      ['<c-f>'] = { grep_with_input_wrap('live_grep'), type = 'action', opts = { desc = 'Find with Input' } },
+      ['<c-p>'] = { grep_with_input_wrap('find_files'), type = 'action', opts = { desc = 'Search File with Input' } },
+      ['<c-f>'] = { grep_with_input_wrap('live_grep'), type = 'action', opts = { desc = 'Search Content with Input' } },
+      ['<c-y>'] = { '<cmd>Telescope resume<cr>', type = 'command', opts = { desc = 'Resume' } },
     }
     opts.defaults.mappings.n = {
       ['<esc>'] = { a.close, type = 'action', opts = { desc = 'Close' } },
@@ -98,6 +99,7 @@ return {
     opts.defaults.mappings.i = {
       ['<c-j>'] = { a.move_selection_next, type = 'action', opts = { desc = 'Move Selection Next' } },
       ['<c-k>'] = { a.move_selection_previous, type = 'action', opts = { desc = 'Move Selection Previous' } },
+      ['<c-w>'] = { '<cmd>norm! db<cr>', type = 'command', opts = { desc = 'Delete Word' } },
       ['<c-r><c-w>'] = { a.insert_original_cword, type = 'action', opts = { desc = 'Insert Cword' } },
       ['<c-r><c-a>'] = { a.insert_original_cWORD, type = 'action', opts = { desc = 'Insert CWORD' } },
       ['<c-r><c-f>'] = { a.insert_original_cfile, type = 'action', opts = { desc = 'Insert Cfile' } },
