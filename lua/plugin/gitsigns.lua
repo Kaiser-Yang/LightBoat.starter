@@ -3,6 +3,7 @@ return {
   event = { { event = 'User', pattern = 'GitRepoDetected' } },
   cond = not vim.g.vscode,
   opts = {
+    attach_to_untracked = true,
     current_line_blame = true,
     current_line_blame_opts = { delay = 300 },
     preview_config = { border = vim.o.winborder or nil },
@@ -19,21 +20,23 @@ return {
       local toggle_word_diff = function()
         u.toggle_notify('Word Diff', require('gitsigns').toggle_word_diff(), { title = 'Git Signs' })
       end
-      local previous_hunk, next_hunk = unpack(r(function()
-        vim.schedule(function()
-          if vim.fn.mode('1') == 'no' then vim.cmd('norm! V') end
-          g.nav_hunk('prev')
-        end)
-      end, function()
-        vim.schedule(function()
-          if vim.fn.mode('1') == 'no' then vim.cmd('norm! V') end
-          g.nav_hunk('next')
-        end)
-      end))
+      local toggle_signs = function()
+        u.toggle_notify('Signs', require('gitsigns').toggle_signs(), { title = 'Git Signs' })
+      end
+      local toggle_numhl = function()
+        u.toggle_notify('Line Number Highlight', require('gitsigns').toggle_numhl(), { title = 'Git Signs' })
+      end
+      local toggle_linehl = function()
+        u.toggle_notify('Line Highlight', require('gitsigns').toggle_linehl(), { title = 'Git Signs' })
+      end
+      local toggle_deleted = function()
+        u.toggle_notify('Deleted', require('gitsigns').toggle_deleted(), { title = 'Git Signs' })
+      end
+      local previous_hunk, next_hunk = unpack(r(function() g.nav_hunk('prev') end, function() g.nav_hunk('next') end))
       local diff_this = function() g.diffthis('~') end
       local mapping = {
-        { { 'n', 'x' }, '[g', previous_hunk, { desc = 'Previous Git Hunk', expr = true } },
-        { { 'n', 'x' }, ']g', next_hunk, { desc = 'Next Git Hunk', expr = true } },
+        { { 'n', 'x' }, '[g', previous_hunk, { desc = 'Previous Git Hunk' } },
+        { { 'n', 'x' }, ']g', next_hunk, { desc = 'Next Git Hunk' } },
         { { 'x', 'o' }, 'ah', g.select_hunk, { desc = 'Select Hunk' } },
         { { 'x', 'o' }, 'ih', g.select_hunk, { desc = 'Select Hunk' } },
         { 'x', '<leader>ga', stage_selection, { desc = 'Stage Selection' } },
@@ -51,7 +54,16 @@ return {
         { 'n', '<leader>gq', quickfix_all_hunk, { desc = 'Quickfix All Hunk' } },
         { 'n', '<leader>tgb', toggle_current_line_blame, { desc = 'Toggle Blame' } },
         { 'n', '<leader>tgw', toggle_word_diff, { desc = 'Toggle Word Diff' } },
+        { 'n', '<leader>tgs', toggle_signs, { desc = 'Toggle Sign' } },
+        { 'n', '<leader>tgn', toggle_numhl, { desc = 'Toggle Line Number Highlight' } },
+        { 'n', '<leader>tgl', toggle_linehl, { desc = 'Toggle Line Highlight' } },
+        { 'n', '<leader>tgd', toggle_deleted, { desc = 'Toggle Deleted' } },
       }
+      if require('lightboat.util').plugin_available('which-key.nvim') then
+        local wk = require('which-key')
+        wk.add({ '<leader>g', desc = 'Git', mode = { 'n', 'x' }, buffer = true })
+        wk.add({ '<leader>tg', desc = 'Toggle Git', mode = { 'n', 'x' }, buffer = true })
+      end
       for _, m in ipairs(mapping) do
         m[4].buffer = buffer
         vim.keymap.set(unpack(m))
