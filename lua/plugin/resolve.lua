@@ -18,7 +18,6 @@ return {
       local mapping = {
         { { 'n', 'x' }, '[x', previous_conflict, { desc = 'Conflict' } },
         { { 'n', 'x' }, ']x', next_conflict, { desc = 'Conflict' } },
-        { 'n', '<leader>x', h.nop, { desc = 'Conflict' } },
         { 'n', '<leader>xc', resolve.choose_ours, { desc = 'Choose Current' } },
         { 'n', '<leader>xi', resolve.choose_theirs, { desc = 'Choose Incoming' } },
         { 'n', '<leader>xb', resolve.choose_both, { desc = 'Choose Both' } },
@@ -29,7 +28,6 @@ return {
       }
       if vim.fn.executable('delta') == 1 then
         mapping = vim.list_extend(mapping, {
-          { 'n', '<leader>xd', h.nop, { desc = 'Diff' } },
           { 'n', '<leader>xdi', resolve.show_diff_theirs, { desc = 'Incoming' } },
           { 'n', '<leader>xdc', resolve.show_diff_ours, { desc = 'Current' } },
           { 'n', '<leader>xdb', resolve.show_diff_both, { desc = 'Both' } },
@@ -46,7 +44,6 @@ return {
     on_conflicts_resolved = function(args)
       vim.diagnostic.enable(true, { bufnr = args.bufnr })
       local mapping = {
-        { 'n', '<leader>x' },
         { 'n', '<leader>xc' },
         { 'n', '<leader>xi' },
         { 'n', '<leader>xb' },
@@ -59,7 +56,6 @@ return {
       }
       if vim.fn.executable('delta') == 1 then
         mapping = vim.list_extend(mapping, {
-          { 'n', '<leader>xd' },
           { 'n', '<leader>xdi' },
           { 'n', '<leader>xdc' },
           { 'n', '<leader>xdb' },

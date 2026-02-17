@@ -8,6 +8,7 @@ return {
     current_line_blame_opts = { delay = 300 },
     preview_config = { border = vim.o.winborder or nil },
     on_attach = function(buffer)
+      local h = require('lightboat.handler')
       local g = require('gitsigns')
       local r = require('lightboat.handler').repmove_wrap
       local u = require('lightboat.util')
@@ -59,11 +60,6 @@ return {
         { 'n', '<leader>tgl', toggle_linehl, { desc = 'Line Highlight' } },
         { 'n', '<leader>tgd', toggle_deleted, { desc = 'Deleted' } },
       }
-      if require('lightboat.util').plugin_available('which-key.nvim') then
-        local wk = require('which-key')
-        wk.add({ '<leader>g', desc = 'Git', mode = { 'n', 'x' }, buffer = true })
-        wk.add({ '<leader>tg', desc = 'Git', mode = { 'n', 'x' }, buffer = true })
-      end
       for _, m in ipairs(mapping) do
         m[4].buffer = buffer
         vim.keymap.set(unpack(m))

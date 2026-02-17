@@ -175,12 +175,21 @@ return {
     -- stylua: ignore end
     if u.plugin_available('which-key.nvim') then
       local wk = require('which-key')
-      wk.add({ '[', mode = { 'n', 'x', 'o' }, desc = 'Previous' })
-      wk.add({ ']', mode = { 'n', 'x', 'o' }, desc = 'Next' })
-      wk.add({ '<leader>s', mode = { 'n', 'x' }, desc = 'Search' })
-      wk.add({ '<leader>t', mode = { 'n', 'x' }, desc = 'Toggle' })
-      wk.add({ '<m-s>p', mode = 'n', desc = 'Swap with Previous' })
-      wk.add({ '<m-s>n', mode = 'n', desc = 'Swap with Next' })
+      wk.add({
+        { '<leader>g', buffer = true, icon = { cat = 'filetype', name = 'git' }, desc = 'Git', mode = 'nx' },
+        { '<leader>x', buffer = true, icon = { cat = 'filetype', name = 'git' }, desc = 'Conflict' },
+        { '<leader>xd', buffer = true, icon = { cat = 'filetype', name = 'git' }, desc = 'Diff' },
+        { '<leader>tg', buffer = true, icon = { icon = ' ', color = 'yellow' }, desc = 'Git' },
+        { '<leader>t', icon = { icon = ' ', color = 'yellow' }, desc = 'Toggle' },
+        { '<leader>s', icon = { icon = ' ', color = 'green' }, desc = 'Search' },
+        { 'a', desc = 'Around', mode = 'xo' },
+        { 'i', desc = 'Inside', mode = 'xo' },
+        { '<m-s>', desc = 'Swap' },
+        { '<m-s>p', desc = 'Previous' },
+        { '<m-s>n', desc = 'Next' },
+        { '[', desc = 'Previous', mode = 'nxo' },
+        { ']', desc = 'Next', mode = 'nxo' },
+      })
     end
   end,
 }
