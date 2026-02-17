@@ -1,7 +1,7 @@
 -- INFO:
 -- See https://github.com/topics/neovim-colorscheme to find one you like and set it here
 return {
-  'Kaiser-Yang/gruvbox.nvim',
+  'ellisonleao/gruvbox.nvim',
   priority = 1000,
   cond = not vim.g.vscode,
   opts = {

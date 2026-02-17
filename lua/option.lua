@@ -34,7 +34,7 @@ vim.g.big_file_callback = function(data)
   then
     original[data.buffer].indentexpr = vim.bo.indentexpr
   end
-  if not original[data.buffer].buftype then original[data.buffer].buftype = vim.bo.buftype end
+  if data.old_status == data.new_status then return end
   if data.new_status then
     vim.b.conform_on_save = false
     vim.b.treesitter_foldexpr_auto_set = false
@@ -53,21 +53,19 @@ vim.g.big_file_callback = function(data)
     for _, client in pairs(vim.lsp.get_clients({ bufnr = data.buffer })) do
       vim.lsp.buf_detach_client(data.buffer, client.id)
     end
-    if vim.treesitter.highlighter.active[data.buffer] ~= nil then treesitter_attached = true end
-    -- This is used to make sure treesitter is stopped
-    if treesitter_attached then vim.cmd('e') end
-    if vim.bo.filetype == '' then
-      original[data.buffer].buftype = vim.bo.buftype
+    if vim.treesitter.highlighter.active[data.buffer] ~= nil then vim.treesitter.stop(data.buffer) end
+    if vim.bo.filetype == '' and vim.bo.buftype == '' then
       -- This is a tricky way to disable lsp attaching
       -- Since lsp won't attach to buffers with buftype set to nonempty value
       vim.bo.buftype = 'acwrite'
-      vim.api.nvim_create_autocmd('BufEnter', {
+      vim.api.nvim_create_autocmd('FileType', {
         buffer = data.buffer,
         once = true,
-        callback = function() vim.bo.buftype = original[data.buffer].buftype end,
+        callback = function() vim.bo.buftype = '' end,
       })
     end
-    require('nvim-treesitter.endwise').detach(data.buffer)
+    if _G.plugin_loaded['nvim-treesitter-endwise'] then require('nvim-treesitter.endwise').detach(data.buffer) end
+    if _G.plugin_loaded['nvim-treesitter-context'] then require('treesitter-context').enable() end
   else
     vim.b.conform_on_save = nil
     vim.b.treesitter_foldexpr_auto_set = nil
@@ -75,6 +73,7 @@ vim.g.big_file_callback = function(data)
     vim.b.treesitter_highlight_auto_start = nil
     -- Trigger the FileType autocommand to let lsp attach, indentexpr, endwise and foldexpr set up
     if vim.bo.filetype ~= '' then vim.api.nvim_set_option_value('filetype', vim.bo.filetype, { buf = data.buffer }) end
+    if _G.plugin_loaded['nvim-treesitter-context'] then require('treesitter-context').enable() end
   end
 end
 
@@ -106,8 +105,9 @@ vim.o.foldlevel = 99999
 vim.o.foldcolumn = '1'
 vim.o.fillchars = 'fold: ,foldopen:,foldclose:,foldsep: '
 vim.o.splitright = true
+vim.o.autowriteall = true
 
-vim.filetype.add({ pattern = { ['.*.bazelrc'] = 'bazelrc', }, })
+vim.filetype.add({ pattern = { ['.*.bazelrc'] = 'bazelrc' } })
 
 vim.treesitter.language.register('objc', { 'objcpp' })
 vim.o.splitbelow = false

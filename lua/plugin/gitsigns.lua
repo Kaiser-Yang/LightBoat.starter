@@ -32,12 +32,10 @@ return {
       end))
       local diff_this = function() g.diffthis('~') end
       local mapping = {
-        -- WARN:
-        -- This may be a little bit weird in operator pending mode
-        { { 'n', 'x', 'o' }, '[g', previous_hunk, { desc = 'Previous Git Hunk', expr = true } },
-        { { 'n', 'x', 'o' }, ']g', next_hunk, { desc = 'Next Git Hunk', expr = true } },
-        { { 'x', 'o', 'o' }, 'ah', g.select_hunk, { desc = 'Select Hunk' } },
-        { { 'x', 'o', 'o' }, 'ih', g.select_hunk, { desc = 'Select Hunk' } },
+        { { 'n', 'x' }, '[g', previous_hunk, { desc = 'Previous Git Hunk', expr = true } },
+        { { 'n', 'x' }, ']g', next_hunk, { desc = 'Next Git Hunk', expr = true } },
+        { { 'x', 'o' }, 'ah', g.select_hunk, { desc = 'Select Hunk' } },
+        { { 'x', 'o' }, 'ih', g.select_hunk, { desc = 'Select Hunk' } },
         { 'x', '<leader>ga', stage_selection, { desc = 'Stage Selection' } },
         { 'x', '<leader>gr', reset_selection, { desc = 'Reset Selection' } },
         { 'n', '<leader>ga', g.stage_hunk, { desc = 'Stage Hunk' } },
