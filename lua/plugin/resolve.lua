@@ -18,6 +18,7 @@ return {
       local mapping = {
         { { 'n', 'x' }, '[x', previous_conflict, { desc = 'Conflict' } },
         { { 'n', 'x' }, ']x', next_conflict, { desc = 'Conflict' } },
+        { 'n', '<leader>x', h.nop, { desc = 'Conflict' } },
         { 'n', '<leader>xc', resolve.choose_ours, { desc = 'Choose Current' } },
         { 'n', '<leader>xi', resolve.choose_theirs, { desc = 'Choose Incoming' } },
         { 'n', '<leader>xb', resolve.choose_both, { desc = 'Choose Both' } },
@@ -28,6 +29,7 @@ return {
       }
       if vim.fn.executable('delta') == 1 then
         mapping = vim.list_extend(mapping, {
+          { 'n', '<leader>xd', h.nop, { desc = 'Diff' } },
           { 'n', '<leader>xdi', resolve.show_diff_theirs, { desc = 'Incoming' } },
           { 'n', '<leader>xdc', resolve.show_diff_ours, { desc = 'Current' } },
           { 'n', '<leader>xdb', resolve.show_diff_both, { desc = 'Both' } },
@@ -35,20 +37,16 @@ return {
           { 'n', '<leader>xdV', resolve.show_diff_theirs_vs_ours, { desc = 'Incoming V.S. Current' } },
         })
       end
-      if require('lightboat.util').plugin_available('which-key.nvim') then
-        local wk = require('which-key')
-        wk.add({ '<leader>x', desc = 'Conflict', buffer = args.bufnr })
-        wk.add({ '<leader>xd', desc = 'Diff', buffer = args.bufnr })
-      end
       for _, m in ipairs(mapping) do
         m[4].buffer = args.bufnr
         vim.keymap.set(unpack(m))
       end
       vim.diagnostic.enable(false, { bufnr = args.bufnr })
     end,
-    disable_diagnostics = function(args)
+    on_conflicts_resolved = function(args)
       vim.diagnostic.enable(true, { bufnr = args.bufnr })
       local mapping = {
+        { 'n', '<leader>x' },
         { 'n', '<leader>xc' },
         { 'n', '<leader>xi' },
         { 'n', '<leader>xb' },
@@ -61,6 +59,7 @@ return {
       }
       if vim.fn.executable('delta') == 1 then
         mapping = vim.list_extend(mapping, {
+          { 'n', '<leader>xd' },
           { 'n', '<leader>xdi' },
           { 'n', '<leader>xdc' },
           { 'n', '<leader>xdb' },
@@ -69,7 +68,7 @@ return {
         })
       end
       for _, m in ipairs(mapping) do
-        vim.keymap.del(unpack(m), { buffer = args.bufnr })
+        pcall(vim.keymap.del, m[1], m[2], { buffer = args.bufnr })
       end
     end,
   },
