@@ -14,9 +14,15 @@ local additional_args = function()
 end
 local function grep_with_input_wrap(name)
   return function()
-    local line = vim.api.nvim_get_current_line()
-    local opts = { default_text = line:sub(3) }
-    require('telescope.builtin')[name](opts)
+    local line = vim.api.nvim_get_current_line():sub(3):gsub('^:.-: ?', '')
+    local opts = { default_text = line }
+    local b = require('telescope.builtin')
+    if type(name) ~= 'table' and b[name] then
+      b[name](opts)
+    else
+      assert(#name == 2)
+      require('telescope').extensions[name[1]][name[2]](opts)
+    end
   end
 end
 local function smart_select_all(buffer)
@@ -35,6 +41,7 @@ return {
     'nvim-lua/plenary.nvim',
     {
       'nvim-telescope/telescope-fzf-native.nvim',
+      'nvim-telescope/telescope-frecency.nvim',
       build = 'make',
       enabled = vim.fn.executable('make') == 1 and (vim.fn.executable('gcc') == 1 or vim.fn.executable('clang') == 1),
     },
@@ -55,15 +62,11 @@ return {
     },
     pickers = {
       lsp_dynamic_workspace_symbols = { attach_mappings = function() return true end },
-      find_files = {
-        find_command = find_command,
-      },
+      find_files = { find_command = find_command },
       live_grep = { additional_args = additional_args, attach_mappings = function() return true end },
       grep_string = { additional_args = additional_args },
     },
-    extensions = {
-      ['todo-comments'] = { todo = { additional_args = additional_args } },
-    },
+    extensions = { frecency = { workspaces = { cwd = vim.fn.getcwd() } } },
   },
   config = function(_, opts)
     local t = require('telescope')
@@ -118,5 +121,6 @@ return {
     opts.defaults.mappings.i = vim.tbl_deep_extend('error', opts.defaults.mappings.i, insert_and_normal)
     t.setup(opts)
     if u.plugin_available('telescope-fzf-native.nvim') then t.load_extension('fzf') end
+    if u.plugin_available('telescope-frecency.nvim') then t.load_extension('frecency') end
   end,
 }

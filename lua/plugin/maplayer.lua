@@ -129,6 +129,7 @@ return {
       { key = '<c-p>', desc = 'Serach File', handler = '<cmd>Telescope find_files<cr>' },
       { key = '<f1>', desc = 'Search Help', handler = '<cmd>Telescope help_tags<cr>' },
       { key = '<m-f>', mode = 'nx', desc = 'Search Word', handler = '<cmd>Telescope grep_string<cr>' },
+      { key = '<leader>f', mode = 'n', desc = 'Frecency', handler = '<cmd>Telescope frecency<cr>' },
       { key = '<leader>sb', desc = 'Buffer', handler = '<cmd>Telescope buffers<cr>' },
       { key = '<leader>scc', desc = 'Config Path', handler = '<cmd>Telescope live_grep cwd=' .. c_dir .. '<cr>' },
       { key = '<leader>scl', desc = 'Lazy Path', handler = '<cmd>Telescope live_grep cwd=' .. l_dir .. '<cr>' },
