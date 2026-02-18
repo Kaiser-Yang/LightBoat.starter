@@ -76,12 +76,12 @@ return {
       { key = '][', mode = 'nox', desc = 'Block End', handler = h.next_block_end, fallback = false },
 
       -- Treesitter Text Object
-      { key = 'af', mode = 'nx', desc = 'For', handler = h.around_loop, fallback = false },
-      { key = 'if', mode = 'nx', desc = 'For', handler = h.inside_loop, fallback = false },
-      { key = 'am', mode = 'nx', desc = 'Method', handler = h.around_function, fallback = false },
-      { key = 'im', mode = 'nx', desc = 'Method', handler = h.inside_function, fallback = false },
-      { key = 'ao', mode = 'nx', desc = 'Call', handler = h.around_call, fallback = false },
-      { key = 'io', mode = 'nx', desc = 'Call', handler = h.inside_call, fallback = false },
+      { key = 'af', mode = 'nox', desc = 'For', handler = h.around_loop, fallback = false },
+      { key = 'if', mode = 'nox', desc = 'For', handler = h.inside_loop, fallback = false },
+      { key = 'am', mode = 'nox', desc = 'Method', handler = h.around_function, fallback = false },
+      { key = 'im', mode = 'nox', desc = 'Method', handler = h.inside_function, fallback = false },
+      { key = 'ao', mode = 'nox', desc = 'Call', handler = h.around_call, fallback = false },
+      { key = 'io', mode = 'nox', desc = 'Call', handler = h.inside_call, fallback = false },
 
       -- Swap
       { key = '<m-s>pf', desc = 'For', handler = h.swap_with_previous_loop, fallback = false },

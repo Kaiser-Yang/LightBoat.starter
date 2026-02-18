@@ -2,6 +2,11 @@
 -- https://github.com/nvim-telescope/telescope.nvim/issues/3621
 -- https://github.com/nvim-telescope/telescope.nvim/pull/3392#issuecomment-3919322773
 local u = require('lightboat.util')
+local function find_command()
+  local res = { 'rg', '--files', '--color', 'never', '-g', '!.git' }
+  if u.in_config_dir() then table.insert(res, '--hidden') end
+  return res
+end
 local additional_args = function()
   local res = { '-g', '!.git' }
   if u.in_config_dir() then table.insert(res, '--hidden') end
@@ -51,11 +56,7 @@ return {
     pickers = {
       lsp_dynamic_workspace_symbols = { attach_mappings = function() return true end },
       find_files = {
-        find_command = function()
-          local res = { 'rg', '--files', '--color', 'never', '-g', '!.git' }
-          if u.in_config_dir() then table.insert(res, '--hidden') end
-          return res
-        end,
+        find_command = find_command,
       },
       live_grep = { additional_args = additional_args, attach_mappings = function() return true end },
       grep_string = { additional_args = additional_args },
@@ -87,7 +88,6 @@ return {
       ['<c-l>'] = { a.send_selected_to_loclist + a.open_loclist, type = 'action', opts = { desc = 'Send Selected to Loclist' }, },
       ['<c-p>'] = { grep_with_input_wrap('find_files'), type = 'action', opts = { desc = 'Search File with Input' } },
       ['<c-f>'] = { grep_with_input_wrap('live_grep'), type = 'action', opts = { desc = 'Search Content with Input' } },
-      ['<c-y>'] = { '<cmd>Telescope resume<cr>', type = 'command', opts = { desc = 'Resume' } },
       ['<m-p>'] = { a.cycle_history_prev, type = 'action', opts = { desc = 'Previous Search History' } },
       ['<m-n>'] = { a.cycle_history_next, type = 'action', opts = { desc = 'Next Search History' } },
     }
