@@ -66,7 +66,13 @@ return {
       live_grep = { additional_args = additional_args, attach_mappings = function() return true end },
       grep_string = { additional_args = additional_args },
     },
-    extensions = { frecency = { workspaces = { cwd = vim.fn.getcwd() } } },
+    extensions = {
+      frecency = {
+        previewer = false,
+        layout_config = { anchor = 'N', anchor_padding = 0 },
+        workspaces = { cwd = vim.fn.getcwd() },
+      },
+    },
   },
   config = function(_, opts)
     local t = require('telescope')
@@ -119,6 +125,8 @@ return {
     -- stylua: ignore end
     opts.defaults.mappings.n = vim.tbl_deep_extend('error', opts.defaults.mappings.n, insert_and_normal)
     opts.defaults.mappings.i = vim.tbl_deep_extend('error', opts.defaults.mappings.i, insert_and_normal)
+    local th = require('telescope.themes')
+    opts.extensions.frecency = th.get_dropdown(opts.extensions.frecency)
     t.setup(opts)
     if u.plugin_available('telescope-fzf-native.nvim') then t.load_extension('fzf') end
     if u.plugin_available('telescope-frecency.nvim') then t.load_extension('frecency') end
