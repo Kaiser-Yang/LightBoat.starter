@@ -72,7 +72,7 @@ vim.g.big_file_callback = function(data)
     vim.b.treesitter_indentexpr_auto_set = nil
     vim.b.treesitter_highlight_auto_start = nil
     -- Trigger the FileType autocommand to let lsp attach, indentexpr, endwise and foldexpr set up
-    if vim.bo.filetype ~= '' then vim.api.nvim_set_option_value('filetype', vim.bo.filetype, { buf = data.buffer }) end
+    if vim.bo.filetype ~= '' then vim.bo.filetype = vim.bo.filetype end
     if _G.plugin_loaded['nvim-treesitter-context'] then require('treesitter-context').enable() end
   end
 end

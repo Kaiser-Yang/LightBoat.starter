@@ -50,7 +50,7 @@ return {
         { 'n', '<leader>gR', g.reset_buffer, { desc = 'Reset Buffer' } },
         { 'n', '<leader>gd', g.preview_hunk, { desc = 'Diff' } },
         { 'n', '<leader>gD', g.preview_hunk_inline, { desc = 'Diff Inline' } },
-        { 'n', '<leader>gt', diff_this, { desc = 'Diff this' } },
+        { 'n', '<leader>gt', diff_this, { desc = 'Diff This' } },
         { 'n', '<leader>gb', g.blame_line, { desc = 'Blame Line' } },
         { 'n', '<leader>gq', quickfix_all_hunk, { desc = 'Quickfix All Hunk' } },
         { 'n', '<leader>tgb', toggle_current_line_blame, { desc = 'Blame' } },

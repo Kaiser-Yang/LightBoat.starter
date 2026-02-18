@@ -15,6 +15,11 @@ return {
     vim.o.timeoutlen = vim.g.vscode and 300 or 0
     local u = require('lightboat.util')
     local h = require('lightboat.handler')
+    local function toggle_conflict_detection()
+      if not _G.plugin_loaded['resolve.nvim'] then return false end
+      local status = require('resolve').toggle_auto_detect(nil, true)
+      u.toggle_notify('Conflict Detection', status, { title = 'Resolve' })
+    end
     -- stylua: ignore start
     require('maplayer').setup({
       -- Basic
@@ -43,7 +48,7 @@ return {
       -- Use "gc" to comment with motion
       { key = '<m-/>', desc = 'Comment Line', handler = h.comment_line, fallback = false },
       { key = '<m-/>', mode = 'i', desc = 'Comment Line', handler = h.comment_line_insert, fallback = false },
-      { key = '<m-/>', mode = 'x', desc = 'Comment Selection', handler = h.comment_selection, fallback = false },
+      { key = '<m-/>', mode = 'x', desc = 'Comment', handler = h.comment_selection, fallback = false },
       { key = '<leader>ti', desc = 'Inlay Hint', handler = h.toggle_inlay_hint, fallback = false },
       { key = '<leader>ts', desc = 'Spell', handler = h.toggle_spell, fallback = false },
       { key = '<leader>tt', desc = 'Treesitter Highlight', handler = h.toggle_treesitter },
@@ -138,8 +143,9 @@ return {
       { key = '<leader>sh', desc = 'Highlight', handler = '<cmd>Telescope highlights<cr>' },
       { key = '<leader>sc', desc = 'Current Buffer', handler = '<cmd>Telescope current_buffer_fuzzy_find<cr>' },
       { key = '<leader>ss', desc = 'Spell Suggestion', handler = '<cmd>Telescope spell_suggest<cr>' },
-      -- By default, "[t" and "]t" are mapped to ":tabprevious" and ":tabnext"
-      -- Those below do not support vim.v.count
+
+      -- Conflict
+      { key = '<leader>tx', desc = 'Conflict Detection', handler = toggle_conflict_detection, fallback = false },
 
       -- Key with Multi Functionalities
       { key = '<c-e>', mode = { 'i', 'c' }, desc = 'Cancel Completion', handler = h.cancel_completion },
@@ -176,19 +182,24 @@ return {
     if u.plugin_available('which-key.nvim') then
       local wk = require('which-key')
       wk.add({
-        { '<leader>g', buffer = true, icon = { cat = 'filetype', name = 'git' }, desc = 'Git', mode = 'nx' },
-        { '<leader>x', buffer = true, icon = { cat = 'filetype', name = 'git' }, desc = 'Conflict' },
-        { '<leader>xd', buffer = true, icon = { cat = 'filetype', name = 'git' }, desc = 'Diff' },
+        { '<leader>g', buffer = true, icon = { icon = ' ', color = 'red' }, desc = 'Git', mode = 'nx' },
+        { '<leader>x', buffer = true, icon = { icon = ' ', color = 'red' }, desc = 'Conflict' },
+        { '<leader>xd', buffer = true, icon = { icon = ' ', color = 'red' }, desc = 'Diff' },
         { '<leader>tg', buffer = true, icon = { icon = ' ', color = 'yellow' }, desc = 'Git' },
         { '<leader>t', icon = { icon = ' ', color = 'yellow' }, desc = 'Toggle' },
         { '<leader>s', icon = { icon = ' ', color = 'green' }, desc = 'Search' },
         { 'a', desc = 'Around', mode = 'xo' },
         { 'i', desc = 'Inside', mode = 'xo' },
-        { '<m-s>', desc = 'Swap' },
-        { '<m-s>p', desc = 'Previous' },
-        { '<m-s>n', desc = 'Next' },
-        { '[', desc = 'Previous', mode = 'nxo' },
-        { ']', desc = 'Next', mode = 'nxo' },
+        { '*', desc = 'Search Backward', icon = { icon = ' ', color = 'green' }, mode = 'x' },
+        { '#', desc = 'Search Forward', icon = { icon = ' ', color = 'green' }, mode = 'x' },
+        { '@', desc = 'Execute Register', mode = 'x' },
+        { 'Q', desc = 'Repeat Last Recorded Macro', mode = 'x' },
+        { '<m-s>', desc = 'Swap', icon = { icon = '󰓡 ', color = 'green' } },
+        { '<m-s>p', desc = 'Previous', icon = { icon = '󰓡 ', color = 'green' } },
+        { '<m-s>n', desc = 'Next', icon = { icon = '󰓡 ', color = 'green' } },
+        { '[', desc = 'Previous', mode = 'nxo', icon = { icon = ' ', color = 'green' } },
+        { ']', desc = 'Next', mode = 'nxo', icon = { icon = ' ', color = 'green' } },
+        { 'gr', desc = 'LSP', mode = 'nx', icon = { icon = ' ', color = 'orange' } },
       })
     end
   end,
