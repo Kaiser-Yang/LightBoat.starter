@@ -1,5 +1,10 @@
 --- @class LightBoat.Opt
 vim.g.lightboat_opt = {
+  -- In most cases, we do not need to listen on "TextChanged" and "TextChangedI",
+  -- If your file grows to big or shrinks to small,
+  -- you just need to run ":e" to make LightBoat re-detect
+  --- @type string[]|string
+  big_file_detection = { 'BufReadPre', 'FileType', 'BufReadPost' },
   --- @type string[]
   treesitter_ensure_installed = { 'lua' },
   --- @type string[]
@@ -34,45 +39,36 @@ vim.g.big_file_callback = function(data)
   then
     original[data.buffer].indentexpr = vim.bo.indentexpr
   end
-  if data.old_status == data.new_status then return end
+  if data.new_status and vim.bo.filetype ~= '' and not vim.bo.filetype:find('bigfile') then
+    vim.cmd('noautocmd setlocal filetype=' .. vim.bo.filetype .. 'bigfile')
+  end
+  if data.new_status == data.old_status then return end
   if data.new_status then
     vim.b.conform_on_save = false
     vim.b.treesitter_foldexpr_auto_set = false
     vim.b.treesitter_indentexpr_auto_set = false
     vim.b.treesitter_highlight_auto_start = false
     vim.bo.indentexpr = original[data.buffer].indentexpr or ''
-    local treesitter_attached = nil
     for _, win in ipairs(vim.api.nvim_list_wins()) do
       if vim.api.nvim_win_is_valid(win) and vim.api.nvim_win_get_buf(win) == data.buffer then
-        if vim.wo[win][0].foldexpr == "v:lua.require'nvim-treesitter'.foldexpr()" then treesitter_attached = true end
         vim.wo[win][0].foldmethod = 'manual'
         vim.wo[win][0].foldexpr = '0'
-        vim.api.nvim_set_current_win(win)
       end
     end
     for _, client in pairs(vim.lsp.get_clients({ bufnr = data.buffer })) do
       vim.lsp.buf_detach_client(data.buffer, client.id)
     end
     if vim.treesitter.highlighter.active[data.buffer] ~= nil then vim.treesitter.stop(data.buffer) end
-    if vim.bo.filetype == '' and vim.bo.buftype == '' then
-      -- This is a tricky way to disable lsp attaching
-      -- Since lsp won't attach to buffers with buftype set to nonempty value
-      vim.bo.buftype = 'acwrite'
-      vim.api.nvim_create_autocmd('FileType', {
-        buffer = data.buffer,
-        once = true,
-        callback = function() vim.bo.buftype = '' end,
-      })
-    end
     if _G.plugin_loaded['nvim-treesitter-endwise'] then require('nvim-treesitter.endwise').detach(data.buffer) end
+    -- Using enable here will automatically disable context for big files
     if _G.plugin_loaded['nvim-treesitter-context'] then require('treesitter-context').enable() end
   else
     vim.b.conform_on_save = nil
     vim.b.treesitter_foldexpr_auto_set = nil
     vim.b.treesitter_indentexpr_auto_set = nil
     vim.b.treesitter_highlight_auto_start = nil
-    -- Trigger the FileType autocommand to let lsp attach, indentexpr, endwise and foldexpr set up
-    if vim.bo.filetype ~= '' then vim.bo.filetype = vim.bo.filetype end
+    -- Trigger the FileType autocommand to let LSP, indentexpr, endwise and foldexpr set up
+    if vim.bo.filetype ~= '' then vim.bo.filetype = vim.bo.filetype:gsub('bigfile', '') end
     if _G.plugin_loaded['nvim-treesitter-context'] then require('treesitter-context').enable() end
   end
 end
