@@ -22,7 +22,6 @@ return {
   event = { { event = 'User', pattern = 'GitConflictDetected' } },
   cond = not vim.g.vscode,
   opts = {
-    should_skip = function(buffer) return require('lightboat.util').buffer.big(buffer) end,
     default_keymaps = false,
     auto_detect_enabled = false,
     on_conflict_detected = function(args)
