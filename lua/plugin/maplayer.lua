@@ -1,3 +1,14 @@
+local u = require('lightboat.util')
+function _G.live_grep_frecency(opts)
+  if not u.plugin_available('telescope-frecency.nvim') or not u.plugin_available('telescope-frecency.nvim') then
+    return false
+  end
+  require('telescope.builtin').live_grep(vim.tbl_extend('force', {
+    prompt_title = 'Live Grep Frecency',
+    search_dirs = require('frecency').query(),
+  }, opts or {}))
+  return true
+end
 return {
   'Kaiser-Yang/maplayer.nvim',
   event = 'VeryLazy',
@@ -13,7 +24,6 @@ return {
     -- "which-key.nvim" can not be used in vscode neovim extension,
     -- so we must set "timeoutlen" with a proper value to make it work
     vim.o.timeoutlen = vim.g.vscode and 300 or 0
-    local u = require('lightboat.util')
     local c_dir = vim.fn.fnameescape(vim.fn.stdpath('config'))
     local l_dir = vim.fn.fnameescape(u.lazy_path())
     local h = require('lightboat.handler')
@@ -124,22 +134,21 @@ return {
       { key = '<leader>tI', desc = 'Indent Line', handler = h.toggle_indent_line },
 
       -- Picker
-      { key = 'gy', desc = 'Search Register', handler = '<cmd>Telescope registers<cr>' },
-      { key = '<c-f>', desc = 'Search Content', handler = '<cmd>Telescope live_grep<cr>' },
-      { key = '<c-p>', desc = 'Serach File', handler = '<cmd>Telescope find_files<cr>' },
-      { key = '<f1>', desc = 'Search Help', handler = '<cmd>Telescope help_tags<cr>' },
-      { key = '<m-f>', mode = 'nx', desc = 'Search Word', handler = '<cmd>Telescope grep_string<cr>' },
-      { key = '<leader>f', mode = 'n', desc = 'Frecency', handler = '<cmd>Telescope frecency<cr>' },
-      { key = '<leader>sb', desc = 'Buffer', handler = '<cmd>Telescope buffers<cr>' },
-      { key = '<leader>scc', desc = 'Config Path', handler = '<cmd>Telescope live_grep cwd=' .. c_dir .. '<cr>' },
-      { key = '<leader>scl', desc = 'Lazy Path', handler = '<cmd>Telescope live_grep cwd=' .. l_dir .. '<cr>' },
-      { key = '<leader>sfc', desc = 'Config Path', handler = '<cmd>Telescope find_files cwd=' .. c_dir .. '<cr>' },
-      { key = '<leader>sfl', desc = 'Lazy Path', handler = '<cmd>Telescope find_files cwd=' .. l_dir .. '<cr>' },
-      { key = '<leader>sh', desc = 'Highlight', handler = '<cmd>Telescope highlights<cr>' },
-      { key = '<leader>sk', desc = 'Key Mapping', handler = '<cmd>Telescope keymaps<cr>' },
-      { key = '<leader>sm', desc = 'Man Page', handler = '<cmd>Telescope man_pages<cr>' },
-      { key = '<leader>sr', desc = 'Resume', handler = '<cmd>Telescope resume<cr>' },
-      { key = '<leader>st', desc = 'Todo', handler = '<cmd>Telescope todo-comments todo<cr>' },
+      { key = 'gy', desc = 'Search Register', handler = '<cmd>Telescope registers<cr>', fallback = false },
+      { key = '<c-f>', desc = 'Live Grep Frecency', handler = _G.live_grep_frecency, fallback = false },
+      { key = '<c-p>', desc = 'Find File Frecency', handler = '<cmd>Telescope frecency<cr>', fallback = false },
+      { key = '<f1>', desc = 'Search Help', handler = '<cmd>Telescope help_tags<cr>', fallback = false },
+      { key = '<m-f>', mode = 'nx', desc = 'Search Word', handler = '<cmd>Telescope grep_string<cr>', fallback = false },
+      { key = '<leader>sb', desc = 'Buffer', handler = '<cmd>Telescope buffers<cr>', fallback = false },
+      { key = '<leader>scc', desc = 'Config Path', handler = '<cmd>Telescope live_grep cwd=' .. c_dir .. '<cr>', fallback = false },
+      { key = '<leader>scl', desc = 'Lazy Path', handler = '<cmd>Telescope live_grep cwd=' .. l_dir .. '<cr>', fallback = false },
+      { key = '<leader>sfc', desc = 'Config Path', handler = '<cmd>Telescope find_files cwd=' .. c_dir .. '<cr>', fallback = false },
+      { key = '<leader>sfl', desc = 'Lazy Path', handler = '<cmd>Telescope find_files cwd=' .. l_dir .. '<cr>', fallback = false },
+      { key = '<leader>sh', desc = 'Highlight', handler = '<cmd>Telescope highlights<cr>', fallback = false },
+      { key = '<leader>sk', desc = 'Key Mapping', handler = '<cmd>Telescope keymaps<cr>', fallback = false },
+      { key = '<leader>sm', desc = 'Man Page', handler = '<cmd>Telescope man_pages<cr>', fallback = false },
+      { key = '<leader>sr', desc = 'Resume', handler = '<cmd>Telescope resume<cr>', fallback = false },
+      { key = '<leader>st', desc = 'Todo', handler = '<cmd>Telescope todo-comments todo<cr>', fallback = false },
 
       -- Window
       { key = '<c-h>', desc = 'To Left', handler = h.to_left, fallback = false },

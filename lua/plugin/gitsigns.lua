@@ -8,7 +8,6 @@ return {
     current_line_blame_opts = { delay = 300 },
     preview_config = { border = vim.o.winborder or nil },
     on_attach = function(buffer)
-      local h = require('lightboat.handler')
       local g = require('gitsigns')
       local r = require('lightboat.handler').repmove_wrap
       local u = require('lightboat.util')

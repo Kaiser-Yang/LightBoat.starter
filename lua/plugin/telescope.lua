@@ -3,7 +3,7 @@
 -- https://github.com/nvim-telescope/telescope.nvim/pull/3392#issuecomment-3919322773
 local u = require('lightboat.util')
 local function find_command()
-  local res = { 'rg', '--files', '--color', 'never', '-g', '!.git' }
+  local res = { 'rg', '--files', '--color', 'never', '-g', '!.git', '-g', '.gitignore' }
   if u.in_config_dir() then table.insert(res, '--hidden') end
   return res
 end
@@ -12,19 +12,7 @@ local additional_args = function()
   if u.in_config_dir() then table.insert(res, '--hidden') end
   return res
 end
-local function grep_with_input_wrap(name)
-  return function()
-    local line = vim.api.nvim_get_current_line():sub(3):gsub('^:.-: ?', '')
-    local opts = { default_text = line }
-    local b = require('telescope.builtin')
-    if type(name) ~= 'table' and b[name] then
-      b[name](opts)
-    else
-      assert(#name == 2)
-      require('telescope').extensions[name[1]][name[2]](opts)
-    end
-  end
-end
+local function get_input() return vim.api.nvim_get_current_line():sub(3):gsub('^:.-: ?', '') end
 local function smart_select_all(buffer)
   local picker = require('telescope.actions.state').get_current_picker(buffer)
   local all_selected = #picker:get_multi_selection() == picker.manager:num_results()
@@ -33,6 +21,24 @@ local function smart_select_all(buffer)
     a.drop_all(buffer)
   else
     a.select_all(buffer)
+  end
+end
+local function toggle_frecency(buffer)
+  local picker = require('telescope.actions.state').get_current_picker(buffer)
+  local is_frecency = picker.prompt_title:match('Find File Frecency') ~= nil
+  if is_frecency then
+    require('telescope.builtin').find_files({ default_text = get_input() })
+  else
+    require('telescope').extensions.frecency.frecency({ default_text = get_input() })
+  end
+end
+local function toggle_live_grep_frecency(buffer)
+  local picker = require('telescope.actions.state').get_current_picker(buffer)
+  local is_frecency = picker.prompt_title:match('Live Grep Frecency') ~= nil
+  if is_frecency then
+    require('telescope.builtin').live_grep({ default_text = get_input() })
+  else
+    _G.live_grep_frecency({ default_text = get_input() })
   end
 end
 return {
@@ -62,7 +68,7 @@ return {
     },
     pickers = {
       lsp_dynamic_workspace_symbols = { attach_mappings = function() return true end },
-      find_files = { find_command = find_command },
+      find_files = { prompt_title = 'Find File', find_command = find_command },
       live_grep = { additional_args = additional_args, attach_mappings = function() return true end },
       grep_string = { additional_args = additional_args },
     },
@@ -70,7 +76,23 @@ return {
       frecency = {
         previewer = false,
         layout_config = { anchor = 'N', anchor_padding = 0 },
-        workspaces = { cwd = vim.fn.getcwd() },
+        prompt_title = 'Find File Frecency',
+        -- HACK:
+        -- https://github.com/nvim-telescope/telescope-frecency.nvim/issues/335
+        workspace_scan_cmd = find_command(),
+        -- BUG:
+        -- https://github.com/nvim-telescope/telescope-frecency.nvim/pull/334
+        matcher = 'fuzzy',
+        db_version = 'v2',
+        preceding = 'opened',
+        hide_current_buffer = true,
+        show_filter_column = false,
+        ignore_register = function(buffer) return not vim.bo[buffer].buflisted or vim.bo[buffer].buftype ~= '' end,
+        workspaces = {
+          cwd = vim.fn.getcwd(),
+          lazy = u.lazy_path(),
+          conf = vim.fn.stdpath('config'),
+        },
       },
     },
   },
@@ -80,23 +102,23 @@ return {
     local ag = require('telescope.actions.generate')
     -- stylua: ignore start
     local insert_and_normal = {
-      ['<c-c>'] = { a.close, type = 'action', opts = { desc = 'Close' } },
       ['<cr>'] = { a.select_default, type = 'action', opts = { desc = 'Select Default' } },
+      ['<c-c>'] = { a.close, type = 'action', opts = { desc = 'Close' } },
       ['<c-s>'] = { a.select_horizontal, type = 'action', opts = { desc = 'Select Horizontal' } },
       ['<c-v>'] = { a.select_vertical, type = 'action', opts = { desc = 'Select Vertical' } },
       ['<c-t>'] = { a.select_tab, type = 'action', opts = { desc = 'Select Tab' } },
       ['<c-u>'] = { a.preview_scrolling_up, type = 'action', opts = { desc = 'Preview Scroll Up' } },
       ['<c-d>'] = { a.preview_scrolling_down, type = 'action', opts = { desc = 'Preview Scroll Down' } },
-      ['<tab>'] = { a.toggle_selection + a.move_selection_worse, type = 'action', opts = { desc = 'Toggle Selection' } },
-      ['<s-tab>'] = { a.move_selection_better + a.toggle_selection, type = 'action', opts = { desc = 'Toggle Selection' }, },
-      ['<m-a>'] = { smart_select_all, type = 'action', opts = { desc = 'Smart Select All' } },
-      ['<leftmouse>'] = { a.mouse_click, type = 'action', opts = { desc = 'Mouse Click' } },
-      ['<2-leftmouse>'] = { a.double_mouse_click, type = 'action', opts = { desc = 'Mouse Double Click' } },
-      ['<f1>'] = { ag.which_key({ keybind_width = 14, max_height = 0.25 }), type = 'action', opts = { desc = 'Which Key' } },
       ['<c-q>'] = { a.send_selected_to_qflist + a.open_qflist, type = 'action', opts = { desc = 'Send Selected to Qflist' }, },
       ['<c-l>'] = { a.send_selected_to_loclist + a.open_loclist, type = 'action', opts = { desc = 'Send Selected to Loclist' }, },
-      ['<c-p>'] = { grep_with_input_wrap('find_files'), type = 'action', opts = { desc = 'Search File with Input' } },
-      ['<c-f>'] = { grep_with_input_wrap('live_grep'), type = 'action', opts = { desc = 'Search Content with Input' } },
+      ['<c-f>'] = { toggle_live_grep_frecency, type = 'action', opts = { desc = 'Toggle Live Grep Frecency' } },
+      ['<c-p>'] = { toggle_frecency, type = 'action', opts = { desc = 'Toggle Find File Frecency' } },
+      ['<tab>'] = { a.toggle_selection + a.move_selection_worse, type = 'action', opts = { desc = 'Toggle Selection' } },
+      ['<s-tab>'] = { a.move_selection_better + a.toggle_selection, type = 'action', opts = { desc = 'Toggle Selection' }, },
+      ['<f1>'] = { ag.which_key({ keybind_width = 14, max_height = 0.25 }), type = 'action', opts = { desc = 'Which Key' } },
+      ['<leftmouse>'] = { a.mouse_click, type = 'action', opts = { desc = 'Mouse Click' } },
+      ['<2-leftmouse>'] = { a.double_mouse_click, type = 'action', opts = { desc = 'Mouse Double Click' } },
+      ['<m-a>'] = { smart_select_all, type = 'action', opts = { desc = 'Smart Select All' } },
       ['<m-p>'] = { a.cycle_history_prev, type = 'action', opts = { desc = 'Previous Search History' } },
       ['<m-n>'] = { a.cycle_history_next, type = 'action', opts = { desc = 'Next Search History' } },
     }
@@ -105,15 +127,16 @@ return {
       ['q'] = { a.close, type = 'action', opts = { desc = 'Close' } },
       ['j'] = { a.move_selection_next, type = 'action', opts = { desc = 'Move Selection Next' } },
       ['k'] = { a.move_selection_previous, type = 'action', opts = { desc = 'Move Selection Previous' } },
-      ['H'] = { a.move_to_top, type = 'action', opts = { desc = 'Move To Top' } },
-      ['M'] = { a.move_to_middle, type = 'action', opts = { desc = 'Move To Middle' } },
-      ['L'] = { a.move_to_bottom, type = 'action', opts = { desc = 'Move To Bottom' } },
-      ['gg'] = { a.move_to_top, type = 'action', opts = { desc = 'Move To Top' } },
-      ['G'] = { a.move_to_bottom, type = 'action', opts = { desc = 'Move To Bottom' } },
+      ['H'] = { a.move_to_top, type = 'action', opts = { desc = 'Move to Top' } },
+      ['M'] = { a.move_to_middle, type = 'action', opts = { desc = 'Move to Middle' } },
+      ['L'] = { a.move_to_bottom, type = 'action', opts = { desc = 'Move to Bottom' } },
+      ['G'] = { a.move_to_bottom, type = 'action', opts = { desc = 'Move to Bottom' } },
+      ['gg'] = { a.move_to_top, type = 'action', opts = { desc = 'Move to Top' } },
     }
     opts.defaults.mappings.i = {
       ['<c-j>'] = { a.move_selection_next, type = 'action', opts = { desc = 'Move Selection Next' } },
       ['<c-k>'] = { a.move_selection_previous, type = 'action', opts = { desc = 'Move Selection Previous' } },
+      -- INFO:
       -- Used to delete one word before
       -- See https://github.com/nvim-telescope/telescope.nvim/issues/1579#issuecomment-989767519
       ['<c-w>'] = { '<c-s-w>', type = 'command' },
@@ -125,8 +148,7 @@ return {
     -- stylua: ignore end
     opts.defaults.mappings.n = vim.tbl_deep_extend('error', opts.defaults.mappings.n, insert_and_normal)
     opts.defaults.mappings.i = vim.tbl_deep_extend('error', opts.defaults.mappings.i, insert_and_normal)
-    local th = require('telescope.themes')
-    opts.extensions.frecency = th.get_dropdown(opts.extensions.frecency)
+    opts.extensions.frecency = require('telescope.themes').get_dropdown(opts.extensions.frecency)
     t.setup(opts)
     if u.plugin_available('telescope-fzf-native.nvim') then t.load_extension('fzf') end
     if u.plugin_available('telescope-frecency.nvim') then t.load_extension('frecency') end
