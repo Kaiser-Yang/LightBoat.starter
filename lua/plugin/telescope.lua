@@ -11,7 +11,40 @@ local additional_args = function()
   if u.in_config_dir() then table.insert(res, '--hidden') end
   return res
 end
-local function get_input() return require('telescope.actions.state').get_current_line() end
+local function get_input(buffer)
+  local line = require('telescope.actions.state').get_current_line()
+  local picker = require('telescope.actions.state').get_current_picker(buffer)
+  if picker.prompt_title:match('Live Grep') and #line > 0 then
+    if line:sub(1, 1) == '"' then
+      local n = #line
+      local i = 2
+      local buf = {}
+      while i <= n do
+        local c = line:sub(i, i)
+        if c == '\\' then
+          local nextc = line:sub(i + 1, i + 1)
+          if nextc == '' then
+            table.insert(buf, '\\')
+            break
+          else
+            if nextc ~= '"' then table.insert(buf, c) end
+            table.insert(buf, nextc)
+            i = i + 2
+          end
+        elseif c == '"' then
+          break
+        else
+          table.insert(buf, c)
+          i = i + 1
+        end
+      end
+      return table.concat(buf)
+    else
+      return line:match('^%S*')
+    end
+  end
+  return line
+end
 local function smart_select_all(buffer)
   local picker = require('telescope.actions.state').get_current_picker(buffer)
   local all_selected = #picker:get_multi_selection() == picker.manager:num_results()
@@ -23,7 +56,7 @@ local function smart_select_all(buffer)
   end
 end
 local function toggle_frecency(buffer)
-  local input = get_input()
+  local input = get_input(buffer)
   local picker = require('telescope.actions.state').get_current_picker(buffer)
   local is_frecency = picker.prompt_title:match('Find File Frecency') ~= nil
   require('telescope.actions').close(buffer)
@@ -34,7 +67,7 @@ local function toggle_frecency(buffer)
   end
 end
 local function toggle_live_grep_frecency(buffer)
-  local input = get_input()
+  local input = get_input(buffer)
   local picker = require('telescope.actions.state').get_current_picker(buffer)
   local is_frecency = picker.prompt_title:match('Live Grep Frecency') ~= nil
   require('telescope.actions').close(buffer)
@@ -109,7 +142,12 @@ return {
       grep_string = { additional_args = additional_args },
     },
     extensions = {
-      live_grep_args = { additional_args = additional_args, prompt_title = 'Live Grep' },
+      live_grep_args = {
+        additional_args = additional_args,
+        prompt_title = 'Live Grep',
+        auto_quoting = false,
+        mappings = { i = {}, n = {} },
+      },
       frecency = {
         previewer = false,
         layout_config = { anchor = 'N', anchor_padding = 0 },
@@ -186,9 +224,16 @@ return {
     opts.defaults.mappings.n = vim.tbl_deep_extend('error', opts.defaults.mappings.n, insert_and_normal)
     opts.defaults.mappings.i = vim.tbl_deep_extend('error', opts.defaults.mappings.i, insert_and_normal)
     opts.extensions.frecency = require('telescope.themes').get_dropdown(opts.extensions.frecency)
+    local la = require('telescope-live-grep-args.actions')
+    local lm = {
+      ['<c-s>'] = la.quote_prompt(),
+      ['<c-g>'] = la.quote_prompt({ postfix = ' -g ' }),
+      ['<c-t>'] = la.quote_prompt({ postfix = ' -t ' }),
+      ['<c-i>'] = la.quote_prompt({ postfix = ' --iglob ' }),
+    }
+    opts.extensions.live_grep_args.mappings.i = lm
+    opts.extensions.live_grep_args.mappings.n = lm
     t.setup(opts)
     if u.plugin_available('telescope-fzf-native.nvim') then t.load_extension('fzf') end
-    if u.plugin_available('telescope-frecency.nvim') then t.load_extension('frecency') end
-    if u.plugin_available('telescope-live-grep-args.nvim') then t.load_extension('live_grep_args') end
   end,
 }
