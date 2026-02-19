@@ -23,11 +23,9 @@ return {
     on_conflict_detected = function(args)
       local h = require('lightboat.handler')
       local r = require('resolve')
-      local previous_conflict = h.repmove_wrap(r.prev_conflict, r.next_conflict, 1)
-      local next_conflict = h.repmove_wrap(r.prev_conflict, r.next_conflict, 2)
       if #mapping[1] < 4 then
-        vim.list_extend(mapping[1], { previous_conflict, { desc = 'Previous Conflict' } })
-        vim.list_extend(mapping[2], { next_conflict, { desc = 'Next Conflict' } })
+        vim.list_extend(mapping[1], { h.previous_conflict, { desc = 'Previous Conflict' } })
+        vim.list_extend(mapping[2], { h.next_conflict, { desc = 'Next Conflict' } })
         vim.list_extend(mapping[3], { r.choose_ours, { desc = 'Choose Current' } })
         vim.list_extend(mapping[4], { r.choose_theirs, { desc = 'Choose Incoming' } })
         vim.list_extend(mapping[5], { r.choose_both, { desc = 'Choose Both' } })
