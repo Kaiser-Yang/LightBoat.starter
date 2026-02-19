@@ -3,7 +3,7 @@
 -- https://github.com/nvim-telescope/telescope.nvim/pull/3392#issuecomment-3919322773
 local u = require('lightboat.util')
 local function find_command()
-  local res = { 'rg', '--files', '--color', 'never', '-g', '!.git', '-g', '.gitignore' }
+  local res = { 'rg', '--files', '--color', 'never', '-g', '!.git' }
   if u.in_config_dir() then table.insert(res, '--hidden') end
   return res
 end
@@ -12,7 +12,7 @@ local additional_args = function()
   if u.in_config_dir() then table.insert(res, '--hidden') end
   return res
 end
-local function get_input() return vim.api.nvim_get_current_line():sub(3):gsub('^:.-: ?', '') end
+local function get_input() return require('telescope.actions.state').get_current_line() end
 local function smart_select_all(buffer)
   local picker = require('telescope.actions.state').get_current_picker(buffer)
   local all_selected = #picker:get_multi_selection() == picker.manager:num_results()
@@ -24,30 +24,35 @@ local function smart_select_all(buffer)
   end
 end
 local function toggle_frecency(buffer)
+  local input = get_input()
   local picker = require('telescope.actions.state').get_current_picker(buffer)
   local is_frecency = picker.prompt_title:match('Find File Frecency') ~= nil
+  require('telescope.actions').close(buffer)
   if is_frecency then
-    require('telescope.builtin').find_files({ default_text = get_input() })
+    require('telescope.builtin').find_files({ default_text = input })
   else
-    require('telescope').extensions.frecency.frecency({ default_text = get_input() })
+    require('telescope').extensions.frecency.frecency({ default_text = input })
   end
 end
 local function toggle_live_grep_frecency(buffer)
+  local input = get_input()
   local picker = require('telescope.actions.state').get_current_picker(buffer)
   local is_frecency = picker.prompt_title:match('Live Grep Frecency') ~= nil
+  require('telescope.actions').close(buffer)
   if is_frecency then
-    require('telescope.builtin').live_grep({ default_text = get_input() })
+    require('telescope').extensions.live_grep_args.live_grep_args({ default_text = input })
   else
-    _G.live_grep_frecency({ default_text = get_input() })
+    _G.live_grep_frecency({ default_text = input })
   end
 end
 return {
   'nvim-telescope/telescope.nvim',
   dependencies = {
     'nvim-lua/plenary.nvim',
+    'nvim-telescope/telescope-frecency.nvim',
+    'nvim-telescope/telescope-live-grep-args.nvim',
     {
       'nvim-telescope/telescope-fzf-native.nvim',
-      'nvim-telescope/telescope-frecency.nvim',
       build = 'make',
       enabled = vim.fn.executable('make') == 1 and (vim.fn.executable('gcc') == 1 or vim.fn.executable('clang') == 1),
     },
@@ -73,6 +78,7 @@ return {
       grep_string = { additional_args = additional_args },
     },
     extensions = {
+      live_grep_args = { additional_args = additional_args, prompt_title = 'Live Grep' },
       frecency = {
         previewer = false,
         layout_config = { anchor = 'N', anchor_padding = 0 },
@@ -152,5 +158,6 @@ return {
     t.setup(opts)
     if u.plugin_available('telescope-fzf-native.nvim') then t.load_extension('fzf') end
     if u.plugin_available('telescope-frecency.nvim') then t.load_extension('frecency') end
+    if u.plugin_available('telescope-live-grep-args.nvim') then t.load_extension('live_grep_args') end
   end,
 }

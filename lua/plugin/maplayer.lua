@@ -1,12 +1,16 @@
 local u = require('lightboat.util')
+local function get_ivy_opts(opts)
+  return vim.tbl_extend('force', require('telescope.themes').get_ivy({ layout_config = { height = 0.4 } }), opts or {})
+end
+local function grep_word(opts)
+  require('telescope.builtin').grep_string(get_ivy_opts(opts))
+  return true
+end
 function _G.live_grep_frecency(opts)
-  if not u.plugin_available('telescope-frecency.nvim') or not u.plugin_available('telescope-frecency.nvim') then
-    return false
-  end
-  require('telescope.builtin').live_grep(vim.tbl_extend('force', {
-    prompt_title = 'Live Grep Frecency',
-    search_dirs = require('frecency').query(),
-  }, opts or {}))
+  opts = opts or {}
+  opts.prompt_title = opts.prompt_title or 'Live Grep Frecency'
+  opts.search_dirs = opts.search_dirs or require('frecency').query()
+  require('telescope').extensions.live_grep_args.live_grep_args(get_ivy_opts(opts))
   return true
 end
 return {
@@ -138,16 +142,17 @@ return {
       { key = '<c-f>', desc = 'Live Grep Frecency', handler = _G.live_grep_frecency, fallback = false },
       { key = '<c-p>', desc = 'Find File Frecency', handler = '<cmd>Telescope frecency<cr>', fallback = false },
       { key = '<f1>', desc = 'Search Help', handler = '<cmd>Telescope help_tags<cr>', fallback = false },
-      { key = '<m-f>', mode = 'nx', desc = 'Search Word', handler = '<cmd>Telescope grep_string<cr>', fallback = false },
+      { key = '<m-r>', desc = 'Resume', handler = '<cmd>Telescope resume<cr>', fallback = false },
+      { key = '<m-f>', mode = 'nx', desc = 'Search Word', handler = grep_word, fallback = false },
       { key = '<leader>sb', desc = 'Buffer', handler = '<cmd>Telescope buffers<cr>', fallback = false },
-      { key = '<leader>scc', desc = 'Config Path', handler = '<cmd>Telescope live_grep cwd=' .. c_dir .. '<cr>', fallback = false },
-      { key = '<leader>scl', desc = 'Lazy Path', handler = '<cmd>Telescope live_grep cwd=' .. l_dir .. '<cr>', fallback = false },
+      { key = '<leader>scc', desc = 'Config Path', handler = '<cmd>Telescope live_grep_args cwd=' .. c_dir .. '<cr>', fallback = false },
+      { key = '<leader>scl', desc = 'Lazy Path', handler = '<cmd>Telescope live_grep_args cwd=' .. l_dir .. '<cr>', fallback = false },
       { key = '<leader>sfc', desc = 'Config Path', handler = '<cmd>Telescope find_files cwd=' .. c_dir .. '<cr>', fallback = false },
       { key = '<leader>sfl', desc = 'Lazy Path', handler = '<cmd>Telescope find_files cwd=' .. l_dir .. '<cr>', fallback = false },
       { key = '<leader>sh', desc = 'Highlight', handler = '<cmd>Telescope highlights<cr>', fallback = false },
       { key = '<leader>sk', desc = 'Key Mapping', handler = '<cmd>Telescope keymaps<cr>', fallback = false },
       { key = '<leader>sm', desc = 'Man Page', handler = '<cmd>Telescope man_pages<cr>', fallback = false },
-      { key = '<leader>sr', desc = 'Resume', handler = '<cmd>Telescope resume<cr>', fallback = false },
+      { key = '<leader>sp', desc = 'Picker', handler = '<cmd>Telescope<cr>', fallback = false },
       { key = '<leader>st', desc = 'Todo', handler = '<cmd>Telescope todo-comments todo<cr>', fallback = false },
 
       -- Window
@@ -189,30 +194,27 @@ return {
       { key = ']O', mode = 'o', desc = 'Nop', handler = h.nop, fallback = false },
     })
     -- stylua: ignore end
-    if u.plugin_available('which-key.nvim') then
-      local wk = require('which-key')
-      wk.add({
-        { '<leader>g', buffer = true, icon = { icon = ' ', color = 'red' }, desc = 'Git', mode = 'nx' },
-        { '<leader>x', buffer = true, icon = { icon = ' ', color = 'red' }, desc = 'Conflict' },
-        { '<leader>xd', buffer = true, icon = { icon = ' ', color = 'red' }, desc = 'Diff' },
-        { '<leader>tg', buffer = true, icon = { icon = ' ', color = 'yellow' }, desc = 'Git' },
-        { '<leader>t', icon = { icon = ' ', color = 'yellow' }, desc = 'Toggle' },
-        { '<leader>s', icon = { icon = ' ', color = 'green' }, desc = 'Search' },
-        { '<leader>sf', icon = { icon = ' ', color = 'green' }, desc = 'File' },
-        { '<leader>sc', icon = { icon = ' ', color = 'green' }, desc = 'Content' },
-        { 'a', desc = 'Around', mode = 'xo' },
-        { 'i', desc = 'Inside', mode = 'xo' },
-        { '*', desc = 'Search Backward', icon = { icon = ' ', color = 'green' }, mode = 'x' },
-        { '#', desc = 'Search Forward', icon = { icon = ' ', color = 'green' }, mode = 'x' },
-        { '@', desc = 'Execute Register', mode = 'x' },
-        { 'Q', desc = 'Repeat Last Recorded Macro', mode = 'x' },
-        { '<m-s>', desc = 'Swap', icon = { icon = '󰓡 ', color = 'green' } },
-        { '<m-s>p', desc = 'Previous', icon = { icon = '󰓡 ', color = 'green' } },
-        { '<m-s>n', desc = 'Next', icon = { icon = '󰓡 ', color = 'green' } },
-        { '[', desc = 'Previous', mode = 'nxo', icon = { icon = ' ', color = 'green' } },
-        { ']', desc = 'Next', mode = 'nxo', icon = { icon = ' ', color = 'green' } },
-        { 'gr', desc = 'LSP', mode = 'nx', icon = { icon = ' ', color = 'orange' } },
-      })
-    end
+    require('which-key').add({
+      { '<leader>g', buffer = true, icon = { icon = ' ', color = 'red' }, desc = 'Git', mode = 'nx' },
+      { '<leader>x', buffer = true, icon = { icon = ' ', color = 'red' }, desc = 'Conflict' },
+      { '<leader>xd', buffer = true, icon = { icon = ' ', color = 'red' }, desc = 'Diff' },
+      { '<leader>tg', buffer = true, icon = { icon = ' ', color = 'yellow' }, desc = 'Git' },
+      { '<leader>t', icon = { icon = ' ', color = 'yellow' }, desc = 'Toggle' },
+      { '<leader>s', icon = { icon = ' ', color = 'green' }, desc = 'Search' },
+      { '<leader>sf', icon = { icon = ' ', color = 'green' }, desc = 'File' },
+      { '<leader>sc', icon = { icon = ' ', color = 'green' }, desc = 'Content' },
+      { 'a', desc = 'Around', mode = 'xo' },
+      { 'i', desc = 'Inside', mode = 'xo' },
+      { '*', desc = 'Search Backward', icon = { icon = ' ', color = 'green' }, mode = 'x' },
+      { '#', desc = 'Search Forward', icon = { icon = ' ', color = 'green' }, mode = 'x' },
+      { '@', desc = 'Execute Register', mode = 'x' },
+      { 'Q', desc = 'Repeat Last Recorded Macro', mode = 'x' },
+      { '<m-s>', desc = 'Swap', icon = { icon = '󰓡 ', color = 'green' } },
+      { '<m-s>p', desc = 'Previous', icon = { icon = '󰓡 ', color = 'green' } },
+      { '<m-s>n', desc = 'Next', icon = { icon = '󰓡 ', color = 'green' } },
+      { '[', desc = 'Previous', mode = 'nxo', icon = { icon = ' ', color = 'green' } },
+      { ']', desc = 'Next', mode = 'nxo', icon = { icon = ' ', color = 'green' } },
+      { 'gr', desc = 'LSP', mode = 'nx', icon = { icon = ' ', color = 'orange' } },
+    })
   end,
 }
