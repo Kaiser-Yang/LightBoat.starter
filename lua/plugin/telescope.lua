@@ -1,6 +1,5 @@
--- Known Issues:
+-- BUG:
 -- https://github.com/nvim-telescope/telescope.nvim/issues/3621
--- https://github.com/nvim-telescope/telescope.nvim/pull/3392#issuecomment-3919322773
 local u = require('lightboat.util')
 local function find_command()
   local res = { 'rg', '--files', '--color', 'never', '-g', '!.git' }
@@ -72,9 +71,41 @@ return {
       mappings = { n = {}, i = {} },
     },
     pickers = {
-      lsp_dynamic_workspace_symbols = { attach_mappings = function() return true end },
+      registers = {
+        initial_mode = 'normal',
+        theme = 'cursor',
+        attach_mappings = function(buffer, map)
+          vim.keymap.del({ 'i', 'n' }, '<c-e>', { buffer = buffer })
+          local r = { '"', '-', '#', '=', '/', '*', '+', ':', '.', '%' }
+          for i = 0, 9 do
+            table.insert(r, tostring(i))
+          end
+          for _, key in ipairs(r) do
+            map('n', key, {
+              function()
+                vim.schedule_wrap(u.key.feedkeys)('<cr>', 'm')
+                return 'i' .. key
+              end,
+              type = 'command',
+            }, { expr = true })
+          end
+          return true
+        end,
+      },
+      lsp_dynamic_workspace_symbols = {
+        attach_mappings = function(buffer)
+          vim.keymap.del('i', '<c-space>', { buffer = buffer })
+          return true
+        end,
+      },
       find_files = { prompt_title = 'Find File', find_command = find_command },
-      live_grep = { additional_args = additional_args, attach_mappings = function() return true end },
+      live_grep = {
+        additional_args = additional_args,
+        attach_mappings = function(buffer)
+          vim.keymap.del('i', '<c-space>', { buffer = buffer })
+          return true
+        end,
+      },
       grep_string = { additional_args = additional_args },
     },
     extensions = {
@@ -115,6 +146,8 @@ return {
       ['<c-t>'] = { a.select_tab, type = 'action', opts = { desc = 'Select Tab' } },
       ['<c-u>'] = { a.preview_scrolling_up, type = 'action', opts = { desc = 'Preview Scroll Up' } },
       ['<c-d>'] = { a.preview_scrolling_down, type = 'action', opts = { desc = 'Preview Scroll Down' } },
+      ['<c-j>'] = { a.move_selection_next, type = 'action', opts = { desc = 'Move Selection Next' } },
+      ['<c-k>'] = { a.move_selection_previous, type = 'action', opts = { desc = 'Move Selection Previous' } },
       ['<c-q>'] = { a.send_selected_to_qflist + a.open_qflist, type = 'action', opts = { desc = 'Send Selected to Qflist' }, },
       ['<c-l>'] = { a.send_selected_to_loclist + a.open_loclist, type = 'action', opts = { desc = 'Send Selected to Loclist' }, },
       ['<c-f>'] = { toggle_live_grep_frecency, type = 'action', opts = { desc = 'Toggle Live Grep Frecency' } },
@@ -140,8 +173,6 @@ return {
       ['gg'] = { a.move_to_top, type = 'action', opts = { desc = 'Move to Top' } },
     }
     opts.defaults.mappings.i = {
-      ['<c-j>'] = { a.move_selection_next, type = 'action', opts = { desc = 'Move Selection Next' } },
-      ['<c-k>'] = { a.move_selection_previous, type = 'action', opts = { desc = 'Move Selection Previous' } },
       -- INFO:
       -- Used to delete one word before
       -- See https://github.com/nvim-telescope/telescope.nvim/issues/1579#issuecomment-989767519
