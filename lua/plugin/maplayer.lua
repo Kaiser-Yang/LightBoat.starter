@@ -133,7 +133,7 @@ return {
       -- By default <C-J> is an alias of <CR>
       { key = '<c-j>', mode = 'ic', desc = 'Select Next Completion Item', handler = h.next_completion_item },
       { key = '<s-tab>', mode = 'i', desc = 'Snippet Backward', handler = h.snippet_backward, fallback = false },
-      { key = '<c-x><c-o>', mode = 'ic', desc = 'Show Completion', handler = h.show_completion, fallback = false },
+      { key = '<c-x>', mode = 'ic', desc = 'Show Completion', handler = h.show_completion, fallback = false },
       { key = '<c-y>', mode = 'ic', desc = 'Accept Completion Item', handler = h.accept_completion_item },
       { key = '<c-s>', mode = 'i', desc = 'Toggle Signature Help', handler = h.toggle_signature, fallback = false },
 
