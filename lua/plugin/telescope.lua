@@ -1,112 +1,14 @@
+-- WARN:
+-- Do not modify the prompt_title of any existed picker
 -- BUG:
 -- https://github.com/nvim-telescope/telescope.nvim/issues/3621
 local u = require('lightboat.util')
-local function find_command()
-  local res = { 'rg', '--files', '--color', 'never', '-g', '!.git' }
-  if u.in_config_dir() then table.insert(res, '--hidden') end
-  return res
-end
-local additional_args = function()
-  local res = { '-g', '!.git' }
-  if u.in_config_dir() then table.insert(res, '--hidden') end
-  return res
-end
-local function get_input(buffer)
-  local line = require('telescope.actions.state').get_current_line()
-  local picker = require('telescope.actions.state').get_current_picker(buffer)
-  if picker.prompt_title:match('Live Grep') and #line > 0 then
-    if line:sub(1, 1) == '"' then
-      local n = #line
-      local i = 2
-      local buf = {}
-      while i <= n do
-        local c = line:sub(i, i)
-        if c == '\\' then
-          local nextc = line:sub(i + 1, i + 1)
-          if nextc == '' then
-            table.insert(buf, '\\')
-            break
-          else
-            if nextc ~= '"' then table.insert(buf, c) end
-            table.insert(buf, nextc)
-            i = i + 2
-          end
-        elseif c == '"' then
-          break
-        else
-          table.insert(buf, c)
-          i = i + 1
-        end
-      end
-      return table.concat(buf)
-    else
-      return line:match('^%S*')
-    end
-  end
-  return line
-end
-local function smart_select_all(buffer)
-  local picker = require('telescope.actions.state').get_current_picker(buffer)
-  local all_selected = #picker:get_multi_selection() == picker.manager:num_results()
-  local a = require('telescope.actions')
-  if all_selected then
-    a.drop_all(buffer)
-  else
-    a.select_all(buffer)
-  end
-end
-local function toggle_frecency(buffer)
-  local input = get_input(buffer)
-  local picker = require('telescope.actions.state').get_current_picker(buffer)
-  local is_frecency = picker.prompt_title:match('Find File Frecency') ~= nil
-  require('telescope.actions').close(buffer)
-  if is_frecency then
-    require('telescope.builtin').find_files({ default_text = input })
-  else
-    require('telescope').extensions.frecency.frecency({ default_text = input })
-  end
-end
-local function toggle_live_grep_frecency(buffer)
-  local input = get_input(buffer)
-  local picker = require('telescope.actions.state').get_current_picker(buffer)
-  local is_frecency = picker.prompt_title:match('Live Grep Frecency') ~= nil
-  require('telescope.actions').close(buffer)
-  if is_frecency then
-    require('telescope').extensions.live_grep_args.live_grep_args({ default_text = input })
-  else
-    _G.live_grep_frecency({ default_text = input })
-  end
-end
 return {
   'nvim-telescope/telescope.nvim',
-  dependencies = {
-    'nvim-lua/plenary.nvim',
-    'nvim-telescope/telescope-frecency.nvim',
-    'nvim-telescope/telescope-live-grep-args.nvim',
-    {
-      'nvim-telescope/telescope-fzf-native.nvim',
-      build = 'make',
-      enabled = vim.fn.executable('make') == 1 and (vim.fn.executable('gcc') == 1 or vim.fn.executable('clang') == 1),
-    },
-  },
-  cmd = { 'Telescope' },
   opts = {
-    defaults = {
-      dynamic_preview_title = true,
-      sorting_strategy = 'ascending',
-      default_mappings = {},
-      layout_config = {
-        horizontal = { prompt_position = 'top' },
-        width = { padding = 0 },
-        height = { padding = 0 },
-      },
-      cache_picker = { ignore_empty_prompt = true },
-      mappings = { n = {}, i = {} },
-    },
+    defaults = { mappings = { n = {}, i = {} } },
     pickers = {
       registers = {
-        initial_mode = 'normal',
-        theme = 'cursor',
         attach_mappings = function(buffer, map)
           vim.keymap.del({ 'i', 'n' }, '<c-e>', { buffer = buffer })
           local r = { '"', '-', '#', '=', '/', '*', '+', ':', '.', '%' }
@@ -131,48 +33,18 @@ return {
           return true
         end,
       },
-      find_files = { prompt_title = 'Find File', find_command = find_command },
       live_grep = {
-        additional_args = additional_args,
         attach_mappings = function(buffer)
           vim.keymap.del('i', '<c-space>', { buffer = buffer })
           return true
         end,
       },
-      grep_string = { additional_args = additional_args },
     },
-    extensions = {
-      live_grep_args = {
-        additional_args = additional_args,
-        prompt_title = 'Live Grep',
-        auto_quoting = false,
-        mappings = { i = {}, n = {} },
-      },
-      frecency = {
-        previewer = false,
-        layout_config = { anchor = 'N', anchor_padding = 0 },
-        prompt_title = 'Find File Frecency',
-        -- HACK:
-        -- https://github.com/nvim-telescope/telescope-frecency.nvim/issues/335
-        workspace_scan_cmd = find_command(),
-        -- BUG:
-        -- https://github.com/nvim-telescope/telescope-frecency.nvim/pull/334
-        matcher = 'fuzzy',
-        db_version = 'v2',
-        preceding = 'opened',
-        hide_current_buffer = true,
-        show_filter_column = false,
-        ignore_register = function(buffer) return not vim.bo[buffer].buflisted or vim.bo[buffer].buftype ~= '' end,
-        workspaces = {
-          cwd = vim.fn.getcwd(),
-          lazy = u.lazy_path(),
-          conf = vim.fn.stdpath('config'),
-        },
-      },
-    },
+    extensions = { live_grep_args = { mappings = { i = {}, n = {} } } },
   },
   config = function(_, opts)
     local t = require('telescope')
+    local h = require('lightboat.handler')
     local a = require('telescope.actions')
     local ag = require('telescope.actions.generate')
     -- stylua: ignore start
@@ -188,14 +60,14 @@ return {
       ['<c-k>'] = { a.move_selection_previous, type = 'action', opts = { desc = 'Move Selection Previous' } },
       ['<c-q>'] = { a.send_selected_to_qflist + a.open_qflist, type = 'action', opts = { desc = 'Send Selected to Qflist' }, },
       ['<c-l>'] = { a.send_selected_to_loclist + a.open_loclist, type = 'action', opts = { desc = 'Send Selected to Loclist' }, },
-      ['<c-f>'] = { toggle_live_grep_frecency, type = 'action', opts = { desc = 'Toggle Live Grep Frecency' } },
-      ['<c-p>'] = { toggle_frecency, type = 'action', opts = { desc = 'Toggle Find File Frecency' } },
+      ['<c-f>'] = { h.toggle_live_grep_frecency, type = 'action', opts = { desc = 'Toggle Live Grep Frecency' } },
+      ['<c-p>'] = { h.toggle_frecency, type = 'action', opts = { desc = 'Toggle Find File Frecency' } },
       ['<tab>'] = { a.toggle_selection + a.move_selection_worse, type = 'action', opts = { desc = 'Toggle Selection' } },
       ['<s-tab>'] = { a.move_selection_better + a.toggle_selection, type = 'action', opts = { desc = 'Toggle Selection' }, },
       ['<f1>'] = { ag.which_key({ keybind_width = 14, max_height = 0.25 }), type = 'action', opts = { desc = 'Which Key' } },
       ['<leftmouse>'] = { a.mouse_click, type = 'action', opts = { desc = 'Mouse Click' } },
       ['<2-leftmouse>'] = { a.double_mouse_click, type = 'action', opts = { desc = 'Mouse Double Click' } },
-      ['<m-a>'] = { smart_select_all, type = 'action', opts = { desc = 'Smart Select All' } },
+      ['<m-a>'] = { h.smart_select_all, type = 'action', opts = { desc = 'Smart Select All' } },
       ['<m-p>'] = { a.cycle_history_prev, type = 'action', opts = { desc = 'Previous Search History' } },
       ['<m-n>'] = { a.cycle_history_next, type = 'action', opts = { desc = 'Next Search History' } },
     }
@@ -223,17 +95,21 @@ return {
     -- stylua: ignore end
     opts.defaults.mappings.n = vim.tbl_deep_extend('error', opts.defaults.mappings.n, insert_and_normal)
     opts.defaults.mappings.i = vim.tbl_deep_extend('error', opts.defaults.mappings.i, insert_and_normal)
-    opts.extensions.frecency = require('telescope.themes').get_dropdown(opts.extensions.frecency)
-    local la = require('telescope-live-grep-args.actions')
     local lm = {
-      ['<c-s>'] = la.quote_prompt(),
-      ['<c-g>'] = la.quote_prompt({ postfix = ' -g ' }),
-      ['<c-t>'] = la.quote_prompt({ postfix = ' -t ' }),
-      ['<c-i>'] = la.quote_prompt({ postfix = ' --iglob ' }),
+      ['<m-s>'] = { h.toggle_quotation_wrap(), type = 'action', opts = { desc = 'Toggle Quotation' } },
+      ['<m-g>'] = {
+        h.toggle_quotation_wrap({ postfix = ' --glob=' }),
+        type = 'action',
+        opts = { desc = 'Toggle glob' },
+      },
+      ['<m-i>'] = {
+        h.toggle_quotation_wrap({ postfix = ' --iglob=' }),
+        type = 'action',
+        opts = { desc = 'Toggle iglob' },
+      },
     }
     opts.extensions.live_grep_args.mappings.i = lm
     opts.extensions.live_grep_args.mappings.n = lm
     t.setup(opts)
-    if u.plugin_available('telescope-fzf-native.nvim') then t.load_extension('fzf') end
   end,
 }

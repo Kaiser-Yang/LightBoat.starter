@@ -1,18 +1,3 @@
-local u = require('lightboat.util')
-local function get_ivy_opts(opts)
-  return vim.tbl_extend('force', require('telescope.themes').get_ivy({ layout_config = { height = 0.4 } }), opts or {})
-end
-local function grep_word(opts)
-  require('telescope.builtin').grep_string(get_ivy_opts(opts))
-  return true
-end
-function _G.live_grep_frecency(opts)
-  opts = opts or {}
-  opts.prompt_title = opts.prompt_title or 'Live Grep Frecency'
-  opts.search_dirs = opts.search_dirs or require('frecency').query()
-  require('telescope').extensions.live_grep_args.live_grep_args(get_ivy_opts(opts))
-  return true
-end
 return {
   'Kaiser-Yang/maplayer.nvim',
   event = 'VeryLazy',
@@ -28,14 +13,10 @@ return {
     -- "which-key.nvim" can not be used in vscode neovim extension,
     -- so we must set "timeoutlen" with a proper value to make it work
     vim.o.timeoutlen = vim.g.vscode and 300 or 0
-    local c_dir = vim.fn.fnameescape(vim.fn.stdpath('config'))
-    local l_dir = vim.fn.fnameescape(u.lazy_path())
+    local u = require('lightboat.util')
     local h = require('lightboat.handler')
-    local function toggle_conflict_detection()
-      if not _G.plugin_loaded['resolve.nvim'] then return false end
-      local status = require('resolve').toggle_auto_detect(nil, true)
-      u.toggle_notify('Conflict Detection', status, { title = 'Resolve' })
-    end
+    local l_dir = vim.fn.fnameescape(u.lazy_path())
+    local c_dir = vim.fn.fnameescape(vim.fn.stdpath('config'))
     -- stylua: ignore start
     require('maplayer').setup({
       -- Basic
@@ -181,11 +162,11 @@ return {
 
       -- Picker
       { key = 'gy', desc = 'Search Register', handler = '<cmd>Telescope registers<cr>', fallback = false },
-      { key = '<c-f>', desc = 'Live Grep Frecency', handler = _G.live_grep_frecency, fallback = false },
-      { key = '<c-p>', desc = 'Find File Frecency', handler = '<cmd>Telescope frecency<cr>', fallback = false },
+      { key = '<c-f>', desc = 'Live Grep Frecency', handler = h.live_grep_frecency, fallback = false },
+      { key = '<c-p>', desc = 'Find File Frecency', handler = h.find_file_frecency, fallback = false },
       { key = '<f1>', desc = 'Search Help', handler = '<cmd>Telescope help_tags<cr>', fallback = false },
       { key = '<m-r>', desc = 'Resume', handler = '<cmd>Telescope resume<cr>', fallback = false },
-      { key = '<m-f>', mode = 'nx', desc = 'Search Word', handler = grep_word, fallback = false },
+      { key = '<m-f>', mode = 'nx', desc = 'Search Word', handler = h.grep_word, fallback = false },
       { key = '<leader>sb', desc = 'Buffer', handler = '<cmd>Telescope buffers<cr>', fallback = false },
       { key = '<leader>scc', desc = 'Config Path', handler = '<cmd>Telescope live_grep_args cwd=' .. c_dir .. '<cr>', fallback = false },
       { key = '<leader>scl', desc = 'Lazy Path', handler = '<cmd>Telescope live_grep_args cwd=' .. l_dir .. '<cr>', fallback = false },
@@ -202,9 +183,6 @@ return {
       { key = '<c-j>', desc = 'To Bottom', handler = h.to_bottom, fallback = false },
       { key = '<c-k>', desc = 'To Above', handler = h.to_above, fallback = false },
       { key = '<c-l>', desc = 'To Right', handler = h.to_right, fallback = false },
-
-      -- Conflict
-      { key = '<leader>tx', desc = 'Conflict Detection', handler = toggle_conflict_detection, fallback = false },
 
       -- Key with Multi Functionalities
       { key = '<c-e>', mode = 'ic', desc = 'Cancel Completion', handler = h.cancel_completion },
