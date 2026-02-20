@@ -18,6 +18,42 @@ vim.api.nvim_create_autocmd({ 'FocusLost', 'BufLeave' }, {
     end
   end,
 })
+vim.api.nvim_create_autocmd({ 'BufEnter', 'QuitPre' }, {
+  nested = false,
+  callback = function(ev)
+    local tree = require('nvim-tree.api').tree
+    if not tree.is_visible() then return end
+
+    -- How many focusable windows do we have? (excluding e.g. incline status window)
+    local winCount = 0
+    local lastWinId
+    for _, winId in ipairs(vim.api.nvim_list_wins()) do
+      if vim.api.nvim_win_get_config(winId).focusable then
+        local buf = vim.api.nvim_win_get_buf(winId)
+        if vim.bo[buf].filetype ~= 'NvimTree' then
+          lastWinId = winId
+          winCount = winCount + 1
+        end
+      end
+    end
+
+    -- We want to quit and only one window besides tree is left
+    if ev.event == 'QuitPre' and winCount == 1 and lastWinId == vim.api.nvim_get_current_win() then
+      vim.api.nvim_cmd({ cmd = 'qall' }, {})
+    end
+
+    -- :bd was probably issued an only tree window is left
+    -- Behave as if tree was closed (see `:h :bd`)
+    if ev.event == 'BufEnter' and winCount == 0 then
+      vim.schedule(function()
+        -- close nvim-tree: will go to the last buffer used before closing
+        tree.toggle({ find_file = true, focus = true })
+        -- re-open nivm-tree
+        tree.toggle({ find_file = true, focus = false })
+      end)
+    end
+  end,
+})
 local lsp_m = {
   -- By default, "tagfunc" is set whne "LspAttach",
   -- "<C-]>", "<C-W>]", and "<C-W>}" will work, you can use them to go to definition

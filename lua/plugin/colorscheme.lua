@@ -24,5 +24,6 @@ return {
     vim.o.background = 'dark'
     vim.cmd.colorscheme('gruvbox')
     vim.api.nvim_set_hl(0, 'CursorLineFold', { fg = '#928374', bg = '#3c3836', force = true })
+    vim.api.nvim_set_hl(0, 'NvimTreeWindowPicker', { link = 'IncSearch', force = true })
   end,
 }

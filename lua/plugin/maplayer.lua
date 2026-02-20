@@ -218,6 +218,8 @@ return {
       { key = '<c-k>', mode = 'ic', desc = 'Select Previous Completion Item', handler = h.previous_completion_item },
       { key = '<c-k>', mode = 'ic', desc = 'Delete to EOL', handler = h.delete_to_eol },
 
+      { key = '<m-e>', mode = 'n', desc = 'Open, Focus, or Reveal', handler = h.open_focus_reveal },
+
       -- Some Disabled Keys
       { key = '[s', mode = 'o', desc = 'Nop', handler = h.nop, fallback = false },
       { key = ']s', mode = 'o', desc = 'Nop', handler = h.nop, fallback = false },

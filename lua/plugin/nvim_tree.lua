@@ -1,0 +1,68 @@
+return {
+  'nvim-tree/nvim-tree.lua',
+  opts = {
+    on_attach = function(buffer)
+      local a = require('nvim-tree.api')
+      local function opts(desc) return { desc = desc, buffer = buffer, noremap = true, silent = true, nowait = true } end
+      local h = require('lightboat.handler')
+      local mapping = {
+        { 'n', '<cr>', a.node.open.edit, opts('Open') },
+        { 'n', '<del>', a.fs.remove, opts('Delete') },
+        { 'n', '<tab>', a.node.open.preview, opts('Open Preview') },
+        { 'n', '<c-t>', a.node.open.tab, opts('New Tab') },
+        { 'n', '<c-s>', a.node.open.horizontal, opts('Horizontal Split') },
+        { 'n', '<c-v>', a.node.open.vertical, opts('Vertical Split') },
+        { 'n', '<f1>', a.tree.toggle_help, opts('Help') },
+        { 'n', '<f5>', a.tree.reload, opts('Refresh') },
+        { 'n', '<2-leftmouse>', a.node.open.edit, opts('Open') },
+        { 'n', '[g', h.nvim_tree_previous_git, opts('Previous Git') },
+        { 'n', ']g', h.nvim_tree_next_git, opts('Next Git') },
+        { 'n', ']d', h.nvim_tree_next_diagnostic, opts('Next Diagnostic') },
+        { 'n', '[d', h.nvim_tree_previous_diagnostic, opts('Previous Diagnostic') },
+        { 'n', 'a', a.fs.create, opts('Create') },
+        { 'n', 'c', h.copy_to, opts('Copy to') }, -- normal
+        { 'n', 'd', a.fs.remove, opts('Delete') }, -- normal
+        { 'n', 'r', a.fs.rename, opts('Rename') }, -- normal
+        { 'n', 'R', h.move_to, opts('Move to') }, -- normal
+        { 'n', 'e', a.fs.rename_basename, opts('Rename: Basename') }, -- normal
+        { 'n', 'o', a.node.open.edit, opts('Open') },
+        { 'n', 'O', a.node.open.replace_tree_buffer, opts('Open: In Place') },
+        { 'n', 'h', h.collapse_or_go_to_parent, opts('Collapse or Go to Parent') },
+        { 'n', 'l', h.open_folder_or_preview, opts('Open Folder or Preview') },
+        { 'n', '<bs>', a.node.navigate.parent_close, opts('Close Directory') },
+        { 'n', 'p', a.fs.paste, opts('Paste') },
+        { 'n', 'q', a.tree.close, opts('Quit') },
+        { 'n', '<c-r>', a.fs.rename_sub, opts('Rename: Omit Filename') },
+        { 'n', 'x', a.fs.cut, opts('Cut') },
+        { 'n', 'H', a.tree.collapse_all, opts('Collapse All') },
+        { 'n', 'L', a.tree.expand_all, opts('Expand All') },
+        { 'n', 'Y', h.copy_node_information, opts('Copy Node Information') },
+        { 'n', '<c-]>', h.change_root_to_node, opts('CD') },
+        { 'n', '<c-o>', h.change_root_to_parent, opts('Up') },
+        { 'n', 'K', a.node.show_info_popup, opts('Info') },
+        { 'n', 'm', a.marks.toggle, opts('Toggle Bookmark') },
+        { 'n', 'bd', a.marks.bulk.delete, opts('Delete Bookmarked') },
+        { 'n', 'bm', a.marks.bulk.move, opts('Move Bookmarked') },
+        { 'n', 'M', a.filter.no_bookmark.toggle, opts('Toggle Filter: No Bookmark') },
+        { 'n', 'B', a.filter.no_buffer.toggle, opts('Toggle Filter: No Buffer') },
+        { 'n', 'C', a.filter.git.clean.toggle, opts('Toggle Filter: Git Clean') },
+        { 'n', 'I', a.filter.git.ignored.toggle, opts('Toggle Filter: Git Ignored') },
+        { 'n', 'D', a.filter.dotfiles.toggle, opts('Toggle Filter: Dotfiles') },
+        { 'n', 'U', a.filter.custom.toggle, opts('Toggle Filter: Custom') },
+        { 'n', 'f', a.filter.live.start, opts('Live Filter: Start') },
+        { 'n', '<m-f>', a.filter.live.start, opts('Live Filter: Start') },
+        { 'n', 'F', a.filter.live.clear, opts('Live Filter: Clear') },
+        { 'n', 'P', a.node.navigate.parent, opts('Parent Directory') },
+        { 'n', '.', a.node.run.cmd, opts('Run Command') },
+        { 'n', 's', a.node.run.system, opts('Run System') },
+        { 'n', 'S', a.tree.search_node, opts('Search') },
+        { 'n', '<', a.node.navigate.sibling.first, opts('First Sibling') },
+        { 'n', '>', a.node.navigate.sibling.last, opts('Last Sibling') },
+        { 'n', 'E', a.node.open.toggle_group_empty, opts('Toggle Group Empty') },
+      }
+      for _, m in ipairs(mapping) do
+        vim.keymap.set(unpack(m))
+      end
+    end,
+  },
+}
