@@ -60,13 +60,15 @@ return {
       -- By deafault, "[A" and "]A" are mapped to ":rewind" and ":last"
       { key = '[A', mode = 'nx', desc = 'Argument End', handler = h.previous_parameter_end, fallback = false },
       { key = ']A', mode = 'nx', desc = 'Argument End', handler = h.next_parameter_end, fallback = false },
+      { key = '[b', desc = 'Buffer', handler = h.previous_buffer, fallback = false },
+      { key = ']b', desc = 'Buffer', handler = h.next_buffer, fallback = false },
       -- By default, "[c" and "]c" are used to navigate changes in the buffer. In most caes, we cant use "[g" and "]g" to navigate between git hunks
       { key = '[c', mode = 'nx', desc = 'Class Start', handler = h.previous_class_start, fallback = false },
       { key = ']c', mode = 'nx', desc = 'Class Start', handler = h.next_class_start, fallback = false },
       { key = '[C', mode = 'nx', desc = 'Class End', handler = h.previous_class_end, fallback = false },
       { key = ']C', mode = 'nx', desc = 'Class End', handler = h.next_class_end, fallback = false },
-      { key = '[d', mode = 'n', desc = 'Diagnostic', handler = h.previous_diagnostic, fallback = false },
-      { key = ']d', mode = 'n', desc = 'Diagnostic', handler = h.next_diagnostic, fallback = false },
+      { key = '[d', desc = 'Diagnostic', handler = h.previous_diagnostic, fallback = false },
+      { key = ']d', desc = 'Diagnostic', handler = h.next_diagnostic, fallback = false },
       -- By default, "[i", "]i", "[I", and "]I" are used to show information of keywords under cursor
       { key = '[i', mode = 'nx', desc = 'If Start', handler = h.previous_conditional_start, fallback = false },
       { key = ']i', mode = 'nx', desc = 'If Start', handler = h.next_conditional_start, fallback = false },
@@ -77,6 +79,8 @@ return {
       { key = ']f', mode = 'nx', desc = 'For Start', handler = h.next_loop_start, fallback = false },
       { key = '[F', mode = 'nx', desc = 'For End', handler = h.previous_loop_end, fallback = false },
       { key = ']F', mode = 'nx', desc = 'For End', handler = h.next_loop_end, fallback = false },
+      { key = '[l', desc = 'Location', handler = h.previous_location, fallback = false },
+      { key = ']l', desc = 'Location', handler = h.next_location, fallback = false },
       { key = '[m', mode = 'nx', desc = 'Method Start', handler = h.previous_function_start, fallback = false },
       { key = ']m', mode = 'nx', desc = 'Method Start', handler = h.next_function_start, fallback = false },
       { key = '[M', mode = 'nx', desc = 'Method End', handler = h.previous_function_end, fallback = false },
@@ -85,6 +89,8 @@ return {
       { key = ']o', mode = 'nx', desc = 'Call Start', handler = h.next_call_start, fallback = false },
       { key = '[O', mode = 'nx', desc = 'Call End', handler = h.previous_call_end, fallback = false },
       { key = ']O', mode = 'nx', desc = 'Call End', handler = h.next_call_end, fallback = false },
+      { key = '[q', desc = 'Quickfix', handler = h.previous_quickfix, fallback = false },
+      { key = ']q', desc = 'Quickfix', handler = h.next_quickfix, fallback = false },
       -- By default "[r" and "]r" are used to search "rare" words
       { key = '[r', mode = 'nx', desc = 'Return Start', handler = h.previous_return_start, fallback = false },
       { key = ']r', mode = 'nx', desc = 'Return Start', handler = h.next_return_start, fallback = false },
