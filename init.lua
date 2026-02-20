@@ -54,6 +54,10 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'QuitPre' }, {
     end
   end,
 })
+-- WARN:
+-- With those keys below,
+-- we can not use something like "grn" to enter visual replace mode and change a character to "n"
+-- gr not work
 local lsp_m = {
   -- By default, "tagfunc" is set whne "LspAttach",
   -- "<C-]>", "<C-W>]", and "<C-W>}" will work, you can use them to go to definition

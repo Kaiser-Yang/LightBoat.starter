@@ -11,6 +11,43 @@ vim.g.lightboat_opt = {
   mason_ensure_installed = { 'lua-language-server', 'stylua' },
   override_ui_input = true,
   override_ui_select = true,
+  ui_input_on_init = function(uiinput, opt, on_done)
+    local event = require('nui.utils.autocmd').event
+    local prompt = opt.prompt or ''
+    local should_be_normal = prompt:find('Copy to')
+      or prompt:find('Move to')
+      or prompt:find('Rename')
+      or prompt:find('Remove')
+      or prompt:find('New Name')
+    local should_map_y_and_n = prompt:find('[yY]es/[nN]o') or prompt:find('[yY]/[nN]')
+    uiinput:on(event.BufLeave, function() on_done(nil) end, { once = true })
+    uiinput:map('n', 'q', function() on_done(nil) end, { noremap = true, nowait = true })
+    uiinput:map('n', '<Esc>', function() on_done(nil) end, { noremap = true, nowait = true })
+    uiinput:map('n', '<c-c>', function() on_done(nil) end, { noremap = true, nowait = true })
+    uiinput:map('i', '<c-c>', function() on_done(nil) end, { noremap = true, nowait = true })
+    if should_be_normal then
+      uiinput:on(event.BufEnter, function() vim.cmd('stopinsert | norm! 0') end, { once = true })
+    end
+    if should_map_y_and_n then
+      uiinput:map('n', 'y', function() on_done('y') end, { noremap = true, nowait = true })
+      uiinput:map('n', 'Y', function() on_done('Y') end, { noremap = true, nowait = true })
+      uiinput:map('n', 'n', function() on_done('n') end, { noremap = true, nowait = true })
+      uiinput:map('n', 'N', function() on_done('N') end, { noremap = true, nowait = true })
+    end
+  end,
+  ---@diagnostic disable-next-line: unused-local
+  ui_select_on_init = function(uiselect, items, opts, on_done)
+    local event = require('nui.utils.autocmd').event
+    uiselect:on(event.BufLeave, function() on_done(nil, nil) end, { once = true })
+    uiselect:map('n', 'q', function() on_done(nil, nil) end, { noremap = true, nowait = true })
+    uiselect:map('n', '<Esc>', function() on_done(nil, nil) end, { noremap = true, nowait = true })
+    uiselect:map('n', '<c-c>', function() on_done(nil, nil) end, { noremap = true, nowait = true })
+    if #items <= 10 then
+      for i = 1, math.min(10, #items) do
+        uiselect:map('n', tostring(i % 10), function() on_done(items[i], i) end, { noremap = true, nowait = true })
+      end
+    end
+  end,
 }
 vim.g.blink_cmp_unique_priority = function(ctx)
   if ctx.mode == 'cmdline' then

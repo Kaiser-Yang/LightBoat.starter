@@ -20,11 +20,11 @@ return {
         { 'n', ']d', h.nvim_tree_next_diagnostic, opts('Next Diagnostic') },
         { 'n', '[d', h.nvim_tree_previous_diagnostic, opts('Previous Diagnostic') },
         { 'n', 'a', a.fs.create, opts('Create') },
-        { 'n', 'c', h.copy_to, opts('Copy to') }, -- normal
-        { 'n', 'd', a.fs.remove, opts('Delete') }, -- normal
-        { 'n', 'r', a.fs.rename, opts('Rename') }, -- normal
-        { 'n', 'R', h.move_to, opts('Move to') }, -- normal
-        { 'n', 'e', a.fs.rename_basename, opts('Rename: Basename') }, -- normal
+        { 'n', 'c', h.copy_to, opts('Copy to') },
+        { 'n', 'd', a.fs.remove, opts('Delete') },
+        { 'n', 'r', a.fs.rename, opts('Rename') },
+        { 'n', 'R', h.move_to, opts('Move to') },
+        { 'n', 'e', a.fs.rename_basename, opts('Rename: Basename') },
         { 'n', 'o', a.node.open.edit, opts('Open') },
         { 'n', 'O', a.node.open.replace_tree_buffer, opts('Open: In Place') },
         { 'n', 'h', h.collapse_or_go_to_parent, opts('Collapse or Go to Parent') },
