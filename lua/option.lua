@@ -14,20 +14,25 @@ vim.g.lightboat_opt = {
   ui_input_on_init = function(uiinput, opt, on_done)
     local event = require('nui.utils.autocmd').event
     local prompt = opt.prompt or ''
-    local should_be_normal = prompt:find('Copy to')
+    local default = opt.default or ''
+    local should_be_normal = (
+      prompt:find('Copy to')
       or prompt:find('Move to')
       or prompt:find('Rename')
       or prompt:find('Remove')
       or prompt:find('New Name')
+    ) and default:sub(-1) ~= '/'
     local should_map_y_and_n = prompt:find('[yY]es/[nN]o') or prompt:find('[yY]/[nN]')
     uiinput:on(event.BufLeave, function() on_done(nil) end, { once = true })
     uiinput:map('n', 'q', function() on_done(nil) end, { noremap = true, nowait = true })
     uiinput:map('n', '<Esc>', function() on_done(nil) end, { noremap = true, nowait = true })
     uiinput:map('n', '<c-c>', function() on_done(nil) end, { noremap = true, nowait = true })
     uiinput:map('i', '<c-c>', function() on_done(nil) end, { noremap = true, nowait = true })
-    if should_be_normal then
-      uiinput:on(event.BufEnter, function() vim.cmd('stopinsert | norm! 0') end, { once = true })
-    end
+    uiinput:on(event.BufEnter, function()
+      local mode = vim.fn.mode('1')
+      if mode == 'n' and should_be_normal or mode ~= 'n' and not should_be_normal then return end
+      vim.cmd('stopinsert | norm! 0')
+    end, { once = true })
     if should_map_y_and_n then
       uiinput:map('n', 'y', function() on_done('y') end, { noremap = true, nowait = true })
       uiinput:map('n', 'Y', function() on_done('Y') end, { noremap = true, nowait = true })
