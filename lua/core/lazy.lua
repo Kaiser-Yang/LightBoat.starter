@@ -12,8 +12,6 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
---- @type LightBoat.Opts
-vim.g.lightboat_opts = {}
 require('lazy').setup({
   spec = {
     { 'Kaiser-Yang/LightBoat', import = 'lightboat.plugin' },
