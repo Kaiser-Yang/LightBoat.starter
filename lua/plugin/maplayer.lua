@@ -28,7 +28,6 @@ return {
     -- stylua: ignore start
     require('maplayer').setup({
       -- Basic
-      { key = '<cr>', mode = 'i', desc = 'Insert Undo Point', handler = function() u.key.feedkeys('<c-g>u', 'n') return false end },
       -- By default "<C-A>" is used to insert all commands in command mode
       -- and is used to insert previously inserted text in insert mode
       { key = '<c-a>', mode = 'ci', desc = 'Cursor to BOL', handler = h.cursor_to_bol, fallback = false },
@@ -195,6 +194,29 @@ return {
       { key = '<leader>sp', desc = 'Picker', handler = '<cmd>Telescope<cr>', fallback = false },
       { key = '<leader>st', desc = 'Todo', handler = '<cmd>Telescope todo-comments todo<cr>', fallback = false },
 
+      -- Autopair
+      { key = '(', mode = 'i', desc = 'Autopair', handler = h.auto_pair_wrap('('), expr = true },
+      { key = ')', mode = 'i', desc = 'Autopair', handler = h.auto_pair_wrap(')'), expr = true },
+      { key = '[', mode = 'i', desc = 'Autopair', handler = h.auto_pair_wrap('['), expr = true },
+      { key = ']', mode = 'i', desc = 'Autopair', handler = h.auto_pair_wrap(']'), expr = true },
+      { key = '{', mode = 'i', desc = 'Autopair', handler = h.auto_pair_wrap('{'), expr = true },
+      { key = '}', mode = 'i', desc = 'Autopair', handler = h.auto_pair_wrap('}'), expr = true },
+      { key = '<', mode = 'i', desc = 'Autopair', handler = h.auto_pair_wrap('<'), expr = true },
+      { key = '>', mode = 'i', desc = 'Autopair', handler = h.auto_pair_wrap('>'), expr = true },
+      { key = '!', mode = 'i', desc = 'Autopair', handler = h.auto_pair_wrap('!'), expr = true },
+      { key = '-', mode = 'i', desc = 'Autopair', handler = h.auto_pair_wrap('-'), expr = true },
+      { key = '_', mode = 'i', desc = 'Autopair', handler = h.auto_pair_wrap('_'), expr = true },
+      { key = '*', mode = 'i', desc = 'Autopair', handler = h.auto_pair_wrap('*'), expr = true },
+      { key = '$', mode = 'i', desc = 'Autopair', handler = h.auto_pair_wrap('$'), expr = true },
+      { key = '"', mode = 'i', desc = 'Autopair', handler = h.auto_pair_wrap('"'), expr = true },
+      { key = "'", mode = 'i', desc = 'Autopair', handler = h.auto_pair_wrap("'"), expr = true },
+      { key = '`', mode = 'i', desc = 'Autopair', handler = h.auto_pair_wrap('`'), expr = true },
+      { key = '<bs>', mode = 'i', desc = 'Autopair BS', handler = h.auto_pair_wrap('<bs>'), expr = true },
+      { key = '<space>', mode = 'i', desc = 'Autopair Space', handler = h.auto_pair_wrap('<space>'), expr = true },
+      { key = '<m-e>', mode = 'i', desc = 'Autopair Fastwarp', handler = h.auto_pair_wrap('<m-e>'), replace_keycodes = false },
+      { key = '<m-E>', mode = 'i', desc = 'Autopair Reverse Fastwarp', handler = h.auto_pair_wrap('<m-E>'), replace_keycodes = false },
+      { key = '<m-s>', mode = 'i', desc = 'Autopair Surround', handler = h.auto_pair_wrap('<m-)>'), replace_keycodes = false },
+
       -- Window
       { key = '<c-h>', desc = 'To Left', handler = h.to_left, fallback = false },
       { key = '<c-j>', desc = 'To Bottom', handler = h.to_bottom, fallback = false },
@@ -212,8 +234,11 @@ return {
       -- By default, "<c-d>" and "<c-t>" are used to delete or add indent in insert mode
       { key = '<c-d>', mode = 'i', desc = 'Scroll Documentation Down', handler = h.scroll_documentation_down, expr = true },
       { key = '<c-d>', mode = 'i', desc = 'Scroll Signature Down', handler = h.scroll_signature_down, expr = true },
+      { key = '<cr>', mode = 'i', desc = 'Insert Undo Point', handler = function() u.key.feedkeys('<c-g>u', 'n') return false end },
+      { key = '<cr>', mode = 'i', desc = 'Autopair CR', handler = h.auto_pair_wrap('<cr>'), expr = true },
       { key = '<tab>', mode = 'i', desc = 'Snippet Forward', handler = h.snippet_forward },
       { key = '<tab>', mode = 'i', desc = 'Auto Indent', handler = h.auto_indent },
+      { key = '<tab>', mode = 'i', desc = 'Autopair Tabout', handler = h.auto_pair_wrap('<m-tab>'), replace_keycodes = false },
       -- By default, "<c-k>" is used to insert digraph, see ":help i_CTRL-K" and ":help c_CTRL-K"
       { key = '<c-k>', mode = 'ic', desc = 'Select Previous Completion Item', handler = h.previous_completion_item },
       { key = '<c-k>', mode = 'ic', desc = 'Delete to EOL', handler = h.delete_to_eol },
