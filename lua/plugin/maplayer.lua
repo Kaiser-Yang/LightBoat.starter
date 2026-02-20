@@ -5,6 +5,14 @@ return {
     -- We have provide another key binding for commenting current line
     -- We must remove this to make "gc" work
     vim.api.nvim_del_keymap('n', 'gcc')
+    -- We will map those keys on "LspAttach"
+    vim.api.nvim_del_keymap('n', 'grn')
+    vim.api.nvim_del_keymap('n', 'gra')
+    vim.api.nvim_del_keymap('n', 'grr')
+    vim.api.nvim_del_keymap('n', 'gri')
+    vim.api.nvim_del_keymap('n', 'grt')
+    vim.api.nvim_del_keymap('n', 'gO')
+    vim.api.nvim_del_keymap('i', '<c-s>')
     -- When all key bindings has no overlapping,
     -- you can set "timeoutlen" with zero
     -- The default satisfy the requirement.
@@ -57,6 +65,8 @@ return {
       { key = ']c', mode = 'nx', desc = 'Class Start', handler = h.next_class_start, fallback = false },
       { key = '[C', mode = 'nx', desc = 'Class End', handler = h.previous_class_end, fallback = false },
       { key = ']C', mode = 'nx', desc = 'Class End', handler = h.next_class_end, fallback = false },
+      { key = '[d', mode = 'n', desc = 'Diagnostic', handler = h.previous_diagnostic, fallback = false },
+      { key = ']d', mode = 'n', desc = 'Diagnostic', handler = h.next_diagnostic, fallback = false },
       -- By default, "[i", "]i", "[I", and "]I" are used to show information of keywords under cursor
       { key = '[i', mode = 'nx', desc = 'If Start', handler = h.previous_conditional_start, fallback = false },
       { key = ']i', mode = 'nx', desc = 'If Start', handler = h.next_conditional_start, fallback = false },
