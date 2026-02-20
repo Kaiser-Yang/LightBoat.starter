@@ -16,10 +16,6 @@ require('lazy').setup({
   spec = {
     {
       'Kaiser-Yang/LightBoat',
-      -- TODO:
-      -- remove those when finishing refactor
-      version = 'refactor',
-      dir = vim.fn.expand('~') .. '/repo/LightBoat',
       import = 'lightboat.plugin',
     },
     { import = 'plugin' },
