@@ -9,6 +9,8 @@ vim.g.lightboat_opt = {
   treesitter_ensure_installed = { 'lua' },
   --- @type string[]
   mason_ensure_installed = { 'lua-language-server', 'stylua' },
+  override_ui_input = true,
+  override_ui_select = true,
 }
 vim.g.blink_cmp_unique_priority = function(ctx)
   if ctx.mode == 'cmdline' then
