@@ -146,3 +146,6 @@ vim.filetype.add({ pattern = { ['.*.bazelrc'] = 'bazelrc' } })
 
 vim.treesitter.language.register('objc', { 'objcpp' })
 vim.o.splitbelow = false
+vim.diagnostic.config({
+  virtual_lines = { current_line = true },
+})
