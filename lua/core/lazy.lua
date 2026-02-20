@@ -14,10 +14,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
   spec = {
-    {
-      'Kaiser-Yang/LightBoat',
-      import = 'lightboat.plugin',
-    },
+    { 'Kaiser-Yang/LightBoat', import = 'lightboat.plugin' },
     { import = 'plugin' },
   },
 })
