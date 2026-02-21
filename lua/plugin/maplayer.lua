@@ -41,6 +41,7 @@ return {
       { key = '<m-V>', desc = 'System Put Before', handler = h.system_put_before, fallback = false },
       { key = '<m-X>', desc = 'System Cut EOL', handler = h.system_cut_eol, fallback = false },
       { key = '<m-/>', mode = 'inx', desc = 'Toggle Comment', handler = h.toggle_comment, fallback = false },
+      { key = '<m-g>', mode = 'nt', desc = 'Toggle Lazygit', handler = h.toggle_lazygit, fallback = false },
       { key = '<leader>ti', desc = 'Inlay Hint', handler = h.toggle_inlay_hint, fallback = false },
       { key = '<leader>ts', desc = 'Spell', handler = h.toggle_spell, fallback = false },
       { key = '<leader>tt', desc = 'Treesitter Highlight', handler = h.toggle_treesitter },
