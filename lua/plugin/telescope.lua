@@ -97,11 +97,6 @@ return {
     opts.defaults.mappings.i = vim.tbl_deep_extend('error', opts.defaults.mappings.i, insert_and_normal)
     local lm = {
       ['<m-s>'] = { h.toggle_quotation_wrap(), type = 'action', opts = { desc = 'Toggle Quotation' } },
-      ['<m-g>'] = {
-        h.toggle_quotation_wrap({ postfix = ' --glob=' }),
-        type = 'action',
-        opts = { desc = 'Toggle glob' },
-      },
       ['<m-i>'] = {
         h.toggle_quotation_wrap({ postfix = ' --iglob=' }),
         type = 'action',
