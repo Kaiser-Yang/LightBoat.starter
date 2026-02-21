@@ -6,7 +6,7 @@ vim.g.lightboat_opt = {
   --- @type string[]|string
   big_file_detection = { 'BufReadPre', 'FileType', 'BufReadPost' },
   --- @type string[]
-  treesitter_ensure_installed = { 'lua' },
+  treesitter_ensure_installed = {},
   --- @type string[]
   mason_ensure_installed = { 'lua-language-server', 'stylua' },
   override_ui_input = true,
