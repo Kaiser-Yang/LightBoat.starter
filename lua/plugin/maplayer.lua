@@ -179,7 +179,7 @@ return {
       { key = 'gy', desc = 'Search Register', handler = '<cmd>Telescope registers<cr>', fallback = false },
       { key = '<c-f>', desc = 'Live Grep Frecency', handler = h.live_grep_frecency, fallback = false },
       { key = '<c-p>', desc = 'Find File Frecency', handler = h.find_file_frecency, fallback = false },
-      { key = '<f1>', desc = 'Search Help', handler = '<cmd>Telescope help_tags<cr>', fallback = false },
+      { key = '<f1>', desc = 'Search Help', handler = h.help_tags, fallback = false },
       { key = '<m-r>', desc = 'Resume', handler = '<cmd>Telescope resume<cr>', fallback = false },
       { key = '<m-f>', mode = 'nx', desc = 'Search Word', handler = h.grep_word, fallback = false },
       { key = '<leader>sb', desc = 'Buffer', handler = '<cmd>Telescope buffers<cr>', fallback = false },
