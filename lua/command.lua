@@ -48,7 +48,7 @@ local command = {
         { text = true, cwd = vim.fn.getcwd() },
         function(result)
           if result.code ~= 0 then
-            vim.notify('Error running git command: ' .. result.stderr, vim.log.levels.ERROR, { title = 'Resolve' })
+            vim.schedule_wrap(vim.notify)('Error running git command: ' .. result.stderr, vim.log.levels.ERROR, { title = 'Light Boat' })
             return
           end
           local files = vim.split(result.stdout, '\n', { trimempty = true })

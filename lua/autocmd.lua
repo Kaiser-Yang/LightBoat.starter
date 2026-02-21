@@ -47,6 +47,7 @@ vim.api.nvim_create_autocmd({ 'FocusLost', 'BufLeave' }, {
 vim.api.nvim_create_autocmd({ 'BufEnter', 'QuitPre' }, {
   nested = false,
   callback = function(ev)
+    if not _G.plugin_loaded['nvim-tree.lua'] then return end
     local tree = require('nvim-tree.api').tree
     if not tree.is_visible() then return end
 

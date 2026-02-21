@@ -2,7 +2,6 @@
 -- Do not modify the prompt_title of any existed picker
 -- BUG:
 -- https://github.com/nvim-telescope/telescope.nvim/issues/3621
-local u = require('lightboat.util')
 return {
   'nvim-telescope/telescope.nvim',
   opts = {
@@ -10,6 +9,7 @@ return {
     pickers = {
       registers = {
         attach_mappings = function(buffer, map)
+          local u = require('lightboat.util')
           vim.keymap.del({ 'i', 'n' }, '<c-e>', { buffer = buffer })
           local r = { '"', '-', '#', '=', '/', '*', '+', ':', '.', '%' }
           for i = 0, 9 do
