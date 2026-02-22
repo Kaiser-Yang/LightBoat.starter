@@ -61,7 +61,7 @@ Or you can use `:Mason` to open the `mason-org/mason.nvim` menu to install one m
 We recommend you to install by setting `vim.g.lightboat_opt.mason_ensure_installed`,
 which will install them even if you switch a new machine.
 
-### How to enable a nwe LSP?
+### How to enable a new LSP?
 
 In most case, you just need to make sure your LSP command is installed
 (you can install them with `vim.g.lightboat_opt.mason_ensure_installed` automatically).
@@ -70,7 +70,7 @@ Then you just need to create a file under `after/lsp/<name>.lua`.
 And if you have `neovim/nvim-lspconfig` installed,
 you should make sure the filename is same with the one in `neovim/nvim-lspconfig`.
 You can make it an empty file, it's OK.
-Because neovim will merge it with the one in `neovim/neovim-lspconfig`.
+Because `nvim` will merge it with the one in `neovim/neovim-lspconfig`.
 
 If you have disabled `neovim/neovim-lspconfig`,
 you just need to copy a configuration file from the repository.
@@ -165,13 +165,13 @@ return {
 ```
 
 **NOTE**: All your configuration will override the old ones,
-which means if the old field is an array for which configuration will be replaced wholely.
+which means if the old field is an array for which configuration will be replaced wholly.
 
 ### Why does my code not formatted after saving?
 
-The main reason for this is that you do not have a formmatter available for current buffer
+The main reason for this is that you do not have a formatter available for current buffer
 (You will see the message reporting it).
-You can run `:ConformInfo` to check if there is a formmatter available for the buffer.
+You can run `:ConformInfo` to check if there is a formatter available for the buffer.
 
 And if you want to add a new formatter for a filetype, you can follow up those below:
 
@@ -340,7 +340,7 @@ Requirements:
 * `tar`
 * `tree-sitter`
 
-This plugin provides some query files for nvim treesitter, and some commands to install, update
+This plugin provides some query files for `nvim` treesitter, and some commands to install, update
 and remove treesitter parsers. Furthermore,
 it also provides treesitter based indentation and folding.
 
