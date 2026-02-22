@@ -1,6 +1,9 @@
 # Compiled Lua sources
 luac.out
 
+# spell binary files
+*.spl
+
 .repro
 
 # luarocks build files
