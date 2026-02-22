@@ -66,7 +66,7 @@ see [Hot to enable a new LSP](#how-to-enable-a-new-lsp) to learn more.
 
 ### How to enable a new LSP?
 
-In most case, you just need to make sure your LSP command is installed
+In most cases, you just need to make sure your LSP command is installed
 (you can install them with `vim.g.lightboat_opt.mason_ensure_installed` automatically).
 Then you just need to create a file under `after/lsp/<name>.lua`.
 
