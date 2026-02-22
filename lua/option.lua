@@ -62,7 +62,7 @@ vim.g.blink_cmp_unique_priority = function(ctx)
   end
 end
 vim.g.highlight_on_yank = true
-vim.g.highlight_on_yank_limit = 1024 -- 1 KB
+vim.g.highlight_on_yank_limit = 1024 * 1024 -- 1 MB
 vim.g.highlight_on_yank_duration = 300 -- Unit: ms
 vim.g.conform_on_save = true
 vim.g.conform_on_save_reguess_indent = true
