@@ -115,6 +115,15 @@ If you want to update plugins:
 2. Run `:Lazy` in `nvim` to open the plugin manager window.
 3. Press `U` to update all plugins.
 
+### How to customise key mappings?
+
+Most key mappings are placed in `lua/plugin/maplayer.lua`
+you just change the this file to customise key mappings.
+
+Some buffer level key mappings are placed in the related plugin files.
+For example,
+`nvim-telescope/telescope.nvim` related key mappings are placed in `lua/plugin/telescope.lua`
+
 ### How to remove plugins?
 
 For example, if you want to remove `neovim/nvim-lspconfig`,
@@ -203,6 +212,10 @@ Requirements:
 
 This is the plugin manager for `LightBoat`.
 
+Known issues:
+
+* [Weird border behavior when `vim.o.border` is set](https://github.com/folke/lazy.nvim/pull/2072)
+
 ### `neovim/nvim-lspconfig`
 
 As to `nvim 0.11`,
@@ -277,12 +290,107 @@ to add some completion sources to the built-in completion menu, see
 We provide those default key mappings for this plugin,
 you can configure the in `lua/plugin/maplayer.lua`
 
-TODO:
+| Key          | Function                        |
+|--------------|---------------------------------|
+| `<C-J>`      | Select Next Completion Item     |
+| `<C-K>`      | Select Previous Completion Item |
+| `<Tab>`      | Snippet Forward                 |
+| `<S-Tab>`    | Snippet Backward                |
+| `<C-X><C-O>` | Show Completion                 |
+| `<C-Y>`      | Accept Completion Item          |
+| `<C-E>`      | Cancel Completion               |
+| `<C-U>`      | Scroll Documentation Up         |
+| `<C-U>`      | Scroll Signature Up             |
+| `<C-D>`      | Scroll Documentation Down       |
+| `<C-D>`      | Scroll Signature Down           |
+| `<C-S>`      | Toggle Signature                |
 
+Those plugin will install some useful sources and snippets:
+
+* `rafamadriz/friendly-snippets`: This plugin provides a lot of snippets for many languages.
+* `Kaiser-Yang/blink-cmp-dictionary`: dictionary source, we have provide an English dictionary file.
+* `mikavilpas/blink-ripgrep.nvim` (When `rg` is executable): will be enabled when in a git repository.
+
+**NOTE**: Snippets are something that you can insert into your code by just typing some triggers.
 
 Known issues:
 
 * [scroll functions always return true](https://github.com/saghen/blink.cmp/issues/2381)
+
+### `mikavilpas/blink.pairs`, `altermo/ultimate-autopair.nvim` and `abecodes/tabout.nvim`
+
+Those three plugins provide the abilities related with pairs.
+At first, I only use `altermo/ultimate-autopair.nvim`,
+but I find there are some performance problems,
+especially when I hold the space key or backspace key in a pair.
+Then I switch to `mikavilpas/blink.pairs`,
+but in this plugin fly mode is not implemented yet.
+Therefore I use these two together by only mapping right brackets and enter for
+`mikavilpas/blink.pairs` others for `altermo/ultimate-autopair.nvim`.
+
+`altermo/ultimate-autopair.nvim` provides tab out, but we can not do reverse tab out.
+Therefore I added `abecodes/tabout.nvim`.
+
+You do not need to care about it, `LightBoat` has hidden the implementations.
+
+**NOTE**: Fly mode makes you can fly over pairs, for example, in `([{|}])`
+(`|` is your cursor position), you can press `)` to get `([{}])|`.
+
+**NOTE**: Tab out makes you can jump over some information in a pair, for example,
+in `test(|param1)`, you can press `<Tab>` to get `test(param1|)`,
+press `<Tab>` again, you will get `test(param1)|`.
+
+We provide those mappings by default, you can configure them in `lua/plugin/maplayer.lua`:
+
+| Key          | Function |
+|--------------|----------|
+| `(`          | Autopair |
+| `)`          | Autopair |
+| `[`          | Autopair |
+| `]`          | Autopair |
+| `{`          | Autopair |
+| `}`          | Autopair |
+| `<`          | Autopair |
+| `>`          | Autopair |
+| `!`          | Autopair |
+| `-`          | Autopair |
+| `_`          | Autopair |
+| `*`          | Autopair |
+| `$`          | Autopair |
+| `"`          | Autopair |
+| `'`          | Autopair |
+| `` ` ``      | Autopair |
+| `<BS>`       | Delete Pair |
+| `<Space>`    | Add Space in Pair |
+| `<M-e>`      | Fastwarp      |
+| `<M-E>`      | Reverse Fastwarp |
+| `<M-s>`      | Auto Close Unclosed Pairs |
+| `<CR>`       | Autopair CR            |
+| `<Tab>`      | Tabout        |
+| `<S-Tab>`    | Reverse Tabout |
+
+**NOTE**: Fart wrap is something that can move contents after a pair into the pair,
+for example, in `(|)a`, if you press `<M-e>`, you will get `(a|)`.
+Reverse fast wrap will do this reversely, from `(a|)` to `(|)a`.
+
+**NOTE**: We only mappings them in insert mode.
+If you want use them in command mode,
+you just need to update the `mode = 'i'` to `mode = 'ic'` of these mappings.
+
+### `mikavilpas/blink.indent`
+
+This is a indent line plugin, give you guide for indent lines.
+We choose this one is because that it can be used even in very large files.
+
+We provide those mappings, you can configure them in `lua/plugin/maplayer.lua`
+
+| Key             | Function       |
+|-----------------|----------------|
+| `[|`            | Indent Start   |
+| `]|`            | Indent End     |
+| `i|`            | Inside Indent Line |
+| `a|`            | Around Indent Line |
+| `<leader>tI`    | Toggle Indent Line |
 
 ### `lewis6991/gitsigns.nvim`
 
@@ -295,7 +403,35 @@ and some commands to control those signs and do some git related operations.
 
 We provide those key mappings, you can configure them in `lua/plugin/git_signs.lua`:
 
-TODO:
+| Key           | Function                     |
+|---------------|----------------------------  |
+| `[g`          | Previous Git Hunk            |
+| `]g`          | Next Git Hunk                |
+| `ah`          | Select Git Hunk              |
+| `ih`          | Select Git Hunk              |
+| `<leader>ga`  | Git Add                      |
+| `<leader>gr`  | Git Reset                    |
+| `<leader>gA`  | Git Add Buffer               |
+| `<leader>gu`  | Undo Add Hunk                |
+| `<leader>gU`  | Undo Add Buffer              |
+| `<leader>gr`  | Reset Hunk                   |
+| `<leader>gR`  | Reset Buffer                 |
+| `<leader>gd`  | Diff Hunk                    |
+| `<leader>gD`  | Diff Inline                  |
+| `<leader>gt`  | Diff This                    |
+| `<leader>gb`  | Blame Line                   |
+| `<leader>gq`  | Quickfix All Hunk            |
+| `<leader>tgb` | Toggle Blame Current Line    |
+| `<leader>tgw` | Toggle Word Diff             |
+| `<leader>tgs` | Toggle Sign                  |
+| `<leader>tgn` | Toggle Line Number Highlight |
+| `<leader>tgl` | Toggle Line Highlight        |
+| `<leader>tgd` | Toggle Deleted               |
+
+**Skill**: Some operation can be repeated by `.`,
+for example, if you do `<leader>ga` in a hunk,
+you can repeat it by press `.` on another hunk.
+
 ### `spacedentist/resolve.nvim`
 
 Requirements:
@@ -323,7 +459,23 @@ You can add those contents below to your `~/.gitconfig`:
 
 We provide those key mappings below, you can configure them in `lua/plugin/resolve.lua`:
 
-TODO:
+| Key                 | Function                  |
+|---------------------|--------------------------|
+| `[x`                | Previous Conflict        |
+| `]x`                | Next Conflict            |
+| `<leader>xc`        | Choose Current           |
+| `<leader>xi`        | Choose Incoming          |
+| `<leader>xb`        | Choose Both              |
+| `<leader>xB`        | Choose Both Reverse      |
+| `<leader>xn`        | Choose None              |
+| `<leader>xa`        | Choose Ancestor          |
+| `<leader>xdi`*      | Show Incoming            |
+| `<leader>xdc`*      | Show Current             |
+| `<leader>xdb`*      | Show Both                |
+| `<leader>xdv`*      | Show Current V.S. Incoming |
+| `<leader>xdV`*      | Show Incoming V.S. Current |
+
+\* Only available if `delta` executable is present.
 
 ### `NMAC427/guess-indent.nvim`
 
@@ -357,6 +509,29 @@ to show the context of the current position.
 To make it work, you need have a treesitter parser for the filetype of the current buffer.
 A treesitter parser can be easily installed by `:TSInstall <name>`
 command provided by `nvim-treesitter/nvim-treesitter` plugin.
+
+### `ellisonleao/gruvbox.nvim`
+
+The default color scheme for `LightBoat`. You can change it to any one you like.
+See `lua/plugin/colorscheme.lua` to learn how to find a color scheme.
+
+### `Kaiser-Yang/repmove.nvim`
+
+This plugin makes it possible to use `;` and `,` to repeat the last motion you have done.
+For example, if you press `]s` to go to next misspelled word,
+you can use `;` to go tot the next one, `,` to go to the previous one.
+
+### `MunifTanjim/nui.nvim`
+
+We use this plugin to hack `vim.ui.input` and `vim.ui.select`.
+
+### Others
+
+Those below are dependencies by some plugins, we do not recommend you to disable them:
+
+* `saghen/blink.download`
+* `plenary.nvim`
+* `nvim-web-devicons`
 
 ## Skills
 
