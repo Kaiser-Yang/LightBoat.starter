@@ -147,6 +147,8 @@ vim.o.fillchars = 'fold: ,foldopen:,foldclose:,foldsep: '
 vim.o.splitright = true
 vim.o.splitbelow = false
 vim.o.autowriteall = true
+vim.o.cmdwinheight = 10
+vim.o.nrformats = 'bin,hex,octal'
 
 vim.filetype.add({ pattern = { ['.*.bazelrc'] = 'bazelrc' } })
 vim.treesitter.language.register('objc', { 'objcpp' })
