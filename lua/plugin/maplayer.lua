@@ -46,6 +46,7 @@ return {
       { key = '<leader>ts', desc = 'Spell', handler = h.toggle_spell, fallback = false },
       { key = '<leader>tt', desc = 'Treesitter Highlight', handler = h.toggle_treesitter },
       { key = { 'ae', 'ie' }, mode = 'ox', desc = 'Edit', handler = h.select_file, fallback = false },
+      { key = '&', desc = 'Last Substitute with Flag', handler = '<cmd>&&<cr>', fallback = false },
 
       -- Repmove Motion
       { key = ';', mode = 'nx', desc = 'Repeat Last Motion Forward', handler = h.semicolon, fallback = false },
