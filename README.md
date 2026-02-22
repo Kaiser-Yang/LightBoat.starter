@@ -386,10 +386,10 @@ We provide those mappings, you can configure them in `lua/plugin/maplayer.lua`
 
 | Key             | Function       |
 |-----------------|----------------|
-| `[|`            | Indent Start   |
-| `]|`            | Indent End     |
-| `i|`            | Inside Indent Line |
-| `a|`            | Around Indent Line |
+| `[\|`            | Indent Start   |
+| `]\|`            | Indent End     |
+| `i\|`            | Inside Indent Line |
+| `a\|`            | Around Indent Line |
 | `<leader>tI`    | Toggle Indent Line |
 
 ### `lewis6991/gitsigns.nvim`
