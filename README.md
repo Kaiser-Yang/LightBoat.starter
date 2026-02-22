@@ -61,6 +61,9 @@ Or you can use `:Mason` to open the `mason-org/mason.nvim` menu to install one m
 We recommend you to install by setting `vim.g.lightboat_opt.mason_ensure_installed`,
 which will install them even if you switch a new machine.
 
+**NOTE**: For LSPs, you still need to enable it by creating files,
+see [Hot to enable a new LSP](#how-to-enable-a-new-lsp) to learn more.
+
 ### How to enable a new LSP?
 
 In most case, you just need to make sure your LSP command is installed
