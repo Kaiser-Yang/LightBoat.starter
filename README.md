@@ -296,7 +296,7 @@ you can configure the in `lua/plugin/maplayer.lua`
 | `<C-K>`      | Select Previous Completion Item |
 | `<Tab>`      | Snippet Forward                 |
 | `<S-Tab>`    | Snippet Backward                |
-| `<C-X><C-O>` | Show Completion                 |
+| `<C-X>`      | Show Completion                 |
 | `<C-Y>`      | Accept Completion Item          |
 | `<C-E>`      | Cancel Completion               |
 | `<C-U>`      | Scroll Documentation Up         |
