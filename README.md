@@ -49,6 +49,50 @@ git remote set-url origin <repo-url>
 
 ## FAQs
 
+### How to install executables such as formatters, LSPs?
+
+You just need configure `vim.g.lightboat_opt.mason_ensure_installed`,
+then `LightBoat` will install them if they are not installed
+(Requirements for `mason-org/mason.nvim` must be met).
+
+By default, `LightBoat` will only install `stylua` and `lua-language-server`.
+
+Or you can use `:Mason` to open the `mason-org/mason.nvim` menu to install one manually.
+We recommend you to install by setting `vim.g.lightboat_opt.mason_ensure_installed`,
+which will install them even if you switch a new machine.
+
+### How to enable a nwe LSP?
+
+In most case, you just need to make sure your LSP command is installed
+(you can install them with `vim.g.lightboat_opt.mason_ensure_installed` automatically).
+Then you just need to create a file under `after/lsp/<name>.lua`.
+
+And if you have `neovim/nvim-lspconfig` installed,
+you should make sure the filename is same with the one in `neovim/nvim-lspconfig`.
+You can make it an empty file, it's OK.
+Because neovim will merge it with the one in `neovim/neovim-lspconfig`.
+
+If you have disabled `neovim/neovim-lspconfig`,
+you just need to copy a configuration file from the repository.
+
+That's all, the LSPs defined under `after/lsp` will be enabled by `LightBoat` automatically.
+And folders are supported too, which means you can defined multi LSPs in one fold.
+
+### How to install treesitter parsers?
+
+You just need configure `vim.g.lightboat_opt.treesitter_ensure_installed`,
+then `LightBoat` will install them when they are not installed
+(Requirements for `nvim-treesitter/nvim-treesitter` must be met).
+
+By default, `LightBoat` will not install any parsers.
+Don't worry,
+parsers for `C`, `Lua`, `Markdown`, `Vimscript`, `Vimdoc` and `Treesitter query files`
+are included by `nvim`.
+
+Or you can use `:TSInstall <name>` to install the parser for your language.
+We recommend you to install by setting `vim.g.lightboat_opt.treesitter_ensure_installed`,
+which will install them even if you switch a new machine.
+
 ### How to update?
 
 `LightBoat` is now on rapid development, I am still trying improve this distro.
@@ -123,33 +167,6 @@ return {
 **NOTE**: All your configuration will override the old ones,
 which means if the old field is an array for which configuration will be replaced wholely.
 
-### How to install executables such as formatters, LSPs?
-
-You just need configure `vim.g.lightboat_opt.mason_ensure_installed`,
-then `LightBoat` will install them if they are not installed
-(Requirements for `mason-org/mason.nvim` must be met).
-
-By default, `LightBoat` will only install `stylua` and `lua-language-server`.
-
-Or you can use `:Mason` to open the `mason-org/mason.nvim` menu to install one manually.
-We recommend you to install by setting `vim.g.lightboat_opt.mason_ensure_installed`,
-which will install them even if you switch a new machine.
-
-### How to install treesitter parsers?
-
-You just need configure `vim.g.lightboat_opt.treesitter_ensure_installed`,
-then `LightBoat` will install them when they are not installed
-(Requirements for `nvim-treesitter/nvim-treesitter` must be met).
-
-By default, `LightBoat` will not install any parsers.
-Don't worry,
-parsers for `C`, `Lua`, `Markdown`, `Vimscript`, `Vimdoc` and `Treesitter query files`
-are included by `nvim`.
-
-Or you can use `:TSInstall <name>` to install the parser for your language.
-We recommend you to install by setting `vim.g.lightboat_opt.treesitter_ensure_installed`,
-which will install them even if you switch a new machine.
-
 ### Why does my code not formatted after saving?
 
 The main reason for this is that you do not have a formmatter available for current buffer
@@ -172,23 +189,6 @@ return {
 ```
 
 By default, `LightBoat` only configures `stylua` for `lua` files.
-
-### How to enable a nwe LSP?
-
-In most case, you just need to make sure your LSP command is installed
-(you can install them with `vim.g.lightboat_opt.mason_ensure_installed` automatically).
-Then you just need to create a file under `after/lsp/<name>.lua`.
-
-And if you have `neovim/nvim-lspconfig` installed,
-you should make sure the filename is same with the one in `neovim/nvim-lspconfig`.
-You can make it an empty file, it's OK.
-Because neovim will merge it with the one in `neovim/neovim-lspconfig`.
-
-If you have disabled `neovim/neovim-lspconfig`,
-you just need to copy a configuration file from the repository.
-
-That's all, the LSPs defined under `after/lsp` will be enabled by `LightBoat` automatically.
-And folders are supported too, which means you can defined multi LSPs in one fold.
 
 ## Plugins
 
@@ -425,6 +425,4 @@ With the default key bindings of `LightBoat`, you can do some things like:
 ### Git Master
 
 <!-- TODO: -->
-
-
 
