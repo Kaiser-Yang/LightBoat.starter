@@ -527,7 +527,7 @@ We use this plugin to hack `vim.ui.input` and `vim.ui.select`.
 
 ### Others
 
-Those below are dependencies by some plugins, we do not recommend you to disable them:
+Those below are dependencies of some plugins, we do not recommend you to disable them:
 
 * `saghen/blink.download`
 * `plenary.nvim`
