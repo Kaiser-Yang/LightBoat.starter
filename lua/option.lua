@@ -61,7 +61,7 @@ vim.g.lightboat_opt = {
     else
       return { 'snippets', 'lsp', 'dictionary', 'buffer' }
     end
-  end
+  end,
 }
 vim.g.highlight_on_yank = true
 vim.g.highlight_on_yank_limit = 1024 * 1024 -- 1 MB
@@ -151,6 +151,13 @@ vim.o.splitbelow = false
 vim.o.autowriteall = true
 vim.o.cmdwinheight = 10
 vim.o.nrformats = 'bin,hex,octal'
+
+local function fold_clickable()
+  local lnum = vim.v.lnum
+  return vim.fn.foldlevel(lnum) > vim.fn.foldlevel(lnum - 1) and vim.v.virtnum == 0
+end
+_G.get_statuscol = function() return '%s%l%=' .. (fold_clickable() and '%C' or ' ') .. ' ' end
+vim.o.statuscolumn = '%!v:lua.get_statuscol()'
 
 vim.filetype.add({ pattern = { ['.*.bazelrc'] = 'bazelrc' } })
 vim.treesitter.language.register('objc', { 'objcpp' })
