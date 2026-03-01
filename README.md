@@ -309,7 +309,6 @@ Those plugin will install some useful sources and snippets:
 
 * `rafamadriz/friendly-snippets`: This plugin provides a lot of snippets for many languages.
 * `Kaiser-Yang/blink-cmp-dictionary`: dictionary source, we have provide an English dictionary file.
-* `mikavilpas/blink-ripgrep.nvim` (When `rg` is executable): will be enabled when in a git repository.
 
 **NOTE**: Snippets are something that you can insert into your code by just typing some triggers.
 

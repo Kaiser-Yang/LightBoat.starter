@@ -57,7 +57,7 @@ vim.g.blink_cmp_unique_priority = function(ctx)
   if ctx.mode == 'cmdline' then
     return { 'cmdline', 'path', 'buffer' }
   else
-    return { 'snippets', 'lsp', 'ripgrep', 'dictionary', 'buffer' }
+    return { 'snippets', 'lsp', 'dictionary', 'buffer' }
   end
 end
 vim.g.highlight_on_yank = true
