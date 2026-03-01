@@ -29,8 +29,7 @@ vim.g.lightboat_opt = {
     uiinput:map('n', '<c-c>', function() on_done(nil) end, { noremap = true, nowait = true })
     uiinput:map('i', '<c-c>', function() on_done(nil) end, { noremap = true, nowait = true })
     uiinput:on(event.BufEnter, function()
-      local mode = vim.fn.mode('1')
-      if mode == 'n' and should_be_normal or mode ~= 'n' and not should_be_normal then return end
+      if not should_be_normal then return end
       vim.cmd('stopinsert | norm! 0')
     end, { once = true })
     if should_map_y_and_n then
