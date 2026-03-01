@@ -29,8 +29,11 @@ vim.g.lightboat_opt = {
     uiinput:map('n', '<c-c>', function() on_done(nil) end, { noremap = true, nowait = true })
     uiinput:map('i', '<c-c>', function() on_done(nil) end, { noremap = true, nowait = true })
     uiinput:on(event.BufEnter, function()
-      if not should_be_normal then return end
-      vim.cmd('stopinsert | norm! 0')
+      if should_be_normal then
+        vim.cmd('stopinsert | norm! A')
+      else
+        vim.cmd('startinsert')
+      end
     end, { once = true })
     if should_map_y_and_n then
       uiinput:map('n', 'y', function() on_done('y') end, { noremap = true, nowait = true })
@@ -52,14 +55,14 @@ vim.g.lightboat_opt = {
       end
     end
   end,
-}
-vim.g.blink_cmp_unique_priority = function(ctx)
-  if ctx.mode == 'cmdline' then
-    return { 'cmdline', 'path', 'buffer' }
-  else
-    return { 'snippets', 'lsp', 'dictionary', 'buffer' }
+  blink_cmp_unique_priority = function(ctx)
+    if ctx.mode == 'cmdline' then
+      return { 'cmdline', 'path', 'buffer' }
+    else
+      return { 'snippets', 'lsp', 'dictionary', 'buffer' }
+    end
   end
-end
+}
 vim.g.highlight_on_yank = true
 vim.g.highlight_on_yank_limit = 1024 * 1024 -- 1 MB
 vim.g.highlight_on_yank_duration = 300 -- Unit: ms
