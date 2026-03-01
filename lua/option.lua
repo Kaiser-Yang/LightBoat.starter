@@ -30,7 +30,7 @@ vim.g.lightboat_opt = {
     uiinput:map('i', '<c-c>', function() on_done(nil) end, { noremap = true, nowait = true })
     uiinput:on(event.BufEnter, function()
       if should_be_normal then
-        vim.cmd('stopinsert | norm! A')
+        vim.cmd('stopinsert | norm! 0')
       else
         vim.cmd('startinsert')
       end
