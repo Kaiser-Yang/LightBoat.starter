@@ -39,5 +39,5 @@ for _, m in ipairs(mappings) do
   end
   m[4].expr = true
   m[4].buffer = true
-  vim.keymap.set(unpack(m))
+  vim.keymap.set(table.unpack(m))
 end

@@ -20,7 +20,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     for _, m in ipairs(lsp_m) do
       m[4].buffer = ev.buf
       ---@diagnostic disable-next-line: param-type-mismatch
-      vim.keymap.set(unpack(m))
+      vim.keymap.set(table.unpack(m))
     end
   end,
 })

@@ -54,7 +54,7 @@ return {
         { 'n', 'S', a.tree.search_node, opts('Search') },
       }
       for _, m in ipairs(mapping) do
-        vim.keymap.set(unpack(m))
+        vim.keymap.set(table.unpack(m))
       end
     end,
   },

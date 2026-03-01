@@ -31,7 +31,7 @@ return {
       }
       for _, m in ipairs(mapping) do
         m[4].buffer = buffer
-        vim.keymap.set(unpack(m))
+        vim.keymap.set(table.unpack(m))
       end
     end,
   },

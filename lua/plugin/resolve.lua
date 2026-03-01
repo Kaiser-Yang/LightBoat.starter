@@ -42,7 +42,7 @@ return {
       end
       for _, m in ipairs(mapping) do
         m[4].buffer = args.bufnr
-        vim.keymap.set(unpack(m))
+        vim.keymap.set(table.unpack(m))
       end
       vim.diagnostic.enable(false, { bufnr = args.bufnr })
     end,
