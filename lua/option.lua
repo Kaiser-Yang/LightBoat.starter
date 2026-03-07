@@ -181,7 +181,6 @@ vim.o.foldcolumn = '1'
 vim.o.fillchars = 'fold: ,foldopen:,foldclose:'
 vim.o.splitright = true
 vim.o.autowriteall = true
-vim.o.cmdheight = 0
 vim.o.cmdwinheight = 10
 vim.o.showmode = false
 vim.opt.nrformats:append('octal')
