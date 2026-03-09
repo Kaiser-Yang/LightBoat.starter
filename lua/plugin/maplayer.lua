@@ -263,7 +263,7 @@ return {
       { key = '<leader>df', desc = 'Float Element', handler = function() require('dapui').float_element() end },
       { key = '<leader>dr', desc = 'Run Last', handler = function() require('dap').run_last() end },
       { key = '<leader>tb', desc = 'Breakpoint', handler = '<cmd>DapToggleBreakpoint<cr>' },
-      { key = '<leader>td', desc = 'Dap UI', handler = h.toggle_dap_ui },
+      { key = '<leader>td', desc = 'Dap View', handler = h.toggle_dap_view },
       { key = '<f4>', desc = 'Dap Terminate', handler = '<cmd>DapTerminate<cr>' },
       { key = '<f5>', desc = 'Dap Continue', handler = '<cmd>DapContinue<cr>' },
       { key = '<f6>', handler = function() require('dap').restart() end },
