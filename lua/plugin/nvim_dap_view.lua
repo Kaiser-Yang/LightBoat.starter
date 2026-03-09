@@ -10,7 +10,6 @@ return {
         threads = { label = 'Thread', keymap = 'T' },
         repl = { label = 'REPL', keymap = 'R' },
         sessions = { label = 'Session', keymap = 'K' },
-        console = { label = 'Console', keymap = 'C' },
       },
     },
   },
