@@ -236,25 +236,11 @@ The URL for LSP configuration files:
 
 Requirements:
 
-UNIX-like systems:
-
 * `git`
 * `curl` or `wget`
 * `unzip`
 * `tar` or `gtar`
 * `gzip`
-
-Windows:
-
-* `pwsh` or `powershell`
-* `git`
-* `tar`
-* One of the following:
-  * `7zip`
-  * `peazip`
-  * `archiver`
-  * `winzip`
-  * `WinRAR`
 
 This is a plugin to install LSPs, linters, formatters and DAPs,
 which make it easy to install executables.
@@ -324,7 +310,8 @@ but I find there are some performance problems,
 especially when I hold the space key or backspace key in a pair.
 Then I switch to `mikavilpas/blink.pairs`,
 but in this plugin fly mode is not implemented yet.
-Therefore I use these two together by only mapping right brackets and enter for
+Therefore I use these two together by only mapping right brackets,
+back space (only when at end of line) and enter for
 `mikavilpas/blink.pairs` others for `altermo/ultimate-autopair.nvim`.
 
 `altermo/ultimate-autopair.nvim` provides tab out, but we can not do reverse tab out.
